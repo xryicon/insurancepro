@@ -124,22 +124,17 @@ export const navLinks = [
   { path: '/contact', label: 'Contact' },
 ];
 
-// Footer links
+// Footer links - UPDATED to only include email, website, FAQ, and Privacy Policy
 export const footerLinks = {
-  quickLinks: [
-    { path: '/car-insurance', label: 'Car Insurance' },
-    { path: '/home-insurance', label: 'Home Insurance' },
-    { path: '/about', label: 'About Us' },
-    { path: '/contact', label: 'Contact' },
+  contactInfo: [
+    { label: "Email", value: "your@email.com", type: "email" },
+    { label: "Website", value: "https://yourwebsite.com", type: "website" },
   ],
   resources: [
     { path: '/faq', label: 'FAQ' },
-    { path: '/blog', label: 'Blog' },
-    { path: '/guides', label: 'Guides' },
     { path: '/privacy-policy', label: 'Privacy Policy' },
   ],
 };
-
 // Social media links
 export const socialLinks = [
   { name: 'Facebook', href: '#', icon: 'Facebook' },
