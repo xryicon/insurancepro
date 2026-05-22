@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
-  Car, Home, Shield, Check, Star, Users, Award, Clock, Headphones,
+  Car, HomeIcon, Shield, Check, Star, Users, Award, Clock, Headphones,
   TrendingUp, ArrowRight
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
@@ -15,7 +15,7 @@ import {
 } from '../components/ui/Card';
 import { features, stats, testimonials, insuranceTypes, insuranceProviders, howItWorksSteps } from '../data/constants';
 
-const Home = () => {
+const HomeIcon = () => {
   const navigate = useNavigate();
 
   return (
@@ -58,7 +58,7 @@ const Home = () => {
                 <Button
                   variant="outline"
                   size="large"
-                  onClick={() => navigate('/home-insurance')}
+                  onClick={() => navigate('/homeIcon-insurance')}
                   rightIcon={<ArrowRight className="w-5 h-5" />}
                 >
                   Get Home Insurance Quote
@@ -361,7 +361,7 @@ const Home = () => {
               <Button
                 variant="outline"
                 size="large"
-                onClick={() => navigate('/home-insurance')}
+                onClick={() => navigate('/homeIcon-insurance')}
                 rightIcon={<ArrowRight className="w-5 h-5" />}
               >
                 Get Home Insurance Quote
