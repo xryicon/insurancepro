@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Car, Home, Shield, Menu, X, Phone, Mail, Globe, Heart
 } from 'lucide-react';
-import { navLinks, socialLinks } from '../data/constants';
+
 
 const Layout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
