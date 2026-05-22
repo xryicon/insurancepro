@@ -250,7 +250,7 @@ const CarInsurance = () => {
               <React.Fragment key={s.number}>
                 <div className="flex items-center">
                   <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 \${
+                    className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${
                       step > s.number
                         ? 'bg-blue-600 text-white'
                         : step === s.number
@@ -262,7 +262,7 @@ const CarInsurance = () => {
                   </div>
                   <div className="ml-3">
                     <div
-                      className={`text-sm font-medium transition-colors duration-300 \${
+                      className={`text-sm font-medium transition-colors duration-300 ${
                         step >= s.number ? 'text-blue-600' : 'text-gray-400'
                       }`}
                     >
@@ -272,7 +272,7 @@ const CarInsurance = () => {
                 </div>
                 {index < steps.length - 1 && (
                   <div
-                    className={`flex-1 h-1 mx-2 rounded transition-all duration-300 \${
+                    className={`flex-1 h-1 mx-2 rounded transition-all duration-300 ${
                       step > s.number ? 'bg-blue-600' : 'bg-gray-200'
                     }`}
                     style={{ minWidth: '40px' }}
@@ -312,6 +312,7 @@ const CarInsurance = () => {
                     placeholder="John Doe"
                     required
                     error={errors.fullName}
+                    icon={<User className="w-5 h-5 text-gray-400" />}
                   />
                   <FormField
                     type="select"
@@ -323,6 +324,7 @@ const CarInsurance = () => {
                     placeholder="Select nationality"
                     required
                     error={errors.nationality}
+                    icon={<MapPin className="w-5 h-5 text-gray-400" />}
                   />
                   <FormField
                     type="date"
@@ -332,6 +334,7 @@ const CarInsurance = () => {
                     onChange={handleChange}
                     required
                     error={errors.licenseDate}
+                    icon={<Calendar className="w-5 h-5 text-gray-400" />}
                   />
                   <FormField
                     type="select"
@@ -343,6 +346,7 @@ const CarInsurance = () => {
                     placeholder="Select nationality"
                     required
                     error={errors.licenseNationality}
+                    icon={<Shield className="w-5 h-5 text-gray-400" />}
                   />
                   <FormField
                     type="date"
@@ -352,6 +356,7 @@ const CarInsurance = () => {
                     onChange={handleChange}
                     required
                     error={errors.dateOfBirth}
+                    icon={<Calendar className="w-5 h-5 text-gray-400" />}
                   />
                   <FormField
                     type="text"
@@ -374,6 +379,7 @@ const CarInsurance = () => {
                     required
                     error={errors.address}
                     className="md:col-span-2"
+                    icon={<MapPin className="w-5 h-5 text-gray-400" />}
                   />
                   <FormField
                     type="email"
@@ -384,6 +390,7 @@ const CarInsurance = () => {
                     placeholder="john@example.com"
                     required
                     error={errors.email}
+                    icon={<Mail className="w-5 h-5 text-gray-400" />}
                   />
                   <FormField
                     type="tel"
@@ -394,6 +401,7 @@ const CarInsurance = () => {
                     placeholder="+34 600 000 000"
                     error={errors.phone}
                     hint="Spanish phone number"
+                    icon={<Phone className="w-5 h-5 text-gray-400" />}
                   />
                 </div>
               </motion.div>
@@ -423,6 +431,7 @@ const CarInsurance = () => {
                     required
                     error={errors.registrationNumber}
                     hint="New Spanish format"
+                    icon={<Car className="w-5 h-5 text-gray-400" />}
                   />
                   <FormField
                     type="select"
@@ -512,3 +521,163 @@ const CarInsurance = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}
+              >
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                  Current Insurance
+                </h2>
+                <p className="text-gray-600 mb-8">
+                  Provide details about your current insurance policy
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    type="select"
+                    name="currentProvider"
+                    label="Current Insurance Provider"
+                    value={formData.currentProvider}
+                    onChange={handleChange}
+                    options={insuranceProviders}
+                    placeholder="Select provider"
+                    required
+                    error={errors.currentProvider}
+                  />
+                  <FormField
+                    type="select"
+                    name="coverageType"
+                    label="Coverage Type"
+                    value={formData.coverageType}
+                    onChange={handleChange}
+                    options={coverageTypeOptions}
+                    placeholder="Select coverage"
+                    required
+                    error={errors.coverageType}
+                  />
+                  <FormField
+                    type="text"
+                    name="currentPremium"
+                    label="Current Premium (€)"
+                    value={formData.currentPremium}
+                    onChange={handleChange}
+                    placeholder="500"
+                    required
+                    error={errors.currentPremium}
+                  />
+                </div>
+              </motion.div>
+            )}
+
+            {step === 4 && (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                  Review & Submit
+                </h2>
+                <p className="text-gray-600 mb-8">
+                  Please review your information before submitting
+                </p>
+
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <p className="text-sm text-gray-500">Full Name</p>
+                        <p className="font-medium">{formData.fullName}</p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <p className="text-sm text-gray-500">Email</p>
+                        <p className="font-medium">{formData.email}</p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <p className="text-sm text-gray-500">Phone</p>
+                        <p className="font-medium">{formData.phone || 'Not provided'}</p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <p className="text-sm text-gray-500">Address</p>
+                        <p className="font-medium">{formData.address}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Vehicle Details</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <p className="text-sm text-gray-500">Registration Number</p>
+                        <p className="font-medium">{formData.registrationNumber}</p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <p className="text-sm text-gray-500">Brand & Model</p>
+                        <p className="font-medium">{formData.brand} {formData.model}</p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <p className="text-sm text-gray-500">Year</p>
+                        <p className="font-medium">{formData.year}</p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <p className="text-sm text-gray-500">Fuel Type</p>
+                        <p className="font-medium">{formData.fuelType}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Current Insurance</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <p className="text-sm text-gray-500">Provider</p>
+                        <p className="font-medium">{formData.currentProvider}</p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <p className="text-sm text-gray-500">Coverage Type</p>
+                        <p className="font-medium">{formData.coverageType}</p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <p className="text-sm text-gray-500">Current Premium</p>
+                        <p className="font-medium">{formData.currentPremium} €</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-end">
+                  <Button variant="outline" onClick={handlePrevious}>
+                    <ChevronLeft className="w-5 h-5 mr-2" />
+                    Back
+                  </Button>
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
+                    loading={isSubmitting}
+                  >
+                    {isSubmitting ? 'Submitting...' : 'Submit Quote Request'}
+                  </Button>
+                </div>
+              </motion.div>
+            )}
+
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-between">
+              {step > 1 && (
+                <Button variant="outline" onClick={handlePrevious}>
+                  <ChevronLeft className="w-5 h-5 mr-2" />
+                  Previous
+                </Button>
+              )}
+              {step < 4 ? (
+                <Button onClick={handleNext} className="ml-auto">
+                  Next
+                  <ChevronRight className="w-5 h-5 ml-2" />
+                </Button>
+              ) : null}
+            </div>
+          </Card>
+        </motion.div>
+      </div>
+    </div>
+  );
+};
+
+export default CarInsurance;
