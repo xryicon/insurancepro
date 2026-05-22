@@ -124,7 +124,7 @@ const carDatabase = {
       'Grandland': { engineSizes: [1499, 1998], horsepower: [130, 175, 230, 300] }
     }
   },
- 'Peugeot': {
+  'Peugeot': {
     models: {
       '108': { engineSizes: [998, 1199], horsepower: [68, 72, 82, 110] },
       '208': { engineSizes: [1199, 1499], horsepower: [75, 100, 130, 155] },
