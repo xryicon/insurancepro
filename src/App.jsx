@@ -547,3 +547,13 @@ function CarInsuranceForm({ onSubmit, onBack, language }) {
     </form>
   );
 }
+// Add this as the LAST line of App.jsx
+export default function App() {
+  const [currentForm, setCurrentForm] = useState('car');
+  const [language, setLanguage] = useState('en');
+
+  // Add your language toggle and form switching logic here
+  // Or just render the main form directly
+
+  return <CarInsuranceForm onSubmit={handleSubmit} onBack={() => {}} language={language} />;
+}
