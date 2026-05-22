@@ -13,7 +13,7 @@ import {
   TestimonialCard,
   ProviderCard
 } from '../components/ui/Card';
-import { features, stats, testimonials, insuranceTypes, insuranceProviders, howItWorksSteps } from '../data/constants';
+import { features, stats, testimonials, insuranceTypes, insuranceProviders, howItWorksSteps } from '../data/constants.jsx';
 
 const Home = () => {
   const navigate = useNavigate();
