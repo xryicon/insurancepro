@@ -5,7 +5,7 @@ import {
   Car, Home as HomeIcon, Shield, Check, Star, Users, Award, Clock, Headphones,
   TrendingUp, ArrowRight
 } from 'lucide-react';
-import { Button } from '../components/ui/Button';
+import Button from '../components/ui/Button';
 import {
   Card,
   FeatureCard,
