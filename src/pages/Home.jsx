@@ -124,8 +124,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-
-  {/* Features Section */}
+{/* Features Section */}
 <section id="features" className="py-16 bg-white">
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <motion.div
@@ -143,54 +142,29 @@ const Home = () => {
       </p>
     </motion.div>
 
-    {/* NEW: Icon-enhanced features */}
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.1 }}
-        className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg"
-      >
-        <Check className="w-6 h-6 text-green-500" />
-        <span className="font-medium">100% Free</span>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg"
-      >
-        <Award className="w-6 h-6 text-yellow-500" />
-        <span className="font-medium">Top Providers</span>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-        className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg"
-      >
-        <Clock className="w-6 h-6 text-blue-500" />
-        <span className="font-medium">Fast and Easy</span>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-        className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg"
-      >
-        <Headphones className="w-6 h-6 text-purple-500" />
-        <span className="font-medium">Expert Support</span>
-      </motion.div>
+      {features.map((feature, index) => {
+        const Icon = feature.icon;
+        return (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: index * 0.1 }}
+          >
+            <FeatureCard
+              icon={Icon}
+              title={feature.title}
+              description={feature.description}
+            />
+          </motion.div>
+        );
+      })}
     </div>
   </div>
 </section>
+
 
       {/* How It Works Section */}
       <section id="how-it-works" className="py-16 bg-white">
