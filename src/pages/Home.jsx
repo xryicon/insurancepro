@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
-  Car, HomeIcon, Shield, Check, Star, Users, Award, Clock, Headphones,
+  Car, Home as HomeIcon, Shield, Check, Star, Users, Award, Clock, Headphones,
   TrendingUp, ArrowRight
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
@@ -15,7 +15,7 @@ import {
 } from '../components/ui/Card';
 import { features, stats, testimonials, insuranceTypes, insuranceProviders, howItWorksSteps } from '../data/constants';
 
-const HomeIcon = () => {
+const Home = () => {
   const navigate = useNavigate();
 
   return (
@@ -58,7 +58,7 @@ const HomeIcon = () => {
                 <Button
                   variant="outline"
                   size="large"
-                  onClick={() => navigate('/homeIcon-insurance')}
+                  onClick={() => navigate('/home-insurance')}
                   rightIcon={<ArrowRight className="w-5 h-5" />}
                 >
                   Get Home Insurance Quote
@@ -216,6 +216,7 @@ const HomeIcon = () => {
                     <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">
                       {step.step}
                     </div>
+                    <Icon className="w-8 h-8 text-blue-600 mx-auto mb-3" />
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">{step.title}</h3>
                     <p className="text-gray-600 text-sm">{step.description}</p>
                   </Card>
@@ -361,7 +362,7 @@ const HomeIcon = () => {
               <Button
                 variant="outline"
                 size="large"
-                onClick={() => navigate('/homeIcon-insurance')}
+                onClick={() => navigate('/home-insurance')}
                 rightIcon={<ArrowRight className="w-5 h-5" />}
               >
                 Get Home Insurance Quote
