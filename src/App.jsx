@@ -1,362 +1,65 @@
 import { useState, useEffect } from 'react';
-import { Car, Home, Shield, Mail, Camera, X, Euro } from 'lucide-react';
+import { Car, Home, Shield, Check, Star, Mail, Camera, X, Euro, Upload } from 'lucide-react';
 
 // ============ TRANSLATIONS ============
 const enTranslations = {
-  carInsurance: 'Car Insurance',
-  houseInsurance: 'House Insurance',
+  carInsurance: 'Car Insurance', houseInsurance: 'House Insurance',
   compareAndSave: 'Compare and Save on Insurance',
-  compareCarInsurance: 'Compare car insurance from top providers',
-  compareHouseInsurance: 'Compare home insurance from top providers',
-  getStarted: 'Get Started',
-  currentInsurance: 'Current Insurance',
-  currentProvider: 'Current insurance provider',
-  selectProvider: 'Select your provider',
-  coverageType: 'Coverage type',
-  selectCoverage: 'Select coverage',
-  currentPremium: 'Current annual premium',
-  vehicleDetails: 'Vehicle Details',
-  brand: 'Brand',
-  model: 'Model',
-  year: 'Year of registration',
-  selectYear: 'Select year',
-  engineSizeCC: 'Engine size (cc)',
-  horsepowerHP: 'Horsepower (HP)',
-  pictureOfVehicleDocuments: 'Picture of vehicle documents',
-  uploadVehicleDocumentsHint: 'Upload a clear photo of your vehicle registration document',
-  driverDetails: 'Driver Details',
-  dateOfBirth: 'Date of birth',
-  nieNumber: 'NIE number',
-  driverLicenseNationality: 'Driver license nationality',
-  selectNationality: 'Select nationality',
-  driverLicenseDate: 'Driver license date',
-  gender: 'Gender',
-  selectGender: 'Select gender',
-  contactInformation: 'Contact Information',
-  fullName: 'Full name',
-  enterYourName: 'Enter your full name',
-  email: 'Email address',
-  enterYourEmail: 'Enter your email address',
-  phone: 'Phone number',
-  enterYourPhone: 'Enter your phone number',
-  submitQuoteRequest: 'Get Quote',
-  back: 'Back',
-  required: 'This field is required',
-  invalidEmail: 'Please enter a valid email address',
-  select: 'Select...'
-};
-
-const nlTranslations = {
-  carInsurance: 'Autoverzekering',
-  houseInsurance: 'Inboedelverzekering',
-  compareAndSave: 'Vergelijk en Bespaar op Verzekeringen',
-  compareCarInsurance: 'Vergelijk autoverzekeringen van topaanbieders',
-  compareHouseInsurance: 'Vergelijk inboedelverzekeringen van topaanbieders',
-  getStarted: 'Aan de slag',
-  currentInsurance: 'Huidige verzekering',
-  currentProvider: 'Huidige verzekeraar',
-  selectProvider: 'Selecteer uw verzekeraar',
-  coverageType: 'Dekkingstype',
-  selectCoverage: 'Selecteer dekking',
-  currentPremium: 'Huidige jaarpremie',
-  vehicleDetails: 'Voertuiggegevens',
-  brand: 'Merk',
-  model: 'Model',
-  year: 'Bouwjaar',
-  selectYear: 'Selecteer jaar',
-  engineSizeCC: 'Motorinhoud (cc)',
-  horsepowerHP: 'Vermogen (PK)',
-  pictureOfVehicleDocuments: 'Foto van voertuigdocumenten',
-  uploadVehicleDocumentsHint: 'Upload een duidelijke foto van uw voertuigregistratiedocument',
-  driverDetails: 'Bestuurdersgegevens',
-  dateOfBirth: 'Geboortedatum',
-  nieNumber: 'NIE-nummer',
-  driverLicenseNationality: 'Rijbewijsnationaliteit',
-  selectNationality: 'Selecteer nationaliteit',
-  driverLicenseDate: 'Rijbewijsdatum',
-  gender: 'Geslacht',
-  selectGender: 'Selecteer geslacht',
-  contactInformation: 'Contactinformatie',
-  fullName: 'Volledige naam',
-  enterYourName: 'Vul uw volledige naam in',
-  email: 'E-mailadres',
-  enterYourEmail: 'Vul uw e-mailadres in',
-  phone: 'Telefoonnummer',
-  enterYourPhone: 'Vul uw telefoonnummer in',
-  submitQuoteRequest: 'Offerte aanvragen',
-  back: 'Terug',
-  required: 'Dit veld is verplicht',
-  invalidEmail: 'Vul een geldig e-mailadres in',
-  select: 'Selecteer...'
-};
-
-// ============ CAR DATABASE ============
-const carDatabase = {
-  'Alfa Romeo': {
-    models: {
-      'Giulia': { engineSizes: [1400, 1600, 1995, 2891], horsepower: [150, 180, 200, 280, 510] },
-      'Stelvio': { engineSizes: [1995, 2891], horsepower: [200, 280, 510] },
-      'Tonale': { engineSizes: [1499, 1995], horsepower: [130, 160, 250] }
-    }
-  },
-  'Audi': {
-    models: {
-      'A1': { engineSizes: [999, 1395, 1498, 1984], horsepower: [95, 116, 150, 200] },
-      'A3': { engineSizes: [1395, 1498, 1984, 2996], horsepower: [116, 150, 204, 306] },
-      'A4': { engineSizes: [1984, 2996], horsepower: [150, 204, 265, 340] },
-      'A6': { engineSizes: [1984, 2996], horsepower: [204, 245, 340, 450] },
-      'Q3': { engineSizes: [1984, 2996], horsepower: [150, 230, 340] },
-      'Q5': { engineSizes: [1984, 2996], horsepower: [204, 265, 340] }
-    }
-  },
-  'BMW': {
-    models: {
-      '1 Series': { engineSizes: [1499, 1998, 2998], horsepower: [140, 170, 218, 306] },
-      '2 Series': { engineSizes: [1499, 1998, 2998], horsepower: [150, 192, 258, 340] },
-      '3 Series': { engineSizes: [1998, 2998], horsepower: [184, 258, 340, 374] },
-      '4 Series': { engineSizes: [1998, 2998], horsepower: [197, 258, 340] },
-      '5 Series': { engineSizes: [1998, 2998], horsepower: [250, 265, 340, 530] },
-      'X1': { engineSizes: [1499, 1998], horsepower: [140, 192, 231] },
-      'X3': { engineSizes: [1998, 2998], horsepower: [190, 252, 292, 360] },
-      'X5': { engineSizes: [2998, 3982], horsepower: [265, 340, 400, 530] }
-    }
-  },
-  'Citroën': {
-    models: {
-      'C1': { engineSizes: [998, 1199], horsepower: [68, 72, 82, 100] },
-      'C3': { engineSizes: [1199, 1499], horsepower: [82, 100, 110, 130] },
-      'C4': { engineSizes: [1199, 1499, 1997], horsepower: [100, 130, 155, 225] },
-      'C5 Aircross': { engineSizes: [1499, 1997], horsepower: [130, 180] }
-    }
-  },
-  'Cupra': {
-    models: {
-      'Ateca': { engineSizes: [1498, 1984], horsepower: [150, 245, 300] },
-      'Formentor': { engineSizes: [1498, 1984, 2891], horsepower: [150, 245, 310, 390] },
-      'Leon': { engineSizes: [1498, 1984], horsepower: [150, 190, 245, 300] }
-    }
-  },
-  'Dacia': {
-    models: {
-      'Sandero': { engineSizes: [999, 1461], horsepower: [65, 75, 90, 100] },
-      'Duster': { engineSizes: [1461, 1600], horsepower: [90, 105, 130, 150] },
-      'Jogger': { engineSizes: [999, 1461], horsepower: [90, 100, 110] }
-    }
-  },
-  'DS': {
-    models: {
-      'DS 3': { engineSizes: [1199, 1499], horsepower: [95, 100, 130, 155] },
-      'DS 4': { engineSizes: [1199, 1499], horsepower: [100, 130, 225] },
-      'DS 7': { engineSizes: [1499, 1997], horsepower: [130, 180, 225, 360] }
-    }
-  },
-  'Fiat': {
-    models: {
-      '500': { engineSizes: [875, 1197, 1368], horsepower: [65, 85, 95, 110] },
-      'Panda': { engineSizes: [875, 999, 1197], horsepower: [65, 70, 85] },
-      'Tipo': { engineSizes: [999, 1368, 1598], horsepower: [70, 95, 120] }
-    }
-  },
-  'Ford': {
-    models: {
-      'Fiesta': { engineSizes: [998, 1197, 1499], horsepower: [85, 100, 125, 155] },
-      'Focus': { engineSizes: [998, 1499, 1999], horsepower: [85, 125, 150, 190, 280] },
-      'Puma': { engineSizes: [999, 1499], horsepower: [95, 125, 155] },
-      'Kuga': { engineSizes: [1499, 1999], horsepower: [125, 150, 190, 245] },
-      'Galaxy': { engineSizes: [1999], horsepower: [190, 240, 280] }
-    }
-  },
-  'Hyundai': {
-    models: {
-      'i10': { engineSizes: [998, 1197], horsepower: [67, 84, 100] },
-      'i20': { engineSizes: [998, 1368, 1580], horsepower: [84, 100, 120, 140] },
-      'i30': { engineSizes: [1368, 1580, 1999], horsepower: [100, 120, 140, 184, 276] },
-      'Tucson': { engineSizes: [1580, 1999], horsepower: [150, 184, 230, 265] },
-      'Kona': { engineSizes: [1580], horsepower: [120, 136, 204] }
-    }
-  },
-  'Kia': {
-    models: {
-      'Picanto': { engineSizes: [998, 1248], horsepower: [67, 84, 100] },
-      'Rio': { engineSizes: [998, 1368], horsepower: [84, 100, 120] },
-      'Ceed': { engineSizes: [1368, 1580, 1999], horsepower: [100, 120, 140, 204] },
-      'Sportage': { engineSizes: [1580, 1999], horsepower: [150, 184, 265] },
-      'Niro': { engineSizes: [1580], horsepower: [141, 204] }
-    }
-  },
-  'Mercedes-Benz': {
-    models: {
-      'A-Class': { engineSizes: [1332, 1497, 1991], horsepower: [136, 163, 204, 306] },
-      'B-Class': { engineSizes: [1332, 1497, 1991], horsepower: [136, 163, 204] },
-      'C-Class': { engineSizes: [1497, 1991, 2996], horsepower: [184, 204, 258, 390, 435] },
-      'E-Class': { engineSizes: [1991, 2996], horsepower: [211, 258, 340, 435, 612] },
-      'GLA': { engineSizes: [1332, 1991], horsepower: [136, 163, 204, 306] },
-      'GLB': { engineSizes: [1332, 1991], horsepower: [136, 163, 204, 224] },
-      'GLC': { engineSizes: [1991, 2996], horsepower: [204, 258, 313, 390] }
-    }
-  },
-  'Nissan': {
-    models: {
-      'Micra': { engineSizes: [999, 1197], horsepower: [71, 90, 100] },
-      'Juke': { engineSizes: [999, 1332, 1598], horsepower: [95, 117, 140, 190] },
-      'Qashqai': { engineSizes: [1197, 1598, 1997], horsepower: [115, 130, 140, 160, 190] },
-      'X-Trail': { engineSizes: [1997], horsepower: [150, 200] },
-      'Leaf': { engineSizes: [0], horsepower: [110, 150, 218] }
-    }
-  },
-  'Opel': {
-    models: {
-      'Corsa': { engineSizes: [1199, 1368, 1499], horsepower: [75, 95, 100, 130, 155] },
-      'Astra': { engineSizes: [1199, 1368, 1499, 1998], horsepower: [95, 110, 125, 155, 230] },
-      'Insignia': { engineSizes: [1499, 1998, 2994], horsepower: [145, 170, 200, 230, 260] },
-      'Mokka': { engineSizes: [1199, 1499], horsepower: [95, 115, 130, 155] },
-      'Grandland': { engineSizes: [1499, 1998], horsepower: [130, 175, 230, 300] }
-    }
-  },
-  'Peugeot': {
-    models: {
-      '108': { engineSizes: [998, 1199], horsepower: [68, 72, 82, 110] },
-      '208': { engineSizes: [1199, 1499], horsepower: [75, 100, 130, 155] },
-      '308': { engineSizes: [1199, 1499, 1997], horsepower: [110, 130, 155, 180, 225] },
-      '3008': { engineSizes: [1199, 1499, 1997], horsepower: [110, 130, 155, 180, 225] },
-      '5008': { engineSizes: [1499, 1997], horsepower: [130, 180, 225] }
-    }
-  },
-  'Renault': {
-    models: {
-      'Clio': { engineSizes: [999, 1332, 1461], horsepower: [75, 90, 100, 130, 140] },
-      'Captur': { engineSizes: [898, 1332, 1461], horsepower: [90, 100, 130, 140, 155] },
-      'Megane': { engineSizes: [1197, 1332, 1461, 1799], horsepower: [100, 115, 130, 140, 160, 280] },
-      'Scenic': { engineSizes: [1332, 1461], horsepower: [115, 130, 145, 160] },
-      'Kadjar': { engineSizes: [1332, 1461, 1598], horsepower: [115, 130, 140, 160] }
-    }
-  },
-  'Seat': {
-    models: {
-      'Ibiza': { engineSizes: [999, 1197, 1498], horsepower: [80, 95, 110, 115, 150] },
-      'Leon': { engineSizes: [1197, 1498, 1984], horsepower: [95, 110, 120, 150, 190, 245, 300] },
-      'Ateca': { engineSizes: [1498, 1984], horsepower: [115, 150, 190, 245, 300] },
-      'Tarraco': { engineSizes: [1498, 1984], horsepower: [150, 190, 245, 300] }
-    }
-  },
-  'Skoda': {
-    models: {
-      'Fabia': { engineSizes: [999, 1498], horsepower: [80, 95, 110, 115, 150] },
-      'Octavia': { engineSizes: [1498, 1984, 2800], horsepower: [115, 150, 190, 245, 280] },
-      'Kamiq': { engineSizes: [999, 1498], horsepower: [95, 115, 150] },
-      'Karoq': { engineSizes: [1498, 1984], horsepower: [115, 150, 190, 245] },
-      'Kodiaq': { engineSizes: [1984, 2800], horsepower: [150, 190, 245, 280] }
-    }
-  },
-  'Toyota': {
-    models: {
-      'Yaris': { engineSizes: [998, 1490], horsepower: [72, 92, 116, 130] },
-      'Corolla': { engineSizes: [1197, 1490, 1987], horsepower: [92, 116, 132, 160, 196] },
-      'Camry': { engineSizes: [2487], horsepower: [218] },
-      'RAV4': { engineSizes: [2487], horsepower: [196, 218, 306] },
-      'C-HR': { engineSizes: [1798, 1987], horsepower: [116, 140, 196] }
-    }
-  },
-  'Volvo': {
-    models: {
-      'XC40': { engineSizes: [1477, 1969, 2487], horsepower: [150, 163, 211, 250, 408] },
-      'XC60': { engineSizes: [1969, 2487, 2954], horsepower: [211, 250, 299, 390, 408] },
-      'XC90': { engineSizes: [2954, 2979], horsepower: [250, 320, 408, 455] },
-      'V60': { engineSizes: [1969, 2487], horsepower: [211, 250, 299, 390] }
-    }
-  },
-  'Volkswagen': {
-    models: {
-      'up!': { engineSizes: [999], horsepower: [60, 75, 90] },
-      'Polo': { engineSizes: [999, 1498], horsepower: [75, 90, 95, 110, 115, 150] },
-      'Golf': { engineSizes: [1197, 1498, 1968], horsepower: [90, 110, 115, 130, 150, 190, 245, 300] },
-      'Passat': { engineSizes: [1395, 1498, 1968, 2800], horsepower: [110, 150, 190, 245, 280] },
-      'Tiguan': { engineSizes: [1498, 1968, 2800], horsepower: [130, 150, 190, 220, 245, 280] },
-      'T-Roc': { engineSizes: [1197, 1498, 1968], horsepower: [110, 115, 150, 190] }
-    }
-  }
+  compareCarInsurance: 'Compare car insurance from top providers and save up to 40%',
+  compareHouseInsurance: 'Compare home insurance from top providers and save up to 35%',
+  getStarted: 'Get Started', personalInfo: 'Personal Information', vehicleDetails: 'Vehicle Details',
+  fullName: 'Full Name', nationality: 'Nationality', licenseDate: 'Driver License Date',
+  licenseNationality: 'License Nationality', dateOfBirth: 'Date of Birth', nieNumber: 'NIE Number',
+  address: 'Address', email: 'Email Address', phone: 'Telephone Number',
+  registrationNumber: 'Registration Number', brand: 'Brand', model: 'Model', year: 'Year',
+  engineSizeCC: 'Engine Size (cc)', horsepowerHP: 'Horsepower (HP)',
+  transmission: 'Transmission', fuelType: 'Fuel Type',
+  uploadLogbook: 'Upload Vehicle Registration',
+  uploadLogbookHint: 'Upload a photo of your vehicle registration document if you do not know the details',
+  currentInsurance: 'Current Insurance', currentProvider: 'Current insurance provider',
+  selectProvider: 'Select your provider', coverageType: 'Coverage type', selectCoverage: 'Select coverage',
+  currentPremium: 'Current annual premium', back: 'Back',
+  required: 'This field is required', invalidEmail: 'Please enter a valid email address', select: 'Select...'
 };
 
 // ============ CONSTANTS ============
-const insuranceProviders = [
-  'Achmea', 'Allianz', 'ASR', 'a.s.r.', 'Centraal Beheer', 'CNP Assurances',
-  'DELA', 'FBTO', 'Generali', 'InShared', 'Interpolis', 'Kempen',
-  'National Nederlanden', 'OHRA', 'Reaal', 'Univé', 'VGZ', 'ZLM',
-  'Mapfre', 'AXA'
+const transmissionOptions = [
+  { value: 'manual', label: 'Manual' },
+  { value: 'automatic', label: 'Automatic' }
 ];
-
-const coverageTypes = [
-  { value: 'third_party', label: { en: 'Third Party', nl: 'WA' } },
-  { value: 'limited_casco', label: { en: 'Limited Casco', nl: 'WA+' } },
-  { value: 'fully_comprehensive', label: { en: 'Fully Comprehensive', nl: 'All Risk' } }
+const fuelTypeOptions = [
+  { value: 'petrol', label: 'Petrol' },
+  { value: 'diesel', label: 'Diesel' },
+  { value: 'hybrid', label: 'Hybrid' },
+  { value: 'electric', label: 'Full Electric' }
 ];
-
-const houseExcessOptions = [
-  { value: '90', label: '€90' },
-  { value: '300', label: '€300' },
-  { value: 'other', label: 'Other' }
-];
-
-const countryOptions = [
-  'Netherlands', 'Belgium', 'Spain', 'Germany', 'France', 'United Kingdom',
-  'Portugal', 'Italy', 'Poland', 'Romania', 'Other EU', 'Non-EU'
-];
-
-const genderOptions = [
-  { value: 'male', label: 'Male' },
-  { value: 'female', label: 'Female' }
-];
+const nationalityOptions = ['Spanish', 'British', 'Dutch', 'German', 'French', 'Belgian', 'Portuguese', 'Italian', 'Other EU', 'Non-EU'];
+const insuranceProviders = ['Achmea', 'Allianz', 'ASR', 'Centraal Beheer', 'DELA', 'FBTO', 'Generali', 'Interpolis', 'Mapfre', 'AXA'];
 
 // ============ COMPONENTS ============
-
-export function ImageUpload({ label, onImageSelect, onImageRemove, imagePreview }) {
+function ImageUpload({ label, onImageSelect, onImageRemove, imagePreview }) {
   const [error, setError] = useState('');
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
-    if (!file.type.match('image.*')) {
-      setError('Please select an image file');
-      return;
-    }
-
+    if (!file.type.match('image.*')) { setError('Please select an image file'); return; }
     const reader = new FileReader();
-    reader.onload = () => {
-      onImageSelect(file, reader.result);
-      setError('');
-    };
+    reader.onload = () => { onImageSelect(file, reader.result); setError(''); };
     reader.readAsDataURL(file);
   };
-
   return (
     <div className="mb-4">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        {label}
-      </label>
+      <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
       <div className="flex items-center gap-4">
-        <label className="flex flex-col items-center justify-center w-24 h-24 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
-          <Camera className="w-8 h-8 text-gray-400 mb-1" />
-          <span className="text-xs text-gray-500 text-center">Upload</span>
-          <input
-            type="file"
-            accept="image/*"
-            capture="environment"
-            onChange={handleFileChange}
-            className="hidden"
-          />
+        <label className="flex flex-col items-center justify-center w-24 h-24 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+          <Upload className="w-8 h-8 text-gray-400 mb-1" />
+          <span className="text-xs text-gray-500">Upload</span>
+          <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
         </label>
         {imagePreview && (
           <div className="relative">
-            <img
-              src={imagePreview}
-              alt="Preview"
-              className="w-24 h-24 object-cover rounded-lg border"
-            />
-            <button
-              onClick={onImageRemove}
-              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-            >
+            <img src={imagePreview} alt="Preview" className="w-24 h-24 object-cover rounded-lg border" />
+            <button onClick={onImageRemove} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1">
               <X className="w-4 h-4" />
             </button>
           </div>
@@ -367,337 +70,228 @@ export function ImageUpload({ label, onImageSelect, onImageRemove, imagePreview 
   );
 }
 
-export function SmartSelect({ label, value, onChange, options, otherValue, onOtherChange, required = false, error = '' }) {
+function SmartSelect({ label, value, onChange, options, otherValue, onOtherChange, required = false, error = '' }) {
   const [showOther, setShowOther] = useState(value === 'other');
-
-  useEffect(() => {
-    setShowOther(value === 'other');
-  }, [value]);
-
+  useEffect(() => { setShowOther(value === 'other'); }, [value]);
   const handleChange = (e) => {
-    const val = e.target.value;
-    onChange(val);
-    setShowOther(val === 'other');
+    const val = e.target.value; onChange(val); setShowOther(val === 'other');
     if (val !== 'other') onOtherChange('');
   };
-
   return (
     <div className="mb-4">
-      <label className="block text-sm font-medium text-gray-700 mb-1">
-        {label}{required && <span className="text-red-500 ml-1">*</span>}
-      </label>
-      <select
-        value={value}
-        onChange={handleChange}
-        className={`w-full p-2 border rounded-md ${error ? 'border-red-500' : 'border-gray-300'}`}
-      >
-        <option value="">{typeof label === 'string' ? label : 'Select...'}</option>
-        {Object.entries(options).map(([key, label]) => (
-          <option key={key} value={key}>
-            {typeof label === 'string' ? label : label.en}
-          </option>
-        ))}
-        <option value="other">Other (specify)</option>
+      <label className="block text-sm font-medium text-gray-700 mb-1">{label}{required && <span className="text-red-500">*</span>}</label>
+      <select value={value} onChange={handleChange} className={`w-full p-2 border rounded-md ${error ? 'border-red-500' : 'border-gray-300'}`}>
+        <option value="">{label || 'Select...'}</option>
+        {Object.entries(options).map(([key, lbl]) => <option key={key} value={key}>{lbl}</option>)}
+        <option value="other">Other</option>
       </select>
-      {showOther && (
-        <input
-          type="text"
-          value={otherValue}
-          onChange={(e) => onOtherChange(e.target.value)}
-          placeholder="Please specify"
-          className="mt-2 w-full p-2 border border-gray-300 rounded-md"
-        />
-      )}
+      {showOther && <input type="text" value={otherValue} onChange={(e) => onOtherChange(e.target.value)} placeholder="Specify" className="mt-2 w-full p-2 border border-gray-300 rounded-md" />}
       {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
     </div>
   );
 }
 
-export function CarInsuranceForm({ onSubmit, onBack, language }) {
-  const t = language === 'nl' ? nlTranslations : enTranslations;
+// ============ LANDING PAGE ============
+function LandingPage({ onSelect }) {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <header className="w-full py-4 px-6 bg-white border-b border-gray-100">
+        <div className="max-w-6xl mx-auto flex justify-end">
+          <a href="mailto:info@insurancepro.es" className="text-sm text-gray-600 hover:text-blue-600 flex items-center gap-1">
+            <Mail className="w-4 h-4" /> info@insurancepro.es
+          </a>
+        </div>
+      </header>
+      <main className="max-w-6xl mx-auto px-6 py-16">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
+            <Shield className="w-4 h-4" /> Trusted by 10,000+ customers in Spain
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Save Money on Your Insurance</h1>
+        </div>
+        <div className="flex justify-center gap-8 flex-wrap mb-12">
+          <div className="flex items-center gap-2 text-gray-500"><Check className="w-5 h-5 text-green-500" /><span className="text-sm">100% Secure</span></div>
+          <div className="flex items-center gap-2 text-gray-500"><Star className="w-5 h-5 text-yellow-500" /><span className="text-sm">4.9/5 Rating</span></div>
+          <div className="flex items-center gap-2 text-gray-500"><Shield className="w-5 h-5 text-blue-500" /><span className="text-sm">Trusted Partner</span></div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <button onClick={() => onSelect('car')} className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 hover:shadow-md group">
+            <div className="flex flex-col items-center">
+              <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-blue-100"><Car className="w-8 h-8 text-blue-600" /></div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">Car Insurance</h2>
+              <p className="text-gray-600 mb-6">Compare and save up to 40%</p>
+              <span className="text-blue-600 font-medium">Get a free quote →</span>
+            </div>
+          </button>
+          <button onClick={() => onSelect('house')} className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 hover:shadow-md group">
+            <div className="flex flex-col items-center">
+              <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-green-100"><Home className="w-8 h-8 text-green-600" /></div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">House Insurance</h2>
+              <p className="text-gray-600 mb-6">Compare and save up to 35%</p>
+              <span className="text-green-600 font-medium">Get a free quote →</span>
+            </div>
+          </button>
+        </div>
+      </main>
+      <footer className="py-8 px-6 border-t border-gray-200 bg-white text-center text-sm text-gray-500">
+        © 2026 InsurancePro. All rights reserved.
+      </footer>
+    </div>
+  );
+}
 
+// ============ CAR INSURANCE FORM ============
+function CarInsuranceForm({ onSubmit, onBack }) {
   const [formData, setFormData] = useState({
-    currentProvider: '', currentCoverage: '', currentPremium: '',
-    brand: '', brandOther: '', model: '', modelOther: '', year: '',
-    engineSize: '', engineSizeOther: '', horsepower: '', horsepowerOther: '',
-    dateOfBirth: '', nieNumber: '', driverLicenseNationality: '',
-    driverLicenseDate: '', gender: '',
-    vehicleDocumentImage: null, vehicleDocumentPreview: '',
-    name: '', email: '', phone: ''
+    fullName: '', nationality: '', licenseDate: '', licenseNationality: '',
+    dateOfBirth: '', nieNumber: '', address: '', email: '', phone: '',
+    registrationNumber: '', brand: '', model: '', year: '',
+    engineSize: '', horsepower: '', transmission: '', fuelType: '',
+    logbookImage: null, logbookPreview: ''
   });
-
   const [errors, setErrors] = useState({});
-
-  const getModels = () => {
-    if (formData.brand === '' || formData.brand === 'other') return {};
-    return carDatabase[formData.brand]?.models || {};
-  };
-
-  const getEngineSizes = () => {
-    if (formData.brand === '' || formData.brand === 'other' || formData.model === '' || formData.model === 'other') return [];
-    return carDatabase[formData.brand]?.models[formData.model]?.engineSizes || [];
-  };
-
-  const getHorsepower = () => {
-    if (formData.brand === '' || formData.brand === 'other' || formData.model === '' || formData.model === 'other') return [];
-    return carDatabase[formData.brand]?.models[formData.model]?.horsepower || [];
+  
+  const brandOptions = {
+    'Volkswagen': ['Polo', 'Golf', 'Passat', 'Tiguan', 'T-Roc'],
+    'Peugeot': ['108', '208', '308', '3008', '5008'],
+    'Renault': ['Clio', 'Captur', 'Megane', 'Scenic', 'Kadjar'],
+    'Ford': ['Fiesta', 'Focus', 'Puma', 'Kuga'],
+    'Toyota': ['Yaris', 'Corolla', 'RAV4', 'C-HR']
   };
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.currentProvider) newErrors.currentProvider = t.required;
-    if (!formData.currentCoverage) newErrors.currentCoverage = t.required;
-    if (!formData.currentPremium) newErrors.currentPremium = t.required;
-    if (!formData.brand) newErrors.brand = t.required;
-    if (formData.brand !== 'other' && !formData.model) newErrors.model = t.required;
-    if (formData.brand !== 'other' && formData.model !== 'other' && !formData.year) newErrors.year = t.required;
-    if (!formData.dateOfBirth) newErrors.dateOfBirth = t.required;
-    if (!formData.nieNumber) newErrors.nieNumber = t.required;
-    if (!formData.driverLicenseNationality) newErrors.driverLicenseNationality = t.required;
-    if (!formData.driverLicenseDate) newErrors.driverLicenseDate = t.required;
-    if (!formData.gender) newErrors.gender = t.required;
-    if (!formData.name) newErrors.name = t.required;
-    if (!formData.email) {
-      newErrors.email = t.required;
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = t.invalidEmail;
-    }
+    if (!formData.fullName) newErrors.fullName = 'Required';
+    if (!formData.nationality) newErrors.nationality = 'Required';
+    if (!formData.licenseDate) newErrors.licenseDate = 'Required';
+    if (!formData.licenseNationality) newErrors.licenseNationality = 'Required';
+    if (!formData.dateOfBirth) newErrors.dateOfBirth = 'Required';
+    if (!formData.nieNumber) newErrors.nieNumber = 'Required';
+    if (!formData.address) newErrors.address = 'Required';
+    if (!formData.email) newErrors.email = 'Required';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email';
+    if (!formData.registrationNumber) newErrors.registrationNumber = 'Required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!validate()) return;
-    onSubmit(formData);
-  };
-
-  const handleImageSelect = (file, preview) => {
-    setFormData(prev => ({ ...prev, vehicleDocumentImage: file, vehicleDocumentPreview: preview }));
-  };
-
-  const handleImageRemove = () => {
-    setFormData(prev => ({ ...prev, vehicleDocumentImage: null, vehicleDocumentPreview: '' }));
-  };
-
-  const brandOptions = {};
-  Object.keys(carDatabase).forEach(brand => { brandOptions[brand] = brand; });
+  const handleSubmit = (e) => { e.preventDefault(); if (!validate()) return; onSubmit(formData); };
+  const handleImageSelect = (file, preview) => setFormData(prev => ({ ...prev, logbookImage: file, logbookPreview: preview }));
+  const handleImageRemove = () => setFormData(prev => ({ ...prev, logbookImage: null, logbookPreview: '' }));
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-4 sm:p-6 bg-white rounded-lg shadow-md w-full">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
-          <Car className="w-6 h-6 text-blue-600" />
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-800">{t.carInsurance}</h2>
-        </div>
-        <button type="button" onClick={onBack} className="flex items-center gap-2 px-3 py-1 sm:px-4 sm:py-2 text-sm text-gray-600 hover:text-gray-800">
-          <X className="w-4 h-4" />{t.back}
-        </button>
+    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-4 sm:p-6 bg-white rounded-lg shadow-md">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">Car Insurance Quote</h2>
+        <button type="button" onClick={onBack} className="text-gray-600 hover:text-gray-800">← Back</button>
       </div>
 
-      <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-        <h3 className="text-lg font-semibold text-gray-700 mb-4">{t.currentInsurance}</h3>
+      <div className="mb-8 p-4 bg-gray-50 rounded-lg">
+        <h3 className="text-lg font-semibold mb-4">Personal Information</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t.currentProvider}*</label>
-            <select value={formData.currentProvider} onChange={(e) => setFormData(prev => ({ ...prev, currentProvider: e.target.value }))}
-              className={`w-full p-2 border rounded-md ${errors.currentProvider ? 'border-red-500' : 'border-gray-300'}`}>
-              <option value="">{t.selectProvider}</option>
-              {insuranceProviders.map(provider => <option key={provider} value={provider}>{provider}</option>)}
+          <div><label className="block text-sm font-medium mb-1">Full Name *</label>
+            <input type="text" value={formData.fullName} onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))} className={`w-full p-2 border rounded-md ${errors.fullName ? 'border-red-500' : 'border-gray-300'}`} />
+            {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>}
+          </div>
+          <div><label className="block text-sm font-medium mb-1">Nationality *</label>
+            <select value={formData.nationality} onChange={(e) => setFormData(prev => ({ ...prev, nationality: e.target.value }))} className={`w-full p-2 border rounded-md ${errors.nationality ? 'border-red-500' : 'border-gray-300'}`}>
+              <option value="">Select</option>{nationalityOptions.map(n => <option key={n} value={n}>{n}</option>)}
             </select>
-            {errors.currentProvider && <p className="text-red-500 text-xs mt-1">{errors.currentProvider}</p>}
+            {errors.nationality && <p className="text-red-500 text-xs mt-1">{errors.nationality}</p>}
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t.coverageType}*</label>
-            <select value={formData.currentCoverage} onChange={(e) => setFormData(prev => ({ ...prev, currentCoverage: e.target.value }))}
-              className={`w-full p-2 border rounded-md ${errors.currentCoverage ? 'border-red-500' : 'border-gray-300'}`}>
-              <option value="">{t.selectCoverage}</option>
-              {coverageTypes.map(ct => <option key={ct.value} value={ct.value}>{typeof ct.label === 'string' ? ct.label : ct.label[language]}</option>)}
+          <div><label className="block text-sm font-medium mb-1">License Date *</label>
+            <input type="date" value={formData.licenseDate} onChange={(e) => setFormData(prev => ({ ...prev, licenseDate: e.target.value }))} className={`w-full p-2 border rounded-md ${errors.licenseDate ? 'border-red-500' : 'border-gray-300'}`} />
+            {errors.licenseDate && <p className="text-red-500 text-xs mt-1">{errors.licenseDate}</p>}
+          </div>
+          <div><label className="block text-sm font-medium mb-1">License Nationality *</label>
+            <select value={formData.licenseNationality} onChange={(e) => setFormData(prev => ({ ...prev, licenseNationality: e.target.value }))} className={`w-full p-2 border rounded-md ${errors.licenseNationality ? 'border-red-500' : 'border-gray-300'}`}>
+              <option value="">Select</option>{nationalityOptions.map(n => <option key={n} value={n}>{n}</option>)}
             </select>
-            {errors.currentCoverage && <p className="text-red-500 text-xs mt-1">{errors.currentCoverage}</p>}
+            {errors.licenseNationality && <p className="text-red-500 text-xs mt-1">{errors.licenseNationality}</p>}
           </div>
-        </div>
-        <div className="mt-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1">{t.currentPremium} (€)*</label>
-          <div className="relative">
-            <Euro className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input type="number" value={formData.currentPremium} onChange={(e) => setFormData(prev => ({ ...prev, currentPremium: e.target.value }))}
-              placeholder="0" min="0" step="1" className={`w-full pl-10 p-2 border rounded-md ${errors.currentPremium ? 'border-red-500' : 'border-gray-300'}`} />
-          </div>
-          {errors.currentPremium && <p className="text-red-500 text-xs mt-1">{errors.currentPremium}</p>}
-        </div>
-      </div>
-
-      <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-        <h3 className="text-lg font-semibold text-gray-700 mb-4">{t.vehicleDetails}</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <SmartSelect label={`${t.brand}*`} value={formData.brand} onChange={(val) => setFormData(prev => ({ ...prev, brand: val, model: '', engineSize: '', horsepower: '' }))}
-            onOtherChange={(val) => setFormData(prev => ({ ...prev, brandOther: val }))} options={brandOptions} otherValue={formData.brandOther} required error={errors.brand} />
-          {formData.brand && formData.brand !== 'other' && (
-            <SmartSelect label={`${t.model}*`} value={formData.model} onChange={(val) => setFormData(prev => ({ ...prev, model: val, engineSize: '', horsepower: '' }))}
-              onOtherChange={(val) => setFormData(prev => ({ ...prev, modelOther: val }))} options={getModels()} otherValue={formData.modelOther} required error={errors.model} />
-          )}
-        </div>
-        {formData.brand && formData.brand !== 'other' && formData.model && formData.model !== 'other' && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{t.year}*</label>
-              <select value={formData.year} onChange={(e) => setFormData(prev => ({ ...prev, year: e.target.value }))}
-                className={`w-full p-2 border rounded-md ${errors.year ? 'border-red-500' : 'border-gray-300'}`}>
-                <option value="">{t.selectYear}</option>
-                {Array.from({ length: 30 }, (_, i) => new Date().getFullYear() - i).map(year => <option key={year} value={year}>{year}</option>)}
-              </select>
-              {errors.year && <p className="text-red-500 text-xs mt-1">{errors.year}</p>}
-            </div>
-            <SmartSelect label={t.engineSizeCC} value={formData.engineSize} onChange={(val) => setFormData(prev => ({ ...prev, engineSize: val, horsepower: '' }))}
-              onOtherChange={(val) => setFormData(prev => ({ ...prev, engineSizeOther: val }))}
-              options={getEngineSizes().reduce((acc, size) => { acc[size] = `${size} cc`; return acc; }, {})} otherValue={formData.engineSizeOther} />
-            <SmartSelect label={t.horsepowerHP} value={formData.horsepower} onChange={(val) => setFormData(prev => ({ ...prev, horsepower: val }))}
-              onOtherChange={(val) => setFormData(prev => ({ ...prev, horsepowerOther: val }))}
-              options={getHorsepower().reduce((acc, hp) => { acc[hp] = `${hp} HP`; return acc; }, {})} otherValue={formData.horsepowerOther} />
-          </div>
-        )}
-        <ImageUpload label={t.pictureOfVehicleDocuments} onImageSelect={handleImageSelect} onImageRemove={handleImageRemove} imagePreview={formData.vehicleDocumentPreview} />
-        <p className="text-xs text-gray-500 mt-1">{t.uploadVehicleDocumentsHint}</p>
-      </div>
-
-      <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-        <h3 className="text-lg font-semibold text-gray-700 mb-4">{t.driverDetails}</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t.dateOfBirth}*</label>
-            <input type="date" value={formData.dateOfBirth} onChange={(e) => setFormData(prev => ({ ...prev, dateOfBirth: e.target.value }))}
-              className={`w-full p-2 border rounded-md ${errors.dateOfBirth ? 'border-red-500' : 'border-gray-300'}`} />
+          <div><label className="block text-sm font-medium mb-1">Date of Birth *</label>
+            <input type="date" value={formData.dateOfBirth} onChange={(e) => setFormData(prev => ({ ...prev, dateOfBirth: e.target.value }))} className={`w-full p-2 border rounded-md ${errors.dateOfBirth ? 'border-red-500' : 'border-gray-300'}`} />
             {errors.dateOfBirth && <p className="text-red-500 text-xs mt-1">{errors.dateOfBirth}</p>}
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t.nieNumber}*</label>
-            <input type="text" value={formData.nieNumber} onChange={(e) => setFormData(prev => ({ ...prev, nieNumber: e.target.value }))}
-              placeholder="X1234567A" className={`w-full p-2 border rounded-md ${errors.nieNumber ? 'border-red-500' : 'border-gray-300'}`} />
+          <div><label className="block text-sm font-medium mb-1">NIE Number *</label>
+            <input type="text" value={formData.nieNumber} onChange={(e) => setFormData(prev => ({ ...prev, nieNumber: e.target.value }))} placeholder="X1234567A" className={`w-full p-2 border rounded-md ${errors.nieNumber ? 'border-red-500' : 'border-gray-300'}`} />
             {errors.nieNumber && <p className="text-red-500 text-xs mt-1">{errors.nieNumber}</p>}
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t.driverLicenseNationality}*</label>
-            <select value={formData.driverLicenseNationality} onChange={(e) => setFormData(prev => ({ ...prev, driverLicenseNationality: e.target.value }))}
-              className={`w-full p-2 border rounded-md ${errors.driverLicenseNationality ? 'border-red-500' : 'border-gray-300'}`}>
-              <option value="">{t.selectNationality}</option>
-              {countryOptions.map(country => <option key={country} value={country}>{country}</option>)}
-            </select>
-            {errors.driverLicenseNationality && <p className="text-red-500 text-xs mt-1">{errors.driverLicenseNationality}</p>}
+          <div className="md:col-span-2"><label className="block text-sm font-medium mb-1">Address *</label>
+            <input type="text" value={formData.address} onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))} className={`w-full p-2 border rounded-md ${errors.address ? 'border-red-500' : 'border-gray-300'}`} />
+            {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t.driverLicenseDate}*</label>
-            <input type="date" value={formData.driverLicenseDate} onChange={(e) => setFormData(prev => ({ ...prev, driverLicenseDate: e.target.value }))}
-              className={`w-full p-2 border rounded-md ${errors.driverLicenseDate ? 'border-red-500' : 'border-gray-300'}`} />
-            {errors.driverLicenseDate && <p className="text-red-500 text-xs mt-1">{errors.driverLicenseDate}</p>}
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t.gender}*</label>
-            <select value={formData.gender} onChange={(e) => setFormData(prev => ({ ...prev, gender: e.target.value }))}
-              className={`w-full p-2 border rounded-md ${errors.gender ? 'border-red-500' : 'border-gray-300'}`}>
-              <option value="">{t.selectGender}</option>
-              {genderOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
-            </select>
-            {errors.gender && <p className="text-red-500 text-xs mt-1">{errors.gender}</p>}
-          </div>
-        </div>
-      </div>
-
-      <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-        <h3 className="text-lg font-semibold text-gray-700 mb-4">{t.contactInformation}</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t.fullName}*</label>
-            <input type="text" value={formData.name} onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-              placeholder={t.enterYourName} className={`w-full p-2 border rounded-md ${errors.name ? 'border-red-500' : 'border-gray-300'}`} />
-            {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t.email}*</label>
-            <input type="email" value={formData.email} onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-              placeholder={t.enterYourEmail} className={`w-full p-2 border rounded-md ${errors.email ? 'border-red-500' : 'border-gray-300'}`} />
+          <div><label className="block text-sm font-medium mb-1">Email *</label>
+            <input type="email" value={formData.email} onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))} className={`w-full p-2 border rounded-md ${errors.email ? 'border-red-500' : 'border-gray-300'}`} />
             {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
           </div>
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t.phone}</label>
-            <input type="tel" value={formData.phone} onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-              placeholder={t.enterYourPhone} className="w-full p-2 border border-gray-300 rounded-md" />
+          <div><label className="block text-sm font-medium mb-1">Phone</label>
+            <input type="tel" value={formData.phone} onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))} className="w-full p-2 border border-gray-300 rounded-md" />
           </div>
         </div>
       </div>
 
-      <button type="submit" className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors">
-        <Mail className="w-5 h-5" />{t.submitQuoteRequest}
+      <div className="mb-8 p-4 bg-gray-50 rounded-lg">
+        <h3 className="text-lg font-semibold mb-4">Vehicle Details</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div><label className="block text-sm font-medium mb-1">Registration Number *</label>
+            <input type="text" value={formData.registrationNumber} onChange={(e) => setFormData(prev => ({ ...prev, registrationNumber: e.target.value }))} className={`w-full p-2 border rounded-md ${errors.registrationNumber ? 'border-red-500' : 'border-gray-300'}`} />
+            {errors.registrationNumber && <p className="text-red-500 text-xs mt-1">{errors.registrationNumber}</p>}
+          </div>
+          <div><label className="block text-sm font-medium mb-1">Brand *</label>
+            <select value={formData.brand} onChange={(e) => setFormData(prev => ({ ...prev, brand: e.target.value, model: '' }))} className="w-full p-2 border border-gray-300 rounded-md">
+              <option value="">Select brand</option>{Object.keys(brandOptions).map(b => <option key={b} value={b}>{b}</option>)}
+            </select>
+          </div>
+          {formData.brand && <div><label className="block text-sm font-medium mb-1">Model *</label>
+            <select value={formData.model} onChange={(e) => setFormData(prev => ({ ...prev, model: e.target.value }))} className="w-full p-2 border border-gray-300 rounded-md">
+              <option value="">Select model</option>{brandOptions[formData.brand]?.map(m => <option key={m} value={m}>{m}</option>)}
+            </select>
+          </div>}
+          <div><label className="block text-sm font-medium mb-1">Year</label>
+            <select value={formData.year} onChange={(e) => setFormData(prev => ({ ...prev, year: e.target.value }))} className="w-full p-2 border border-gray-300 rounded-md">
+              <option value="">Select year</option>
+              {Array.from({length:30}, (_,i) => new Date().getFullYear()-i).map(y => <option key={y} value={y}>{y}</option>)}
+            </select>
+          </div>
+          <div><label className="block text-sm font-medium mb-1">Engine Size (cc)</label>
+            <input type="text" value={formData.engineSize} onChange={(e) => setFormData(prev => ({ ...prev, engineSize: e.target.value }))} className="w-full p-2 border border-gray-300 rounded-md" />
+          </div>
+          <div><label className="block text-sm font-medium mb-1">Horsepower (HP)</label>
+            <input type="text" value={formData.horsepower} onChange={(e) => setFormData(prev => ({ ...prev, horsepower: e.target.value }))} className="w-full p-2 border border-gray-300 rounded-md" />
+          </div>
+          <div><label className="block text-sm font-medium mb-1">Transmission</label>
+            <select value={formData.transmission} onChange={(e) => setFormData(prev => ({ ...prev, transmission: e.target.value }))} className="w-full p-2 border border-gray-300 rounded-md">
+              <option value="">Select</option>{transmissionOptions.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+            </select>
+          </div>
+          <div><label className="block text-sm font-medium mb-1">Fuel Type</label>
+            <select value={formData.fuelType} onChange={(e) => setFormData(prev => ({ ...prev, fuelType: e.target.value }))} className="w-full p-2 border border-gray-300 rounded-md">
+              <option value="">Select</option>{fuelTypeOptions.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
+            </select>
+          </div>
+        </div>
+        <div className="mt-6">
+          <label className="block text-sm font-medium mb-2">Upload Vehicle Registration</label>
+          <ImageUpload onImageSelect={handleImageSelect} onImageRemove={handleImageRemove} imagePreview={formData.logbookPreview} />
+          <p className="text-xs text-gray-500 mt-1">Upload a photo if you do not know the details</p>
+        </div>
+      </div>
+
+      <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors">
+        Get Quote
       </button>
     </form>
   );
 }
 
-// ============ LANDING PAGE COMPONENT ============
-export function LandingPage({ onSelect, language }) {
-  const t = language === 'nl' ? nlTranslations : enTranslations;
-
+// ============ MAIN APP ============
+export default function App() {
+  const [currentForm, setCurrentForm] = useState('landing');
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-center p-4">
-      <div className="text-center mb-10 sm:mb-12">
-        <Shield className="w-16 h-16 text-blue-600 mx-auto mb-4" />
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">InsurancePro</h1>
-        <p className="text-base sm:text-lg text-gray-600">{t.compareAndSave}</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 w-full max-w-4xl">
-        {/* Car Insurance Card */}
-        <button
-          onClick={() => onSelect('car')}
-          className="bg-white rounded-xl shadow-lg p-6 sm:p-8 hover:shadow-xl transition-all duration-300 group w-full"
-        >
-          <div className="flex flex-col items-center text-center">
-            <Car className="w-10 h-10 sm:w-12 sm:h-12 text-blue-600 mb-3 sm:mb-4 group-hover:scale-110 transition-transform" />
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">{t.carInsurance}</h2>
-            <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">{t.compareCarInsurance}</p>
-            <span className="text-blue-600 font-medium hover:underline text-sm sm:text-base">{t.getStarted} →</span>
-          </div>
-        </button>
-
-        {/* House Insurance Card */}
-        <button
-          onClick={() => onSelect('house')}
-          className="bg-white rounded-xl shadow-lg p-6 sm:p-8 hover:shadow-xl transition-all duration-300 group w-full"
-        >
-          <div className="flex flex-col items-center text-center">
-            <Home className="w-10 h-10 sm:w-12 sm:h-12 text-green-600 mb-3 sm:mb-4 group-hover:scale-110 transition-transform" />
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">{t.houseInsurance}</h2>
-            <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">{t.compareHouseInsurance}</p>
-            <span className="text-green-600 font-medium hover:underline text-sm sm:text-base">{t.getStarted} →</span>
-          </div>
-        </button>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      {currentForm === 'landing' && <LandingPage onSelect={setCurrentForm} />}
+      {currentForm === 'car' && <CarInsuranceForm onSubmit={(d) => console.log(d)} onBack={() => setCurrentForm('landing')} />}
     </div>
   );
 }
-
-// ============ MAIN APP COMPONENT ============
-export default function App() {
-  const [currentForm, setCurrentForm] = useState('landing');
-  const [language, setLanguage] = useState('en');
-
-  const handleSubmit = (data) => {
-    console.log('Form submitted:', data);
-    alert('Quote request submitted successfully! We will contact you soon.');
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {currentForm === 'landing' && (
-        <LandingPage onSelect={setCurrentForm} language={language} />
-      )}
-      {currentForm === 'car' && (
-        <CarInsuranceForm
-          onSubmit={handleSubmit}
-          onBack={() => setCurrentForm('landing')}
-          language={language}
-        />
-      )}
-    </div>
-  );
-}   
