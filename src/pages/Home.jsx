@@ -124,48 +124,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-{/* Features Section */}
-<section id="features" className="py-16 bg-white">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      className="text-center mb-12"
-    >
-      <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-        Why Choose InsurancePro?
-      </h2>
-      <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-        We make insurance comparison simple, fast, and rewarding
-      </p>
-    </motion.div>
-
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {features.map((feature, index) => {
-        const Icon = feature.icon;
-        return (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: index * 0.1 }}
-          >
-            <FeatureCard
-              icon={Icon}
-              title={feature.title}
-              description={feature.description}
-            />
-          </motion.div>
-        );
-      })}
-    </div>
-  </div>
-</section>
-
-
+      
       {/* How It Works Section */}
       <section id="how-it-works" className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
