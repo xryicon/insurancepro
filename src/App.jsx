@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Car, Home, Shield, Mail, Camera, X, Euro } from 'lucide-react';
 
-// Add these translation objects at the top of App.jsx
+// ============ TRANSLATIONS ============
 const enTranslations = {
   carInsurance: 'Car Insurance',
   houseInsurance: 'House Insurance',
+  compareAndSave: 'Compare and Save on Insurance',
+  compareCarInsurance: 'Compare car insurance from top providers',
+  compareHouseInsurance: 'Compare home insurance from top providers',
+  getStarted: 'Get Started',
   currentInsurance: 'Current Insurance',
   currentProvider: 'Current insurance provider',
   selectProvider: 'Select your provider',
@@ -45,6 +49,10 @@ const enTranslations = {
 const nlTranslations = {
   carInsurance: 'Autoverzekering',
   houseInsurance: 'Inboedelverzekering',
+  compareAndSave: 'Vergelijk en Bespaar op Verzekeringen',
+  compareCarInsurance: 'Vergelijk autoverzekeringen van topaanbieders',
+  compareHouseInsurance: 'Vergelijk inboedelverzekeringen van topaanbieders',
+  getStarted: 'Aan de slag',
   currentInsurance: 'Huidige verzekering',
   currentProvider: 'Huidige verzekeraar',
   selectProvider: 'Selecteer uw verzekeraar',
@@ -82,7 +90,7 @@ const nlTranslations = {
   select: 'Selecteer...'
 };
 
-// Comprehensive car database
+// ============ CAR DATABASE ============
 const carDatabase = {
   'Alfa Romeo': {
     models: {
@@ -267,9 +275,9 @@ const carDatabase = {
       'T-Roc': { engineSizes: [1197, 1498, 1968], horsepower: [110, 115, 150, 190] }
     }
   }
-}
+};
 
-// Insurance providers
+// ============ CONSTANTS ============
 const insuranceProviders = [
   'Achmea', 'Allianz', 'ASR', 'a.s.r.', 'Centraal Beheer', 'CNP Assurances',
   'DELA', 'FBTO', 'Generali', 'InShared', 'Interpolis', 'Kempen',
@@ -277,33 +285,30 @@ const insuranceProviders = [
   'Mapfre', 'AXA'
 ];
 
-// Coverage types
 const coverageTypes = [
   { value: 'third_party', label: { en: 'Third Party', nl: 'WA' } },
   { value: 'limited_casco', label: { en: 'Limited Casco', nl: 'WA+' } },
   { value: 'fully_comprehensive', label: { en: 'Fully Comprehensive', nl: 'All Risk' } }
 ];
 
-// House excess options
 const houseExcessOptions = [
   { value: '90', label: '€90' },
   { value: '300', label: '€300' },
   { value: 'other', label: 'Other' }
 ];
 
-// Country options
 const countryOptions = [
   'Netherlands', 'Belgium', 'Spain', 'Germany', 'France', 'United Kingdom',
   'Portugal', 'Italy', 'Poland', 'Romania', 'Other EU', 'Non-EU'
 ];
 
-// Gender options
 const genderOptions = [
   { value: 'male', label: 'Male' },
   { value: 'female', label: 'Female' }
 ];
 
-// ImageUpload Component
+// ============ COMPONENTS ============
+
 export function ImageUpload({ label, onImageSelect, onImageRemove, imagePreview }) {
   const [error, setError] = useState('');
 
@@ -362,7 +367,6 @@ export function ImageUpload({ label, onImageSelect, onImageRemove, imagePreview 
   );
 }
 
-// SmartSelect Component
 export function SmartSelect({ label, value, onChange, options, otherValue, onOtherChange, required = false, error = '' }) {
   const [showOther, setShowOther] = useState(value === 'other');
 
@@ -387,7 +391,7 @@ export function SmartSelect({ label, value, onChange, options, otherValue, onOth
         onChange={handleChange}
         className={`w-full p-2 border rounded-md ${error ? 'border-red-500' : 'border-gray-300'}`}
       >
-        <option value="">Select...</option>
+        <option value="">{typeof label === 'string' ? label : 'Select...'}</option>
         {Object.entries(options).map(([key, label]) => (
           <option key={key} value={key}>
             {typeof label === 'string' ? label : label.en}
@@ -408,7 +412,7 @@ export function SmartSelect({ label, value, onChange, options, otherValue, onOth
     </div>
   );
 }
-// CarInsuranceForm Component
+
 export function CarInsuranceForm({ onSubmit, onBack, language }) {
   const t = language === 'nl' ? nlTranslations : enTranslations;
 
@@ -480,13 +484,13 @@ export function CarInsuranceForm({ onSubmit, onBack, language }) {
   Object.keys(carDatabase).forEach(brand => { brandOptions[brand] = brand; });
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
+    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-4 sm:p-6 bg-white rounded-lg shadow-md w-full">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <Car className="w-6 h-6 text-blue-600" />
-          <h2 className="text-2xl font-bold text-gray-800">{t.carInsurance}</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-800">{t.carInsurance}</h2>
         </div>
-        <button type="button" onClick={onBack} className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-800">
+        <button type="button" onClick={onBack} className="flex items-center gap-2 px-3 py-1 sm:px-4 sm:py-2 text-sm text-gray-600 hover:text-gray-800">
           <X className="w-4 h-4" />{t.back}
         </button>
       </div>
@@ -628,13 +632,72 @@ export function CarInsuranceForm({ onSubmit, onBack, language }) {
     </form>
   );
 }
-// Add this as the LAST line of App.jsx
+
+// ============ LANDING PAGE COMPONENT ============
+export function LandingPage({ onSelect, language }) {
+  const t = language === 'nl' ? nlTranslations : enTranslations;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-center p-4">
+      <div className="text-center mb-10 sm:mb-12">
+        <Shield className="w-16 h-16 text-blue-600 mx-auto mb-4" />
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">InsurancePro</h1>
+        <p className="text-base sm:text-lg text-gray-600">{t.compareAndSave}</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 w-full max-w-4xl">
+        {/* Car Insurance Card */}
+        <button
+          onClick={() => onSelect('car')}
+          className="bg-white rounded-xl shadow-lg p-6 sm:p-8 hover:shadow-xl transition-all duration-300 group w-full"
+        >
+          <div className="flex flex-col items-center text-center">
+            <Car className="w-10 h-10 sm:w-12 sm:h-12 text-blue-600 mb-3 sm:mb-4 group-hover:scale-110 transition-transform" />
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">{t.carInsurance}</h2>
+            <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">{t.compareCarInsurance}</p>
+            <span className="text-blue-600 font-medium hover:underline text-sm sm:text-base">{t.getStarted} →</span>
+          </div>
+        </button>
+
+        {/* House Insurance Card */}
+        <button
+          onClick={() => onSelect('house')}
+          className="bg-white rounded-xl shadow-lg p-6 sm:p-8 hover:shadow-xl transition-all duration-300 group w-full"
+        >
+          <div className="flex flex-col items-center text-center">
+            <Home className="w-10 h-10 sm:w-12 sm:h-12 text-green-600 mb-3 sm:mb-4 group-hover:scale-110 transition-transform" />
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">{t.houseInsurance}</h2>
+            <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">{t.compareHouseInsurance}</p>
+            <span className="text-green-600 font-medium hover:underline text-sm sm:text-base">{t.getStarted} →</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ============ MAIN APP COMPONENT ============
 export default function App() {
-  const [currentForm, setCurrentForm] = useState('car');
+  const [currentForm, setCurrentForm] = useState('landing');
   const [language, setLanguage] = useState('en');
 
-  // Add your language toggle and form switching logic here
-  // Or just render the main form directly
+  const handleSubmit = (data) => {
+    console.log('Form submitted:', data);
+    alert('Quote request submitted successfully! We will contact you soon.');
+  };
 
-  return <CarInsuranceForm onSubmit={handleSubmit} onBack={() => {}} language={language} />;
-}
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {currentForm === 'landing' && (
+        <LandingPage onSelect={setCurrentForm} language={language} />
+      )}
+      {currentForm === 'car' && (
+        <CarInsuranceForm
+          onSubmit={handleSubmit}
+          onBack={() => setCurrentForm('landing')}
+          language={language}
+        />
+      )}
+    </div>
+  );
+}   
