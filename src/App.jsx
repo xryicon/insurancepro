@@ -223,7 +223,7 @@ const genderOptions = [
 ];
 
 // ImageUpload Component
-function ImageUpload({ label, onImageSelect, onImageRemove, imagePreview }) {
+export function ImageUpload({ label, onImageSelect, onImageRemove, imagePreview }) {
   const [error, setError] = useState('');
 
   const handleFileChange = (e) => {
@@ -282,7 +282,7 @@ function ImageUpload({ label, onImageSelect, onImageRemove, imagePreview }) {
 }
 
 // SmartSelect Component
-function SmartSelect({ label, value, onChange, options, otherValue, onOtherChange, required = false, error = '' }) {
+export function SmartSelect({ label, value, onChange, options, otherValue, onOtherChange, required = false, error = '' }) {
   const [showOther, setShowOther] = useState(value === 'other');
 
   useEffect(() => {
@@ -328,7 +328,7 @@ function SmartSelect({ label, value, onChange, options, otherValue, onOtherChang
   );
 }
 // CarInsuranceForm Component
-function CarInsuranceForm({ onSubmit, onBack, language }) {
+export function CarInsuranceForm({ onSubmit, onBack, language }) {
   const t = language === 'nl' ? nlTranslations : enTranslations;
 
   const [formData, setFormData] = useState({
