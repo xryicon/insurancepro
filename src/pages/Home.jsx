@@ -125,63 +125,72 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Insurance Types Section */}
-      <section id="insurance-types" className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Our Insurance Services
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Compare and save on the insurance you need
-            </p>
-          </motion.div>
+  {/* Features Section */}
+<section id="features" className="py-16 bg-white">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className="text-center mb-12"
+    >
+      <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+        Why Choose InsurancePro?
+      </h2>
+      <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        We make insurance comparison simple, fast, and rewarding
+      </p>
+    </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {insuranceTypes.map((type, index) => {
-              const Icon = type.icon;
-              return (
-                <motion.div
-                  key={type.type}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  onClick={() => navigate(type.path)}
-                >
-                  <div className={`bg-gradient-to-br ${type.color === 'blue' ? 'from-blue-50 to-blue-100' : 'from-green-50 to-green-100'} rounded-2xl p-8 cursor-pointer hover:shadow-xl transition-shadow`}>
-                    <div className="flex items-start space-x-6">
-                      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center ${type.color === 'blue' ? 'bg-blue-600' : 'bg-green-600'}`}>
-                        <Icon className="w-8 h-8 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-2xl font-bold text-gray-900 mb-2">{type.title}</h3>
-                        <p className="text-gray-600 mb-4">{type.description}</p>
-                        <div className="flex items-center space-x-4">
-                          <span className="text-green-600 font-semibold">{type.save}</span>
-                          <Button
-                            variant="outline"
-                            size="small"
-                            rightIcon={<ArrowRight className="w-4 h-4" />}
-                          >
-                            Get Quote
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+    {/* NEW: Icon-enhanced features */}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg"
+      >
+        <Check className="w-6 h-6 text-green-500" />
+        <span className="font-medium">100% Free</span>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg"
+      >
+        <Award className="w-6 h-6 text-yellow-500" />
+        <span className="font-medium">Top Providers</span>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+        className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg"
+      >
+        <Clock className="w-6 h-6 text-blue-500" />
+        <span className="font-medium">Fast and Easy</span>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+        className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg"
+      >
+        <Headphones className="w-6 h-6 text-purple-500" />
+        <span className="font-medium">Expert Support</span>
+      </motion.div>
+    </div>
+  </div>
+</section>
 
       {/* How It Works Section */}
       <section id="how-it-works" className="py-16 bg-white">
