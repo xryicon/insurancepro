@@ -1,3 +1,4 @@
+import { Check, Award, Clock, Headphones, Car, Home as HomeIcon, Shield, Star, Users, TrendingUp } from 'lucide-react';
 // Nationality options
 export const nationalityOptions = [
   { value: 'spanish', label: 'Spanish' },
@@ -215,25 +216,24 @@ export const stats = [
   { number: '4.8/5', label: 'Average Rating' },
 ];
 
-// Features
 export const features = [
   {
-    icon: Check,  // Lucide Check icon
+    icon: Check,  // ✅ Now Check is defined
     title: "100% Free",
     description: "No hidden fees or obligations. Compare quotes for free.",
   },
   {
-    icon: Award,  // Lucide Award icon
+    icon: Award,
     title: "Top Providers",
     description: "Compare quotes from the best insurance companies in Spain.",
   },
   {
-    icon: Clock,  // Lucide Clock icon
+    icon: Clock,
     title: "Fast and Easy",
     description: "Get quotes in minutes with our simple, user-friendly process.",
   },
   {
-    icon: Headphones,  // Lucide Headphones icon
+    icon: Headphones,
     title: "Expert Support",
     description: "Our team is here to help you every step of the way.",
   },
