@@ -209,33 +209,33 @@ export const howItWorksSteps = [
 
 // Stats
 export const stats = [
-  { number: '10,000+', label: 'Happy Customers' },
+  { number: '3500+', label: 'Happy Customers' },
   { number: '50+', label: 'Insurance Partners' },
-  { number: '€1M+', label: 'Saved by Customers' },
-  { number: '4.9/5', label: 'Average Rating' },
+  { number: '€200k', label: 'Saved by Customers' },
+  { number: '4.8/5', label: 'Average Rating' },
 ];
 
 // Features
 export const features = [
   {
-    icon: 'CheckCircle',
-    title: '100% Free',
-    description: 'No hidden fees or obligations. Compare for free.',
+    icon: Check,  // Lucide Check icon
+    title: "100% Free",
+    description: "No hidden fees or obligations. Compare quotes for free.",
   },
   {
-    icon: 'Award',
-    title: 'Top Providers',
-    description: 'Compare 50+ leading insurance companies in Spain.',
+    icon: Award,  // Lucide Award icon
+    title: "Top Providers",
+    description: "Compare quotes from the best insurance companies in Spain.",
   },
   {
-    icon: 'Clock',
-    title: 'Fast & Easy',
-    description: 'Get quotes in minutes, not hours.',
+    icon: Clock,  // Lucide Clock icon
+    title: "Fast and Easy",
+    description: "Get quotes in minutes with our simple, user-friendly process.",
   },
   {
-    icon: 'Headphones',
-    title: 'Expert Support',
-    description: 'Personalized advice from our insurance experts.',
+    icon: Headphones,  // Lucide Headphones icon
+    title: "Expert Support",
+    description: "Our team is here to help you every step of the way.",
   },
 ];
 
