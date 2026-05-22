@@ -188,7 +188,7 @@ const carDatabase = {
       'T-Roc': { engineSizes: [1197, 1498, 1968], horsepower: [110, 115, 150, 190] }
     }
   }
-};
+}
 
 // Insurance providers
 const insuranceProviders = [
