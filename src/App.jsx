@@ -127,8 +127,6 @@ const carDatabase = {
  'Peugeot': {
     models: {
       '108': { engineSizes: [998, 1199], horsepower: [68, 72, 82, 110] },
-    models: {
-      '108': { engineSizes: [998, 1199], horsepower: [68, 72, 82, 110] },
       '208': { engineSizes: [1199, 1499], horsepower: [75, 100, 130, 155] },
       '308': { engineSizes: [1199, 1499, 1997], horsepower: [110, 130, 155, 180, 225] },
       '3008': { engineSizes: [1199, 1499, 1997], horsepower: [110, 130, 155, 180, 225] },
