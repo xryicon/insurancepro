@@ -258,32 +258,14 @@ const Layout = () => {
             </div>
 
             {/* Contact Info */}
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
-              <ul className="space-y-3">
-                <li className="flex items-center space-x-2">
-                  <Mail className="w-4 h-4 text-blue-500" />
-                  <span className="text-gray-400 text-sm">info@insurancepro.es</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <Phone className="w-4 h-4 text-blue-500" />
-                  <span className="text-gray-400 text-sm">+34 900 123 456</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <Globe className="w-4 h-4 text-blue-500 mt-0.5" />
-                  <span className="text-gray-400 text-sm">www.insurancepro.es</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <Home className="w-4 h-4 text-blue-500 mt-0.5" />
-                  <span className="text-gray-400 text-sm">
-                    Calle Gran Vía, 123
-                    <br />
-                    28013 Madrid, Spain
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </div>
+          <footer className="text-center text-sm text-gray-500 py-4">
+  <p>
+    Email: <a href="mailto:your@email.com" className="text-blue-600 hover:underline">info@insurancepro.es</a>
+  </p>
+  <p>
+    Website: <a href="https://yourwebsite.com" className="text-blue-600 hover:underline">www.insurancepro.es</a>
+  </p>
+</footer>
 
           {/* Bottom Bar */}
           <div className="border-t border-gray-800 mt-12 pt-8">
