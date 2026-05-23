@@ -1,18 +1,40 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
-import Home from './pages/Home';
-import CarInsurance from './pages/CarInsurance';
-import HomeInsurance from './pages/HomeInsurance';
+
+const Home = lazy(() => import('./pages/Home'));
+const CarInsurance = lazy(() => import('./pages/CarInsurance'));
+const HomeInsurance = lazy(() => import('./pages/HomeInsurance'));
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="car-insurance" element={<CarInsurance />} />
-          <Route path="home-insurance" element={<HomeInsurance />} />
+          <Route
+            index
+            element={
+              <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
+                <Home />
+              </Suspense>
+            }
+          />
+          <Route
+            path="car-insurance"
+            element={
+              <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
+                <CarInsurance />
+              </Suspense>
+            }
+          />
+          <Route
+            path="home-insurance"
+            element={
+              <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
+                <HomeInsurance />
+              </Suspense>
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>
