@@ -141,7 +141,7 @@ export default function CarInsurance() {
                 ></div>
               </div>
 
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <form id="car-insurance-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 {step === 1 && (
                   <>
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">
@@ -424,41 +424,42 @@ export default function CarInsurance() {
                     </div>
                   </>
                 )}
-
-                {/* Navigation Buttons */}
-                <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-between">
-                  {step > 1 && (
-                    <Button
-                      onClick={handlePrevious}
-                      type="button"
-                      variant="outline"
-                      className="w-full sm:w-auto"
-                    >
-                      <ChevronLeft className="w-5 h-5 mr-2" />
-                      Back
-                    </Button>
-                  )}
-                  {step < 4 ? (
-                    <Button
-                      onClick={handleNext}
-                      type="button"
-                      className="w-full sm:w-auto ml-auto"
-                    >
-                      Next
-                      <ChevronRight className="w-5 h-5 ml-2" />
-                    </Button>
-                  ) : (
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      loading={isSubmitting}
-                      className="w-full sm:w-auto ml-auto bg-primary hover:bg-primary/90"
-                    >
-                      {isSubmitting ? 'Submitting...' : 'Submit Quote Request'}
-                    </Button>
-                  )}
-                </div>
               </form>
+
+              {/* Navigation Buttons (OUTSIDE the form) */}
+              <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-between">
+                {step > 1 && (
+                  <Button
+                    onClick={handlePrevious}
+                    type="button"
+                    variant="outline"
+                    className="w-full sm:w-auto"
+                  >
+                    <ChevronLeft className="w-5 h-5 mr-2" />
+                    Back
+                  </Button>
+                )}
+                {step < 4 ? (
+                  <Button
+                    onClick={handleNext}
+                    type="button"
+                    className="w-full sm:w-auto ml-auto"
+                  >
+                    Next
+                    <ChevronRight className="w-5 h-5 ml-2" />
+                  </Button>
+                ) : (
+                  <Button
+                    type="submit"
+                    form="car-insurance-form"
+                    disabled={isSubmitting}
+                    loading={isSubmitting}
+                    className="w-full sm:w-auto ml-auto bg-primary hover:bg-primary/90"
+                  >
+                    {isSubmitting ? 'Submitting...' : 'Submit Quote Request'}
+                  </Button>
+                )}
+              </div>
             </div>
           </Card>
         </motion.div>
