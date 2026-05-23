@@ -471,43 +471,38 @@ export default function CarInsurance() {
 
                 {/* Navigation Buttons */}
                 <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-between">
-                  {step > 1 && (
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handlePrevious();
-                      }}
-                      type="button"
-                      variant="outline"
-                      className="w-full sm:w-auto"
-                    >
-                      <ChevronLeft className="w-5 h-5 mr-2" />
-                      Back
-                    </Button>
-                  )}
-                  {step < 4 ? (
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleNext();
-                      }}
-                      type="button"
-                      className="w-full sm:w-auto ml-auto"
-                    >
-                      Next
-                      <ChevronRight className="w-5 h-5 ml-2" />
-                    </Button>
-                  ) : (
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      loading={isSubmitting}
-                      className="w-full sm:w-auto ml-auto bg-primary hover:bg-primary/90"
-                    >
-                      {isSubmitting ? 'Submitting...' : 'Submit Quote Request'}
-                    </Button>
-                  )}
-                </div>
+  {step > 1 && (
+    <Button
+      onClick={handlePrevious}
+      type="button"
+      variant="outline"
+      className="w-full sm:w-auto"
+    >
+      <ChevronLeft className="w-5 h-5 mr-2" />
+      Back
+    </Button>
+  )}
+  {step < 4 ? (
+    <Button
+      onClick={handleNext}
+      type="button"
+      className="w-full sm:w-auto ml-auto"
+    >
+      Next
+      <ChevronRight className="w-5 h-5 ml-2" />
+    </Button>
+  ) : (
+    <Button
+      type="submit"
+      disabled={isSubmitting}
+      loading={isSubmitting}
+      className="w-full sm:w-auto ml-auto bg-primary hover:bg-primary/90"
+    >
+      {isSubmitting ? 'Submitting...' : 'Submit Quote Request'}
+    </Button>
+  )}
+</div>
+               
               </form>
             </div>
           </Card>
