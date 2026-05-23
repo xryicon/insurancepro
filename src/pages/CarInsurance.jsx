@@ -75,19 +75,30 @@ export default function CarInsurance() {
         >
           <Card>
             <div className="p-6">
-              {/* Progress Steps */}
-              <div className="flex justify-between mb-8">
-                {[1, 2, 3, 4].map((s) => (
-                  <div
-                    key={s}
-                    className={`flex items-center justify-center w-8 h-8 rounded-full ${
-                      s <= step ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'
-                    }`}
-                  >
-                    {s}
-                  </div>
-                ))}
-              </div>
+              {/* Progress Steps with Labels */}
+<div className="flex justify-between mb-8">
+  {[
+    { step: 1, label: 'Personal Details' },
+    { step: 2, label: 'Car Details' },
+    { step: 3, label: 'Coverage' },
+    { step: 4, label: 'Review & Submit' },
+  ].map(({ step: s, label }) => (
+    <div key={s} className="flex flex-col items-center">
+      <div
+        className={`flex items-center justify-center w-8 h-8 rounded-full ${
+          s <= step ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'
+        }`}
+      >
+        {s}
+      </div>
+      <span className={`text-xs mt-1 ${
+        s <= step ? 'text-primary font-medium' : 'text-gray-400'
+      }`}>
+        {label}
+      </span>
+    </div>
+  ))}
+</div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 {/* Step 1: Personal Details */}
