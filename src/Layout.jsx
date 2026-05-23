@@ -1,6 +1,7 @@
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
+import Button from './components/ui/Button';
 
 export default function Layout() {
   const { i18n } = useTranslation();
@@ -14,13 +15,44 @@ export default function Layout() {
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-xl font-bold text-primary"
-          >
-            InsurancePro
-          </motion.div>
+          <div className="flex items-center space-x-8">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-xl font-bold text-primary"
+            >
+              InsurancePro
+            </motion.div>
+
+            {/* Navigation Links */}
+            <nav className="hidden md:flex items-center space-x-6">
+              <Link
+                to="/"
+                className="text-gray-600 hover:text-primary transition-colors"
+              >
+                Home
+              </Link>
+              <Link
+                to="/about"
+                className="text-gray-600 hover:text-primary transition-colors"
+              >
+                About Us
+              </Link>
+              <Link
+                to="/contact"
+                className="text-gray-600 hover:text-primary transition-colors"
+              >
+                Contact
+              </Link>
+              <Link to="/quote">
+                <Button variant="outline" size="small">
+                  Get a Quote
+                </Button>
+              </Link>
+            </nav>
+          </div>
+
+          {/* Language Switcher */}
           <div className="flex items-center space-x-4">
             <button
               onClick={() => changeLanguage('en')}
