@@ -149,12 +149,7 @@ export default function CarInsurance() {
                 ></div>
               </div>
 
-              <form
-  onSubmit={handleSubmit(onSubmit)}
-  action="https://formspree.io/f/xjgzokzw"
-  method="POST"
-  className="space-y-6"
->
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 {step === 1 && (
                   <>
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">
