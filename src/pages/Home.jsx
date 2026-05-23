@@ -33,7 +33,7 @@ const Home = () => {
             >
               <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
                 <Shield className="w-4 h-4" />
-                <span>Trusted by 10,000+ customers in Spain</span>
+                <span>Trusted by 3500+ customers in Spain</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
