@@ -11,12 +11,78 @@ import FormField from '../components/forms/FormField';
 import ImageUpload from '../components/forms/ImageUpload';
 import { useNavigate } from 'react-router-dom';
 
+// Define schema with all fields
+const schema = z.object({
+  // Step 1: Personal Details
+  fullName: z.string().min(1, 'Full name is required'),
+  dateOfBirth: z.string().min(1, 'Date of birth is required'),
+  nationality: z.string().min(1, 'Nationality is required'),
+  nieNumber: z.string().min(1, 'NIE number is required'),
+  dateOfCarLicense: z.string().min(1, 'Date of car license is required'),
+  nationalityOfCarLicense: z.string().min(1, 'Nationality of car license is required'),
+  address: z.string().min(1, 'Address is required'),
+  postcode: z.string().min(1, 'Postcode is required'),
+  email: z.string().email('Invalid email address').min(1, 'Email is required'),
+  telephone: z.string().min(1, 'Telephone is required'),
+
+  // Step 2: Car Details
+  carMake: z.string().min(1, 'Car make is required'),
+  carModel: z.string().min(1, 'Car model is required'),
+  year: z.number().min(1990, 'Year must be after 1990'),
+  registration: z.string().min(1, 'Registration number is required'),
+  horsepower: z.number().min(1, 'Horsepower must be positive').optional(),
+  engineSize: z.number().min(1, 'Engine size must be positive').optional(),
+  transmissionType: z.enum(['Manual', 'Automatic', 'Hybrid', 'Full Electric'], {
+    errorMap: () => ({ message: 'Transmission type is required' }),
+  }).optional(),
+  logbookImage: z.instanceof(File).optional(),
+
+  // Step 3: Current Insurance
+  currentCompany: z.string().min(1, 'Current company is required'),
+  currentPremium: z.number().min(0, 'Premium must be positive'),
+  currentCover: z.string().min(1, 'Current cover is required'),
+});
+
 export default function CarInsurance() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [useLogbookImage, setUseLogbookImage] = useState(false);
-  const schema = z.object({
-    return (
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    trigger,
+    getValues,
+    setValue,
+    watch,
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
+
+  const handleNext = async () => {
+    const fieldsToValidate = {
+      1: ['fullName', 'dateOfBirth', 'nationality', 'nieNumber', 'dateOfCarLicense', 'nationalityOfCarLicense', 'address', 'postcode', 'email', 'telephone'],
+      2: useLogbookImage ? ['logbookImage'] : ['carMake', 'carModel', 'year', 'registration', 'horsepower', 'engineSize', 'transmissionType'],
+      3: ['currentCompany', 'currentPremium', 'currentCover'],
+    }[step];
+
+    const isValid = await trigger(fieldsToValidate);
+    if (isValid) setStep(step + 1);
+  };
+
+  const handlePrevious = () => setStep(step - 1);
+
+  const onSubmit = async (data) => {
+    try {
+      console.log('Submitting:', data);
+      toast.success('Quote submitted successfully!');
+    } catch (error) {
+      toast.error('Failed to submit quote.');
+    }
+  };
+
+  return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         {/* Header with title and back button */}
@@ -39,89 +105,6 @@ export default function CarInsurance() {
           </p>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Card>
-            {/* Rest of your form */}
-          </Card>
-        </motion.div>
-      </div>
-    </div>
-  );
-}
-    
-  // Step 1: Personal Details
-  fullName: z.string().min(1, 'Full name is required'),
-  dateOfBirth: z.string().min(1, 'Date of birth is required'),
-  nationality: z.string().min(1, 'Nationality is required'),
-  nieNumber: z.string().min(1, 'NIE number is required'),
-  dateOfCarLicense: z.string().min(1, 'Date of car license is required'),
-  nationalityOfCarLicense: z.string().min(1, 'Nationality of car license is required'),
-  address: z.string().min(1, 'Address is required'),
-  postcode: z.string().min(1, 'Postcode is required'),
-
-  // Step 2: Car Details
-  carMake: z.string().min(1, 'Car make is required'),
-  carModel: z.string().min(1, 'Car model is required'),
-  year: z.number().min(1990, 'Year must be after 1990'),
-  registration: z.string().min(1, 'Registration number is required'),
-  horsepower: z.number().min(1, 'Horsepower must be positive').optional(),
-  engineSize: z.number().min(1, 'Engine size must be positive').optional(),
-  transmissionType: z.enum(['Manual', 'Automatic', 'Hybrid', 'Full Electric'], {
-    errorMap: () => ({ message: 'Transmission type is required' }),
-  }).optional(),
-  logbookImage: z.instanceof(File).optional(),
-
-  // Step 3: Current Insurance
-  currentCompany: z.string().min(1, 'Current company is required'),
-  currentPremium: z.number().min(0, 'Premium must be positive'),
-  currentCover: z.string().min(1, 'Current cover is required'),
-});
-
-export default function CarInsurance() {
-  const [step, setStep] = useState(1);
-  const [useLogbookImage, setUseLogbookImage] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    trigger,
-    getValues,
-    setValue,
-    watch,
-  } = useForm({
-    resolver: zodResolver(schema),
-  });
-
-  const handleNext = async () => {
-    const fieldsToValidate = {
-      1: ['fullName', 'dateOfBirth', 'nationality', 'nieNumber', 'dateOfCarLicense', 'nationalityOfCarLicense', 'address', 'postcode'],
-      2: useLogbookImage ? [] : ['carMake', 'carModel', 'year', 'registration', 'horsepower', 'engineSize', 'transmissionType'],
-      3: ['currentCompany', 'currentPremium', 'currentCover'],
-    }[step];
-
-    const isValid = await trigger(fieldsToValidate);
-    if (isValid) setStep(step + 1);
-  };
-
-  const handlePrevious = () => setStep(step - 1);
-
-  const onSubmit = async (data) => {
-    try {
-      console.log('Submitting:', data);
-      toast.success('Quote submitted successfully!');
-    } catch (error) {
-      toast.error('Failed to submit quote.');
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -164,89 +147,89 @@ export default function CarInsurance() {
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 {/* Step 1: Personal Details */}
-{step === 1 && (
-  <>
-    <h2 className="text-xl font-semibold text-gray-900 mb-4">
-      Personal Details
-    </h2>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <FormField
-        label="Full Name"
-        id="fullName"
-        placeholder="Enter your full name"
-        error={errors.fullName?.message}
-        {...register('fullName')}
-      />
-      <FormField
-        label="Date of Birth"
-        id="dateOfBirth"
-        type="date"
-        error={errors.dateOfBirth?.message}
-        {...register('dateOfBirth')}
-      />
-      <FormField
-        label="Nationality"
-        id="nationality"
-        placeholder="e.g., Spanish"
-        error={errors.nationality?.message}
-        {...register('nationality')}
-      />
-      <FormField
-        label="NIE Number"
-        id="nieNumber"
-        placeholder="e.g., X1234567A"
-        error={errors.nieNumber?.message}
-        {...register('nieNumber')}
-      />
-      <FormField
-        label="Email Address"
-        id="email"
-        type="email"
-        placeholder="e.g., john@example.com"
-        error={errors.email?.message}
-        {...register('email')}
-      />
-      <FormField
-        label="Telephone"
-        id="telephone"
-        type="tel"
-        placeholder="+34 123 456 789"
-        error={errors.telephone?.message}
-        {...register('telephone')}
-      />
-      <FormField
-        label="Date of Car License"
-        id="dateOfCarLicense"
-        type="date"
-        error={errors.dateOfCarLicense?.message}
-        {...register('dateOfCarLicense')}
-      />
-      <FormField
-        label="Nationality of Car License"
-        id="nationalityOfCarLicense"
-        placeholder="e.g., Spanish"
-        error={errors.nationalityOfCarLicense?.message}
-        {...register('nationalityOfCarLicense')}
-      />
-      <FormField
-        label="Address"
-        id="address"
-        placeholder="Enter your address"
-        error={errors.address?.message}
-        {...register('address')}
-        className="md:col-span-2"
-      />
-      <FormField
-        label="Postcode"
-        id="postcode"
-        placeholder="e.g., 28001"
-        error={errors.postcode?.message}
-        {...register('postcode')}
-        className="md:col-span-2"
-      />
-    </div>
-  </>
-)}
+                {step === 1 && (
+                  <>
+                    <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                      Personal Details
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        label="Full Name"
+                        id="fullName"
+                        placeholder="Enter your full name"
+                        error={errors.fullName?.message}
+                        {...register('fullName')}
+                      />
+                      <FormField
+                        label="Date of Birth"
+                        id="dateOfBirth"
+                        type="date"
+                        error={errors.dateOfBirth?.message}
+                        {...register('dateOfBirth')}
+                      />
+                      <FormField
+                        label="Nationality"
+                        id="nationality"
+                        placeholder="e.g., Spanish"
+                        error={errors.nationality?.message}
+                        {...register('nationality')}
+                      />
+                      <FormField
+                        label="NIE Number"
+                        id="nieNumber"
+                        placeholder="e.g., X1234567A"
+                        error={errors.nieNumber?.message}
+                        {...register('nieNumber')}
+                      />
+                      <FormField
+                        label="Email Address"
+                        id="email"
+                        type="email"
+                        placeholder="e.g., john@example.com"
+                        error={errors.email?.message}
+                        {...register('email')}
+                      />
+                      <FormField
+                        label="Telephone"
+                        id="telephone"
+                        type="tel"
+                        placeholder="+34 123 456 789"
+                        error={errors.telephone?.message}
+                        {...register('telephone')}
+                      />
+                      <FormField
+                        label="Date of Car License"
+                        id="dateOfCarLicense"
+                        type="date"
+                        error={errors.dateOfCarLicense?.message}
+                        {...register('dateOfCarLicense')}
+                      />
+                      <FormField
+                        label="Nationality of Car License"
+                        id="nationalityOfCarLicense"
+                        placeholder="e.g., Spanish"
+                        error={errors.nationalityOfCarLicense?.message}
+                        {...register('nationalityOfCarLicense')}
+                      />
+                      <FormField
+                        label="Address"
+                        id="address"
+                        placeholder="Enter your address"
+                        error={errors.address?.message}
+                        {...register('address')}
+                        className="md:col-span-2"
+                      />
+                      <FormField
+                        label="Postcode"
+                        id="postcode"
+                        placeholder="e.g., 28001"
+                        error={errors.postcode?.message}
+                        {...register('postcode')}
+                        className="md:col-span-2"
+                      />
+                    </div>
+                  </>
+                )}
 
                 {/* Step 2: Car Details */}
                 {step === 2 && (
@@ -254,8 +237,6 @@ export default function CarInsurance() {
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">
                       Car Details
                     </h2>
-
-                    {/* Option to upload logbook */}
                     <div className="mb-6">
                       <label className="flex items-center space-x-2 cursor-pointer">
                         <input
