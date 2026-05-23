@@ -1,7 +1,7 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Phone } from 'lucide-react'; // ← Added Phone icon
+import { Phone } from 'lucide-react';
 import Button from './components/ui/Button';
 
 export default function Layout() {
@@ -9,7 +9,7 @@ export default function Layout() {
   const navigate = useNavigate();
 
   const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng).catch(err => console.error(err)); // ← Added error handling
+    i18n.changeLanguage(lng).catch(err => console.error(err));
   };
 
   return (
@@ -17,6 +17,7 @@ export default function Layout() {
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+          {/* Left side: Logo + Navigation */}
           <div className="flex items-center space-x-8">
             <motion.div
               initial={{ opacity: 0 }}
@@ -26,7 +27,6 @@ export default function Layout() {
               InsurancePro
             </motion.div>
 
-            {/* Navigation Links */}
             <nav className="hidden md:flex items-center space-x-6">
               <Link to="/" className="text-gray-600 hover:text-primary transition-colors">
                 Home
@@ -34,25 +34,25 @@ export default function Layout() {
               <Link to="/about" className="text-gray-600 hover:text-primary transition-colors">
                 About Us
               </Link>
-              <Link
-                to="/contact"
-                className="flex items-center space-x-1 text-gray-600 hover:text-primary transition-colors"
-              >
-                <Phone className="w-4 h-4" /> {/* ← Phone icon added */}
-                <span>Contact</span>
-              </Link>
-              <Button
-                variant="outline"
-                size="small"
-                onClick={() => navigate('/quote')}
-              >
-                Get a Quote
-              </Button>
             </nav>
           </div>
 
-          {/* Language Switcher - FIXED */}
+          {/* Right side: Contact + Get a Quote + Language */}
           <div className="flex items-center space-x-4">
+            <Link
+              to="/contact"
+              className="flex items-center space-x-1 text-gray-600 hover:text-primary transition-colors"
+            >
+              <Phone className="w-4 h-4" />
+              <span>Contact</span>
+            </Link>
+            <Button
+              variant="outline"
+              size="small"
+              onClick={() => navigate('/quote')}
+            >
+              Get a Quote
+            </Button>
             <button
               onClick={() => changeLanguage('en')}
               className={`px-3 py-1 rounded-md text-sm font-medium ${
