@@ -76,18 +76,34 @@ export default function CarInsurance() {
 
   const handlePrevious = () => setStep(step - 1);
 
-  const onSubmit = async (data) => {
-    const response = await fetch('https://formspree.io/f/xjgzokzw', {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: { 'Content-Type': 'application/json' }
-    });
-    if (response.ok) {
-      toast.success('Quote submitted successfully!');
-    } else {
-      toast.error('Failed to submit quote.');
+const onSubmit = async (data) => {
+  const formData = new FormData();
+
+  // Append all fields to formData
+  Object.entries(data).forEach(([key, value]) => {
+    if (value instanceof File) {
+      // Append files directly
+      formData.append(key, value);
+    } else if (value !== undefined && value !== null) {
+      // Convert non-files to strings
+      formData.append(key, String(value));
     }
-  };
+  });
+
+  // Send to Formspree
+  const response = await fetch('https://formspree.io/f/xjgzokzw', {
+    method: 'POST',
+    body: formData, // No Content-Type header! Let the browser set it automatically.
+  });
+
+  if (response.ok) {
+    toast.success('Quote submitted successfully!');
+  } else {
+    const errorData = await response.json();
+    console.error('Formspree error:', errorData);
+    toast.error('Failed to submit quote.');
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
