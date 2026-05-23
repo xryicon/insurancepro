@@ -164,10 +164,10 @@ const Layout = () => {
         {/* Email and Website ONLY */}
         <div className="space-y-2 mb-6">
           <p className="text-gray-400 text-sm">
-            Email: <a href="mailto:your@email.com" className="text-blue-400 hover:text-white">your@email.com</a>
+            Email: <a href="mailto:your@email.com" className="text-blue-400 hover:text-white">Info@insurancepro.es</a>
           </p>
           <p className="text-gray-400 text-sm">
-            Website: <a href="https://yourwebsite.com" className="text-blue-400 hover:text-white">https://yourwebsite.com</a>
+            Website: <a href="https://yourwebsite.com" className="text-blue-400 hover:text-white">https://insurancepro.es</a>
           </p>
         </div>
 
