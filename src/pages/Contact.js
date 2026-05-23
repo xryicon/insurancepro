@@ -24,6 +24,7 @@ function Contact() {
         body: JSON.stringify(formData),
       });
       setSubmitSuccess(true);
+      setFormData({ name: '', telephone: '', query: '' });
     } catch (error) {
       console.error('Error:', error);
     } finally {
@@ -37,6 +38,12 @@ function Contact() {
         <div className="text-center">
           <h2 className="text-2xl font-bold text-green-600 mb-4">Thank you!</h2>
           <p className="text-gray-600">We will contact you soon.</p>
+          <button
+            onClick={() => window.history.back()}
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          >
+            Back
+          </button>
         </div>
       </div>
     );
