@@ -3,53 +3,66 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Upload } from 'lucide-react';
 import { toast } from 'react-toastify';
 import Button from '../components/ui/Button';
-import { Card, InsuranceCard, FeatureCard, StatCard, TestimonialCard, ProviderCard } from '../components/ui/Card';
+import { Card } from '../components/ui/Card';
 import FormField from '../components/forms/FormField';
 import ImageUpload from '../components/forms/ImageUpload';
 
 const schema = z.object({
   // Step 1: Personal Details
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email'),
-  phone: z.string().min(1, 'Phone is required'),
+  fullName: z.string().min(1, 'Full name is required'),
+  dateOfBirth: z.string().min(1, 'Date of birth is required'),
+  nationality: z.string().min(1, 'Nationality is required'),
+  nieNumber: z.string().min(1, 'NIE number is required'),
+  dateOfCarLicense: z.string().min(1, 'Date of car license is required'),
+  nationalityOfCarLicense: z.string().min(1, 'Nationality of car license is required'),
+  address: z.string().min(1, 'Address is required'),
+  postcode: z.string().min(1, 'Postcode is required'),
 
   // Step 2: Car Details
   carMake: z.string().min(1, 'Car make is required'),
   carModel: z.string().min(1, 'Car model is required'),
   year: z.number().min(1990, 'Year must be after 1990'),
-  mileage: z.number().min(0, 'Mileage must be positive'),
+  registration: z.string().min(1, 'Registration number is required'),
+  horsepower: z.number().min(1, 'Horsepower must be positive').optional(),
+  engineSize: z.number().min(1, 'Engine size must be positive').optional(),
+  transmissionType: z.enum(['Manual', 'Automatic', 'Hybrid', 'Full Electric'], {
+    errorMap: () => ({ message: 'Transmission type is required' }),
+  }).optional(),
+  logbookImage: z.instanceof(File).optional(),
 
-  // Step 3: Coverage
-  coverageType: z.enum(['Third-Party', 'Comprehensive'], {
-    errorMap: () => ({ message: 'Coverage type is required' }),
-  }),
-
-  // Step 4: Current Provider
-  currentProvider: z.string().min(1, 'Provider is required'),
+  // Step 3: Current Insurance
+  currentCompany: z.string().min(1, 'Current company is required'),
   currentPremium: z.number().min(0, 'Premium must be positive'),
+  currentCover: z.string().min(1, 'Current cover is required'),
 });
 
 export default function CarInsurance() {
   const [step, setStep] = useState(1);
+  const [useLogbookImage, setUseLogbookImage] = useState(false);
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     trigger,
     getValues,
+    setValue,
+    watch,
   } = useForm({
     resolver: zodResolver(schema),
   });
 
   const handleNext = async () => {
-    const isValid = await trigger([
-      ...(step === 1 ? ['name', 'email', 'phone'] : []),
-      ...(step === 2 ? ['carMake', 'carModel', 'year', 'mileage'] : []),
-      ...(step === 3 ? ['coverageType'] : []),
-    ]);
+    const fieldsToValidate = {
+      1: ['fullName', 'dateOfBirth', 'nationality', 'nieNumber', 'dateOfCarLicense', 'nationalityOfCarLicense', 'address', 'postcode'],
+      2: useLogbookImage ? [] : ['carMake', 'carModel', 'year', 'registration', 'horsepower', 'engineSize', 'transmissionType'],
+      3: ['currentCompany', 'currentPremium', 'currentCover'],
+    }[step];
+
+    const isValid = await trigger(fieldsToValidate);
     if (isValid) setStep(step + 1);
   };
 
@@ -57,7 +70,6 @@ export default function CarInsurance() {
 
   const onSubmit = async (data) => {
     try {
-      // Simulate API call
       console.log('Submitting:', data);
       toast.success('Quote submitted successfully!');
     } catch (error) {
@@ -76,142 +88,344 @@ export default function CarInsurance() {
           <Card>
             <div className="p-6">
               {/* Progress Steps with Labels */}
-<div className="flex justify-between mb-8">
-  {[
-    { step: 1, label: 'Personal Details' },
-    { step: 2, label: 'Car Details' },
-    { step: 3, label: 'Coverage' },
-    { step: 4, label: 'Review & Submit' },
-  ].map(({ step: s, label }) => (
-    <div key={s} className="flex flex-col items-center">
-      <div
-        className={`flex items-center justify-center w-8 h-8 rounded-full ${
-          s <= step ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'
-        }`}
-      >
-        {s}
-      </div>
-      <span className={`text-xs mt-1 ${
-        s <= step ? 'text-primary font-medium' : 'text-gray-400'
-      }`}>
-        {label}
-      </span>
-    </div>
-  ))}
-</div>
+              <div className="flex justify-between mb-8">
+                {[
+                  { step: 1, label: 'Personal Details' },
+                  { step: 2, label: 'Car Details' },
+                  { step: 3, label: 'Current Insurance' },
+                  { step: 4, label: 'Review & Submit' },
+                ].map(({ step: s, label }) => (
+                  <div key={s} className="flex flex-col items-center">
+                    <div
+                      className={`flex items-center justify-center w-8 h-8 rounded-full ${
+                        s <= step ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'
+                      }`}
+                    >
+                      {s}
+                    </div>
+                    <span className={`text-xs mt-1 ${
+                      s <= step ? 'text-primary font-medium' : 'text-gray-400'
+                    }`}>
+                      {label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Progress Bar */}
+              <div className="h-1 bg-gray-200 rounded-full mb-8">
+                <div
+                  className="h-1 bg-primary rounded-full transition-all duration-300"
+                  style={{ width: `${(step / 4) * 100}%` }}
+                ></div>
+              </div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 {/* Step 1: Personal Details */}
                 {step === 1 && (
                   <>
-                    <h2 className="text-xl font-semibold text-gray-900">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-4">
                       Personal Details
                     </h2>
-                    <FormField
-                      label="Full Name"
-                      id="name"
-                      error={errors.name?.message}
-                      {...register('name')}
-                    />
-                    <FormField
-                      label="Email"
-                      id="email"
-                      type="email"
-                      error={errors.email?.message}
-                      {...register('email')}
-                    />
-                    <FormField
-                      label="Phone"
-                      id="phone"
-                      type="tel"
-                      error={errors.phone?.message}
-                      {...register('phone')}
-                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        label="Full Name"
+                        id="fullName"
+                        placeholder="Enter your full name"
+                        error={errors.fullName?.message}
+                        {...register('fullName')}
+                      />
+                      <FormField
+                        label="Date of Birth"
+                        id="dateOfBirth"
+                        type="date"
+                        error={errors.dateOfBirth?.message}
+                        {...register('dateOfBirth')}
+                      />
+                      <FormField
+                        label="Nationality"
+                        id="nationality"
+                        placeholder="e.g., Spanish"
+                        error={errors.nationality?.message}
+                        {...register('nationality')}
+                      />
+                      <FormField
+                        label="NIE Number"
+                        id="nieNumber"
+                        placeholder="e.g., X1234567A"
+                        error={errors.nieNumber?.message}
+                        {...register('nieNumber')}
+                      />
+                      <FormField
+                        label="Date of Car License"
+                        id="dateOfCarLicense"
+                        type="date"
+                        error={errors.dateOfCarLicense?.message}
+                        {...register('dateOfCarLicense')}
+                      />
+                      <FormField
+                        label="Nationality of Car License"
+                        id="nationalityOfCarLicense"
+                        placeholder="e.g., Spanish"
+                        error={errors.nationalityOfCarLicense?.message}
+                        {...register('nationalityOfCarLicense')}
+                      />
+                      <FormField
+                        label="Address"
+                        id="address"
+                        placeholder="Enter your address"
+                        error={errors.address?.message}
+                        {...register('address')}
+                        className="md:col-span-2"
+                      />
+                      <FormField
+                        label="Postcode"
+                        id="postcode"
+                        placeholder="e.g., 28001"
+                        error={errors.postcode?.message}
+                        {...register('postcode')}
+                        className="md:col-span-2"
+                      />
+                    </div>
                   </>
                 )}
 
                 {/* Step 2: Car Details */}
                 {step === 2 && (
                   <>
-                    <h2 className="text-xl font-semibold text-gray-900">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-4">
                       Car Details
                     </h2>
-                    <FormField
-                      label="Car Make"
-                      id="carMake"
-                      error={errors.carMake?.message}
-                      {...register('carMake')}
-                    />
-                    <FormField
-                      label="Car Model"
-                      id="carModel"
-                      error={errors.carModel?.message}
-                      {...register('carModel')}
-                    />
-                    <FormField
-                      label="Year"
-                      id="year"
-                      type="number"
-                      error={errors.year?.message}
-                      {...register('year', { valueAsNumber: true })}
-                    />
-                    <FormField
-                      label="Mileage (km)"
-                      id="mileage"
-                      type="number"
-                      error={errors.mileage?.message}
-                      {...register('mileage', { valueAsNumber: true })}
-                    />
+
+                    {/* Option to upload logbook */}
+                    <div className="mb-6">
+                      <label className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={useLogbookImage}
+                          onChange={(e) => setUseLogbookImage(e.target.checked)}
+                          className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                        />
+                        <span className="text-sm text-gray-600">
+                          I don't know my car details, I'll upload a logbook image
+                        </span>
+                      </label>
+                    </div>
+
+                    {!useLogbookImage ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <FormField
+                          label="Car Make"
+                          id="carMake"
+                          placeholder="e.g., Toyota"
+                          error={errors.carMake?.message}
+                          {...register('carMake')}
+                        />
+                        <FormField
+                          label="Car Model"
+                          id="carModel"
+                          placeholder="e.g., Corolla"
+                          error={errors.carModel?.message}
+                          {...register('carModel')}
+                        />
+                        <FormField
+                          label="Year"
+                          id="year"
+                          type="number"
+                          placeholder="e.g., 2020"
+                          error={errors.year?.message}
+                          {...register('year', { valueAsNumber: true })}
+                        />
+                        <FormField
+                          label="Registration Number"
+                          id="registration"
+                          placeholder="e.g., 1234ABC"
+                          error={errors.registration?.message}
+                          {...register('registration')}
+                        />
+                        <FormField
+                          label="Horsepower (CV)"
+                          id="horsepower"
+                          type="number"
+                          placeholder="e.g., 150"
+                          error={errors.horsepower?.message}
+                          {...register('horsepower', { valueAsNumber: true })}
+                        />
+                        <FormField
+                          label="Engine Size (cc)"
+                          id="engineSize"
+                          type="number"
+                          placeholder="e.g., 2000"
+                          error={errors.engineSize?.message}
+                          {...register('engineSize', { valueAsNumber: true })}
+                        />
+                        <div className="md:col-span-2">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Transmission Type
+                          </label>
+                          <select
+                            id="transmissionType"
+                            className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                            {...register('transmissionType')}
+                          >
+                            <option value="">Select transmission type</option>
+                            <option value="Manual">Manual</option>
+                            <option value="Automatic">Automatic</option>
+                            <option value="Hybrid">Hybrid</option>
+                            <option value="Full Electric">Full Electric</option>
+                          </select>
+                          {errors.transmissionType && (
+                            <p className="text-sm text-red-500 mt-1">
+                              {errors.transmissionType.message}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                        <ImageUpload
+                          onUpload={(file) => setValue('logbookImage', file)}
+                          label="Upload Logbook Image"
+                          icon={<Upload className="w-8 h-8 text-gray-400" />}
+                        />
+                        <p className="text-sm text-gray-500 mt-2">
+                          Upload an image of your car's logbook (V5C certificate)
+                        </p>
+                      </div>
+                    )}
                   </>
                 )}
 
-                {/* Step 3: Coverage */}
+                {/* Step 3: Current Insurance */}
                 {step === 3 && (
                   <>
-                    <h2 className="text-xl font-semibold text-gray-900">
-                      Coverage Preferences
+                    <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                      Current Insurance
                     </h2>
-                    <div className="space-y-4">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Coverage Type
-                      </label>
-                      <select
-                        id="coverageType"
-                        className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                        {...register('coverageType')}
-                      >
-                        <option value="">Select coverage type</option>
-                        <option value="Third-Party">Third-Party</option>
-                        <option value="Comprehensive">Comprehensive</option>
-                      </select>
-                      {errors.coverageType && (
-                        <p className="text-sm text-red-500">
-                          {errors.coverageType.message}
-                        </p>
-                      )}
+                    <div className="grid grid-cols-1 gap-4">
+                      <FormField
+                        label="Current Insurance Company"
+                        id="currentCompany"
+                        placeholder="e.g., Allianz, Mapfre, AXA"
+                        error={errors.currentCompany?.message}
+                        {...register('currentCompany')}
+                      />
+                      <FormField
+                        label="Current Premium (€)"
+                        id="currentPremium"
+                        type="number"
+                        placeholder="e.g., 500"
+                        error={errors.currentPremium?.message}
+                        {...register('currentPremium', { valueAsNumber: true })}
+                      />
+                      <FormField
+                        label="Current Cover"
+                        id="currentCover"
+                        placeholder="e.g., Third-Party, Comprehensive"
+                        error={errors.currentCover?.message}
+                        {...register('currentCover')}
+                      />
                     </div>
                   </>
                 )}
 
-                {/* Step 4: Current Provider */}
+                {/* Step 4: Review & Submit */}
                 {step === 4 && (
                   <>
-                    <h2 className="text-xl font-semibold text-gray-900">
-                      Current Insurance
+                    <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                      Review & Submit
                     </h2>
-                    <FormField
-                      label="Current Provider"
-                      id="currentProvider"
-                      error={errors.currentProvider?.message}
-                      {...register('currentProvider')}
-                    />
-                    <FormField
-                      label="Current Premium (€)"
-                      id="currentPremium"
-                      type="number"
-                      error={errors.currentPremium?.message}
-                      {...register('currentPremium', { valueAsNumber: true })}
-                    />
+                    <div className="bg-gray-50 p-6 rounded-lg mb-6">
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">Your Details</h3>
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-sm text-gray-500">Full Name</p>
+                            <p className="font-medium">{getValues('fullName')}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">Date of Birth</p>
+                            <p className="font-medium">{getValues('dateOfBirth')}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">Nationality</p>
+                            <p className="font-medium">{getValues('nationality')}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">NIE Number</p>
+                            <p className="font-medium">{getValues('nieNumber')}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">Address</p>
+                            <p className="font-medium">{getValues('address')}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">Postcode</p>
+                            <p className="font-medium">{getValues('postcode')}</p>
+                          </div>
+                        </div>
+
+                        {!useLogbookImage ? (
+                          <div className="mt-6">
+                            <h4 className="text-md font-medium text-gray-900 mb-2">Car Details</h4>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <p className="text-sm text-gray-500">Car Make</p>
+                                <p className="font-medium">{getValues('carMake')}</p>
+                              </div>
+                              <div>
+                                <p className="text-sm text-gray-500">Car Model</p>
+                                <p className="font-medium">{getValues('carModel')}</p>
+                              </div>
+                              <div>
+                                <p className="text-sm text-gray-500">Year</p>
+                                <p className="font-medium">{getValues('year')}</p>
+                              </div>
+                              <div>
+                                <p className="text-sm text-gray-500">Registration</p>
+                                <p className="font-medium">{getValues('registration')}</p>
+                              </div>
+                              <div>
+                                <p className="text-sm text-gray-500">Horsepower</p>
+                                <p className="font-medium">{getValues('horsepower') || 'N/A'} CV</p>
+                              </div>
+                              <div>
+                                <p className="text-sm text-gray-500">Engine Size</p>
+                                <p className="font-medium">{getValues('engineSize') || 'N/A'} cc</p>
+                              </div>
+                              <div>
+                                <p className="text-sm text-gray-500">Transmission</p>
+                                <p className="font-medium">{getValues('transmissionType') || 'N/A'}</p>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="mt-6">
+                            <h4 className="text-md font-medium text-gray-900 mb-2">Car Details</h4>
+                            <p className="text-sm text-gray-500">Logbook Image</p>
+                            <p className="font-medium">Uploaded (will be reviewed)</p>
+                          </div>
+                        )}
+
+                        <div className="mt-6">
+                          <h4 className="text-md font-medium text-gray-900 mb-2">Current Insurance</h4>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                              <p className="text-sm text-gray-500">Company</p>
+                              <p className="font-medium">{getValues('currentCompany')}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-500">Premium</p>
+                              <p className="font-medium">{getValues('currentPremium')} €</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-500">Cover</p>
+                              <p className="font-medium">{getValues('currentCover')}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </>
                 )}
 
@@ -222,6 +436,7 @@ export default function CarInsurance() {
                       variant="outline"
                       onClick={handlePrevious}
                       type="button"
+                      className="w-full sm:w-auto"
                     >
                       <ChevronLeft className="w-5 h-5 mr-2" />
                       Back
@@ -231,7 +446,7 @@ export default function CarInsurance() {
                     <Button
                       onClick={handleNext}
                       type="button"
-                      className="ml-auto"
+                      className="w-full sm:w-auto ml-auto"
                     >
                       Next
                       <ChevronRight className="w-5 h-5 ml-2" />
@@ -241,7 +456,7 @@ export default function CarInsurance() {
                       type="submit"
                       disabled={isSubmitting}
                       loading={isSubmitting}
-                      className="ml-auto"
+                      className="w-full sm:w-auto ml-auto bg-primary hover:bg-primary/90"
                     >
                       {isSubmitting ? 'Submitting...' : 'Submit Quote Request'}
                     </Button>
