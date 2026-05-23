@@ -63,19 +63,13 @@ export default function Home() {
             </h2>
             <div className="grid gap-8 md:grid-cols-3">
               {/* Fast & Easy */}
-              <Card>
-                <div className="p-6">
-                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
-                    <Zap className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    {t('Fast & Easy')}
-                  </h3>
-                  <p className="text-gray-600">
-                    {t('Compare quotes in just a few clicks.')}
-                  </p>
-                </div>
-              </Card>
+         {/* TEST: Replace the first Card with a div */}
+<div className="bg-white rounded-lg shadow-md p-6">
+  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+    <Zap className="w-6 h-6 text-blue-600" />
+  </div>
+  <h3 className="text-xl font-semibold text-gray-900 mb-2">Test Icon</h3>
+</div>
 
               {/* Trusted Providers */}
               <Card>
