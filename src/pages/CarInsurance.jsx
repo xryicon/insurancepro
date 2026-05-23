@@ -11,9 +11,7 @@ import FormField from '../components/forms/FormField';
 import ImageUpload from '../components/forms/ImageUpload';
 import { useNavigate } from 'react-router-dom';
 
-// Define schema with all fields
 const schema = z.object({
-  // Step 1: Personal Details
   fullName: z.string().min(1, 'Full name is required'),
   dateOfBirth: z.string().min(1, 'Date of birth is required'),
   nationality: z.string().min(1, 'Nationality is required'),
@@ -24,8 +22,6 @@ const schema = z.object({
   postcode: z.string().min(1, 'Postcode is required'),
   email: z.string().email('Invalid email address').min(1, 'Email is required'),
   telephone: z.string().min(1, 'Telephone is required'),
-
-  // Step 2: Car Details
   carMake: z.string().min(1, 'Car make is required'),
   carModel: z.string().min(1, 'Car model is required'),
   year: z.number().min(1990, 'Year must be after 1990'),
@@ -36,8 +32,6 @@ const schema = z.object({
     errorMap: () => ({ message: 'Transmission type is required' }),
   }).optional(),
   logbookImage: z.instanceof(File).optional(),
-
-  // Step 3: Current Insurance
   currentCompany: z.string().min(1, 'Current company is required'),
   currentPremium: z.number().min(0, 'Premium must be positive'),
   currentCover: z.string().min(1, 'Current cover is required'),
@@ -82,23 +76,22 @@ export default function CarInsurance() {
 
   const handlePrevious = () => setStep(step - 1);
 
-const onSubmit = async (data) => {
-  const response = await fetch('https://formspree.io/f/xjgzokzw', {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: { 'Content-Type': 'application/json' }
-  });
-  if (response.ok) {
-    toast.success('Quote submitted successfully!');
-  } else {
-    toast.error('Failed to submit quote.');
-  }
-};
+  const onSubmit = async (data) => {
+    const response = await fetch('https://formspree.io/f/xjgzokzw', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (response.ok) {
+      toast.success('Quote submitted successfully!');
+    } else {
+      toast.error('Failed to submit quote.');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
-        {/* Header with title and back button */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-bold text-gray-900">
@@ -125,7 +118,6 @@ const onSubmit = async (data) => {
         >
           <Card>
             <div className="p-6">
-              {/* Progress Steps with Labels */}
               <div className="flex justify-between mb-8">
                 {[
                   { step: 1, label: 'Personal Details' },
@@ -150,7 +142,6 @@ const onSubmit = async (data) => {
                 ))}
               </div>
 
-              {/* Progress Bar */}
               <div className="h-1 bg-gray-200 rounded-full mb-8">
                 <div
                   className="h-1 bg-primary rounded-full transition-all duration-300"
@@ -159,7 +150,6 @@ const onSubmit = async (data) => {
               </div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                {/* Step 1: Personal Details */}
                 {step === 1 && (
                   <>
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">
@@ -244,7 +234,6 @@ const onSubmit = async (data) => {
                   </>
                 )}
 
-                {/* Step 2: Car Details */}
                 {step === 2 && (
                   <>
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">
@@ -347,7 +336,6 @@ const onSubmit = async (data) => {
                   </>
                 )}
 
-                {/* Step 3: Current Insurance */}
                 {step === 3 && (
                   <>
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">
@@ -380,7 +368,6 @@ const onSubmit = async (data) => {
                   </>
                 )}
 
-                {/* Step 4: Review & Submit */}
                 {step === 4 && (
                   <>
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">
@@ -483,43 +470,49 @@ const onSubmit = async (data) => {
                 )}
 
                 {/* Navigation Buttons */}
-<div className="mt-8 flex flex-col sm:flex-row gap-4 justify-between">
-  {step > 1 && (
-    <Button
-      onClick={(e) => {
-        e.preventDefault();
-        handlePrevious();
-      }}
-      type="button"
-      variant="outline"
-      className="w-full sm:w-auto"
-    >
-      <ChevronLeft className="w-5 h-5 mr-2" />
-      Back
-    </Button>
-  )}
-  {step < 4 ? (
-    <Button
-      onClick={(e) => {
-        e.preventDefault();
-        handleNext();
-      }}
-      type="button"
-      className="w-full sm:w-auto ml-auto"
-    >
-      Next
-      <ChevronRight className="w-5 h-5 ml-2" />
-    </Button>
-  ) : (
-    <Button
-      type="submit"
-      disabled={isSubmitting}
-      loading={isSubmitting}
-      className="w-full sm:w-auto ml-auto bg-primary hover:bg-primary/90"
-    >
-      {isSubmitting ? 'Submitting...' : 'Submit Quote Request'}
-    </Button>
-  )}
-</div>
-{/* ✅ ADD THIS LINE RIGHT HERE */}
-</form>
+                <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-between">
+                  {step > 1 && (
+                    <Button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handlePrevious();
+                      }}
+                      type="button"
+                      variant="outline"
+                      className="w-full sm:w-auto"
+                    >
+                      <ChevronLeft className="w-5 h-5 mr-2" />
+                      Back
+                    </Button>
+                  )}
+                  {step < 4 ? (
+                    <Button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleNext();
+                      }}
+                      type="button"
+                      className="w-full sm:w-auto ml-auto"
+                    >
+                      Next
+                      <ChevronRight className="w-5 h-5 ml-2" />
+                    </Button>
+                  ) : (
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      loading={isSubmitting}
+                      className="w-full sm:w-auto ml-auto bg-primary hover:bg-primary/90"
+                    >
+                      {isSubmitting ? 'Submitting...' : 'Submit Quote Request'}
+                    </Button>
+                  )}
+                </div>
+              </form>
+            </div>
+          </Card>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
