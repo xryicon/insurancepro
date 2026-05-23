@@ -3,15 +3,13 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
   Home, User, Mail, Phone, Calendar, MapPin, Shield, ArrowLeft,
-  Check, ChevronLeft, ChevronRight, Building, Bed, Bath, Ruler
+  Check, ChevronLeft, ChevronRight, Building, Bed, Bath, Ruler, X, Globe, FileText
 } from 'lucide-react';
-import  Button  from '../components/ui/Button';
-import { Card, InsuranceCard, FeatureCard, StatCard, TestimonialCard, ProviderCard } from '../components/ui/Card';
+import Button from '../components/ui/Button';
+import { Card } from '../components/ui/Card';
 import FormField from '../components/forms/FormField';
-import ImageUpload from '../components/forms/ImageUpload';
 import {
   propertyTypeOptions,
-  securityFeatures,
   insuranceProviders,
   coverageTypeOptions,
   nationalityOptions,
@@ -21,6 +19,17 @@ import {
   EMAIL_REGEX
 } from '../data/constants';
 
+const residenceTypeOptions = [
+  { value: 'main', label: 'Main Residence' },
+  { value: 'second', label: 'Second Residence' },
+];
+
+const maxOccupancyOptions = [
+  { value: '90', label: 'Maximum 90 days' },
+  { value: '180', label: 'Maximum 180 days' },
+  { value: '180+', label: 'More than 180 days' },
+];
+
 const HomeInsurance = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -29,10 +38,11 @@ const HomeInsurance = () => {
 
   const [formData, setFormData] = useState({
     fullName: '', nationality: '', dateOfBirth: '', nieNumber: '', address: '',
-    email: '', phone: '', propertyType: '', propertySize: '', bedrooms: '',
-    bathrooms: '', constructionYear: '', securityFeatures: [], propertyImages: [],
-    propertyImagePreviews: [], currentProvider: '', coverageType: '', currentPremium: '',
-    isPrimaryResidence: true, hasMortgage: false, specialItems: '',
+    email: '', phone: '', propertyType: '', livingSize: '', outsideSize: '', bedrooms: '',
+    bathrooms: '', constructionYear: '', refurbishedYear: '', residenceType: '', maxOccupancy: '',
+    contentsValue: '', propertyValue: '', googleMapsLink: '', catastroNumber: '',
+    currentProvider: '', coverageType: '', currentPremium: '',
+    specialItems: '',
   });
 
   const [errors, setErrors] = useState({});
@@ -53,32 +63,6 @@ const HomeInsurance = () => {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
   }, [errors]);
-
-  const handleSecurityFeatureChange = useCallback((feature) => {
-    setFormData(prev => {
-      const currentFeatures = prev.securityFeatures || [];
-      const newFeatures = currentFeatures.includes(feature)
-        ? currentFeatures.filter(f => f !== feature)
-        : [...currentFeatures, feature];
-      return { ...prev, securityFeatures: newFeatures };
-    });
-  }, []);
-
-  const handleImageSelect = useCallback((file, preview) => {
-    setFormData(prev => ({
-      ...prev,
-      propertyImages: [...prev.propertyImages, file],
-      propertyImagePreviews: [...prev.propertyImagePreviews, preview]
-    }));
-  }, []);
-
-  const handleImageRemove = useCallback((index) => {
-    setFormData(prev => ({
-      ...prev,
-      propertyImages: prev.propertyImages.filter((_, i) => i !== index),
-      propertyImagePreviews: prev.propertyImagePreviews.filter((_, i) => i !== index)
-    }));
-  }, []);
 
   const validatePersonalInfo = useCallback(() => {
     const newErrors = {};
@@ -106,10 +90,10 @@ const HomeInsurance = () => {
   const validatePropertyDetails = useCallback(() => {
     const newErrors = {};
     if (!formData.propertyType) newErrors.propertyType = 'Property type is required';
-    if (!formData.propertySize) {
-      newErrors.propertySize = 'Property size is required';
-    } else if (isNaN(formData.propertySize) || parseInt(formData.propertySize) <= 0) {
-      newErrors.propertySize = 'Please enter a valid property size';
+    if (!formData.livingSize) {
+      newErrors.livingSize = 'Living size is required';
+    } else if (isNaN(formData.livingSize) || parseInt(formData.livingSize) <= 0) {
+      newErrors.livingSize = 'Please enter a valid living size';
     }
     if (!formData.bedrooms) {
       newErrors.bedrooms = 'Number of bedrooms is required';
@@ -122,6 +106,18 @@ const HomeInsurance = () => {
       newErrors.bathrooms = 'Please enter a valid number';
     }
     if (!formData.constructionYear) newErrors.constructionYear = 'Construction year is required';
+    if (!formData.residenceType) newErrors.residenceType = 'Residence type is required';
+    if (!formData.maxOccupancy) newErrors.maxOccupancy = 'Maximum occupancy is required';
+    if (!formData.contentsValue) {
+      newErrors.contentsValue = 'Contents value is required';
+    } else if (isNaN(formData.contentsValue) || parseInt(formData.contentsValue) <= 0) {
+      newErrors.contentsValue = 'Please enter a valid amount';
+    }
+    if (!formData.propertyValue) {
+      newErrors.propertyValue = 'Property value is required';
+    } else if (isNaN(formData.propertyValue) || parseInt(formData.propertyValue) <= 0) {
+      newErrors.propertyValue = 'Please enter a valid amount';
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }, [formData]);
@@ -175,10 +171,11 @@ const HomeInsurance = () => {
   const handleStartOver = useCallback(() => {
     setFormData({
       fullName: '', nationality: '', dateOfBirth: '', nieNumber: '', address: '',
-      email: '', phone: '', propertyType: '', propertySize: '', bedrooms: '',
-      bathrooms: '', constructionYear: '', securityFeatures: [], propertyImages: [],
-      propertyImagePreviews: [], currentProvider: '', coverageType: '', currentPremium: '',
-      isPrimaryResidence: true, hasMortgage: false, specialItems: '',
+      email: '', phone: '', propertyType: '', livingSize: '', outsideSize: '', bedrooms: '',
+      bathrooms: '', constructionYear: '', refurbishedYear: '', residenceType: '', maxOccupancy: '',
+      contentsValue: '', propertyValue: '', googleMapsLink: '', catastroNumber: '',
+      currentProvider: '', coverageType: '', currentPremium: '',
+      specialItems: '',
     });
     setErrors({});
     setStep(1);
@@ -421,15 +418,25 @@ const HomeInsurance = () => {
                     required
                     error={errors.propertyType}
                   />
+                  <div />
                   <FormField
                     type="number"
-                    name="propertySize"
-                    label="Property Size (m²)"
-                    value={formData.propertySize}
+                    name="livingSize"
+                    label="Living Size (m²)"
+                    value={formData.livingSize}
                     onChange={handleChange}
                     placeholder="120"
                     required
-                    error={errors.propertySize}
+                    error={errors.livingSize}
+                  />
+                  <FormField
+                    type="number"
+                    name="outsideSize"
+                    label="Outside Size (m²) - Garage, Carport, Casita"
+                    value={formData.outsideSize}
+                    onChange={handleChange}
+                    placeholder="50"
+                    hint="Optional"
                   />
                   <FormField
                     type="number"
@@ -462,81 +469,78 @@ const HomeInsurance = () => {
                     required
                     error={errors.constructionYear}
                   />
-                  <div className="md:col-span-2">
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Security Features
-                      </label>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                        {securityFeatures.map((feature) => (
-                          <label
-                            key={feature.value}
-                            className="flex items-center space-x-2 cursor-pointer"
-                          >
-                            <input
-                              type="checkbox"
-                              checked={formData.securityFeatures?.includes(feature.value) || false}
-                              onChange={() => handleSecurityFeatureChange(feature.value)}
-                              className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                            />
-                            <span className="text-sm text-gray-600">{feature.label}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="md:col-span-2">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <label className="flex items-center space-x-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          name="isPrimaryResidence"
-                          checked={formData.isPrimaryResidence}
-                          onChange={handleChange}
-                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                        />
-                        <span className="text-sm text-gray-600">Primary Residence</span>
-                      </label>
-                      <label className="flex items-center space-x-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          name="hasMortgage"
-                          checked={formData.hasMortgage}
-                          onChange={handleChange}
-                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                        />
-                        <span className="text-sm text-gray-600">Has Mortgage</span>
-                      </label>
-                    </div>
-                  </div>
-                  <div className="md:col-span-2">
-                    <ImageUpload
-                      label="Upload Property Photos"
-                      onImageSelect={handleImageSelect}
-                      onImageRemove={() => handleImageRemove(formData.propertyImagePreviews.length - 1)}
-                      imagePreview={formData.propertyImagePreviews[0]}
-                      hint="Upload photos of your property (max 5MB per image)"
-                    />
-                    {formData.propertyImagePreviews.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {formData.propertyImagePreviews.map((preview, index) => (
-                          <div key={index} className="relative">
-                            <img
-                              src={preview}
-                              alt={`Property ${index + 1}`}
-                              className="w-20 h-20 object-cover rounded-lg border"
-                            />
-                            <button
-                              onClick={() => handleImageRemove(index)}
-                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                  <FormField
+                    type="select"
+                    name="refurbishedYear"
+                    label="Refurbished Year"
+                    value={formData.refurbishedYear}
+                    onChange={handleChange}
+                    options={[{ value: '', label: 'Not refurbished' }, ...yearOptions.map(year => ({ value: year, label: year }))]}
+                    placeholder="Select year"
+                    hint="Optional"
+                  />
+                  <FormField
+                    type="select"
+                    name="residenceType"
+                    label="Residence Type"
+                    value={formData.residenceType}
+                    onChange={handleChange}
+                    options={residenceTypeOptions}
+                    required
+                    error={errors.residenceType}
+                  />
+                  <FormField
+                    type="select"
+                    name="maxOccupancy"
+                    label="Maximum Occupancy"
+                    value={formData.maxOccupancy}
+                    onChange={handleChange}
+                    options={maxOccupancyOptions}
+                    required
+                    error={errors.maxOccupancy}
+                  />
+                  <FormField
+                    type="number"
+                    name="contentsValue"
+                    label="Contents Value (€)"
+                    value={formData.contentsValue}
+                    onChange={handleChange}
+                    placeholder="50000"
+                    required
+                    error={errors.contentsValue}
+                    hint="Estimated value of your belongings"
+                  />
+                  <FormField
+                    type="number"
+                    name="propertyValue"
+                    label="Property Value (€)"
+                    value={formData.propertyValue}
+                    onChange={handleChange}
+                    placeholder="300000"
+                    required
+                    error={errors.propertyValue}
+                    hint="Rough estimate of property value"
+                  />
+                  <FormField
+                    type="url"
+                    name="googleMapsLink"
+                    label="Google Maps Link"
+                    value={formData.googleMapsLink}
+                    onChange={handleChange}
+                    placeholder="https://maps.google.com/..."
+                    className="md:col-span-2"
+                    hint="Optional - Help us locate your property"
+                  />
+                  <FormField
+                    type="text"
+                    name="catastroNumber"
+                    label="Catastro Number"
+                    value={formData.catastroNumber}
+                    onChange={handleChange}
+                    placeholder="123456789012345678AA"
+                    className="md:col-span-2"
+                    hint="Optional - Spanish property registry number"
+                  />
                   <FormField
                     type="textarea"
                     name="specialItems"
@@ -632,16 +636,27 @@ const HomeInsurance = () => {
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Property Details</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                       <div><div className="text-gray-500">Property Type</div><div className="font-medium">{formData.propertyType}</div></div>
-                      <div><div className="text-gray-500">Property Size</div><div className="font-medium">{formData.propertySize} m²</div></div>
+                      <div><div className="text-gray-500">Living Size</div><div className="font-medium">{formData.livingSize} m²</div></div>
+                      {formData.outsideSize && (
+                        <div><div className="text-gray-500">Outside Size</div><div className="font-medium">{formData.outsideSize} m²</div></div>
+                      )}
                       <div><div className="text-gray-500">Bedrooms</div><div className="font-medium">{formData.bedrooms}</div></div>
                       <div><div className="text-gray-500">Bathrooms</div><div className="font-medium">{formData.bathrooms}</div></div>
                       <div><div className="text-gray-500">Construction Year</div><div className="font-medium">{formData.constructionYear}</div></div>
-                      <div><div className="text-gray-500">Primary Residence</div><div className="font-medium">{formData.isPrimaryResidence ? 'Yes' : 'No'}</div></div>
-                      {formData.securityFeatures?.length > 0 && (
-                        <div className="md:col-span-2">
-                          <div className="text-gray-500">Security Features</div>
-                          <div className="font-medium">{formData.securityFeatures.join(', ')}</div>
-                        </div>
+                      {formData.refurbishedYear && (
+                        <div><div className="text-gray-500">Refurbished Year</div><div className="font-medium">{formData.refurbishedYear}</div></div>
+                      )}
+                      <div><div className="text-gray-500">Residence Type</div><div className="font-medium">{formData.residenceType === 'main' ? 'Main Residence' : 'Second Residence'}</div></div>
+                      <div><div className="text-gray-500">Max Occupancy</div><div className="font-medium">
+                        {formData.maxOccupancy === '90' ? '90 days' : formData.maxOccupancy === '180' ? '180 days' : 'More than 180 days'}
+                      </div></div>
+                      <div><div className="text-gray-500">Contents Value</div><div className="font-medium">€{formData.contentsValue}</div></div>
+                      <div><div className="text-gray-500">Property Value</div><div className="font-medium">€{formData.propertyValue}</div></div>
+                      {formData.googleMapsLink && (
+                        <div className="md:col-span-2"><div className="text-gray-500">Google Maps Link</div><div className="font-medium"><a href={formData.googleMapsLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">View on Maps</a></div></div>
+                      )}
+                      {formData.catastroNumber && (
+                        <div className="md:col-span-2"><div className="text-gray-500">Catastro Number</div><div className="font-medium">{formData.catastroNumber}</div></div>
                       )}
                       {formData.specialItems && (
                         <div className="md:col-span-2">
