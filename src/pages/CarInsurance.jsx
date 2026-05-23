@@ -46,8 +46,14 @@ const schema = z.object({
 export default function CarInsurance() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [useLogbookImage, setUseLogbookImage] = useState(false);
-
+  const logbookImage = watch('logbookImage');
+useEffect(() => {
+  return () => {
+    if (logbookImage) {
+      URL.revokeObjectURL(URL.createObjectURL(logbookImage));
+    }
+  };
+}, [logbookImage]);
   const {
     register,
     handleSubmit,
@@ -323,16 +329,12 @@ export default function CarInsurance() {
                     ) : (
                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                         <ImageUpload
-                          onUpload={(file) => setValue('logbookImage', file)}
-                          label="Upload Logbook Image"
-                          icon={<Upload className="w-8 h-8 text-gray-400" />}
-                        />
-                        <p className="text-sm text-gray-500 mt-2">
-                          Upload an image of your car's logbook (V5C certificate)
-                        </p>
-                      </div>
-                    )}
-                  </>
+  onImageSelect={(file) => setValue('logbookImage', file)}  // ✅ "Here’s the picture!"
+  onImageRemove={() => setValue('logbookImage', undefined)}  // ✅ "Throw it away!"
+  imagePreview={watch('logbookImage') ? URL.createObjectURL(watch('logbookImage')) : ''}  // ✅ "Show this picture!"
+  label="Upload Logbook Image"
+  hint="Upload your car logbook (V5C)"
+/>
                 )}
 
                 {/* Step 3: Current Insurance */}
