@@ -23,7 +23,7 @@ const schema = z.object({
   email: z.string().email('Invalid email address').min(1, 'Email is required'),
   telephone: z.string().min(1, 'Telephone is required'),
 
-  // Car Details (always required)
+  // Car Details
   carMake: z.string().min(1, 'Car make is required'),
   carModel: z.string().min(1, 'Car model is required'),
   year: z.number().min(1990, 'Year must be after 1990'),
@@ -76,6 +76,7 @@ export default function CarInsurance() {
 
     if (response.ok) {
       toast.success('Quote submitted successfully!');
+      navigate('/compare-house-insurance'); // Redirect after submission
     } else {
       toast.error('Failed to submit quote.');
     }
@@ -110,6 +111,7 @@ export default function CarInsurance() {
         >
           <Card>
             <div className="p-6">
+              {/* Progress Steps */}
               <div className="flex justify-between mb-8">
                 {[
                   { step: 1, label: 'Personal Details' },
@@ -134,6 +136,7 @@ export default function CarInsurance() {
                 ))}
               </div>
 
+              {/* Progress Bar */}
               <div className="h-1 bg-gray-200 rounded-full mb-8">
                 <div
                   className="h-1 bg-primary rounded-full transition-all duration-300"
@@ -141,6 +144,7 @@ export default function CarInsurance() {
                 ></div>
               </div>
 
+              {/* Form Steps */}
               <form id="car-insurance-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 {step === 1 && (
                   <>
