@@ -2,8 +2,9 @@ import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Zap, ShieldCheck, Euro } from 'lucide-react'; // <-- ADD THESE ICONS
 import Button from '../components/ui/Button';
-import { Card, InsuranceCard, FeatureCard, StatCard, TestimonialCard, ProviderCard } from '../components/ui/Card';
+import { Card } from '../components/ui/Card';
 
 export default function Home() {
   const { t } = useTranslation();
@@ -61,8 +62,12 @@ export default function Home() {
               {t('Why Choose Us?')}
             </h2>
             <div className="grid gap-8 md:grid-cols-3">
+              {/* Fast & Easy */}
               <Card>
                 <div className="p-6">
+                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+                    <Zap className="w-6 h-6 text-blue-600" />
+                  </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
                     {t('Fast & Easy')}
                   </h3>
@@ -71,8 +76,13 @@ export default function Home() {
                   </p>
                 </div>
               </Card>
+
+              {/* Trusted Providers */}
               <Card>
                 <div className="p-6">
+                  <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+                    <ShieldCheck className="w-6 h-6 text-green-600" />
+                  </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
                     {t('Trusted Providers')}
                   </h3>
@@ -81,8 +91,13 @@ export default function Home() {
                   </p>
                 </div>
               </Card>
+
+              {/* Save Money */}
               <Card>
                 <div className="p-6">
+                  <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
+                    <Euro className="w-6 h-6 text-purple-600" />
+                  </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
                     {t('Save Money')}
                   </h3>
