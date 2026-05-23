@@ -1,10 +1,11 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import Button from './components/ui/Button';
 
 export default function Layout() {
   const { i18n } = useTranslation();
+  const navigate = useNavigate();
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
@@ -44,11 +45,13 @@ export default function Layout() {
               >
                 Contact
               </Link>
-              <Link to="/quote">
-                <Button variant="outline" size="small">
-                  Get a Quote
-                </Button>
-              </Link>
+              <Button
+                variant="outline"
+                size="small"
+                onClick={() => navigate('/quote')}
+              >
+                Get a Quote
+              </Button>
             </nav>
           </div>
 
