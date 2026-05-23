@@ -18,6 +18,7 @@ import {
   EMAIL_REGEX
 } from '../data/constants';
 
+// Dropdown options
 const residenceUsageOptions = [
   { value: 'main', label: 'Main residence' },
   { value: 'second', label: 'Second residence' },
@@ -147,7 +148,7 @@ const HomeInsurance = () => {
   const handleSubmit = useCallback(async () => {
     setIsSubmitting(true);
     try {
-      const response = await fetch('https://formspree.io/f/xjgzokzw', {
+      const response = await fetch('https://formspree.io/f/xdajdegr', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -227,6 +228,7 @@ const HomeInsurance = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header section */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -253,6 +255,7 @@ const HomeInsurance = () => {
           </div>
         </motion.div>
 
+        {/* Progress steps */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -297,12 +300,14 @@ const HomeInsurance = () => {
           </div>
         </motion.div>
 
+        {/* Main form content */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <Card className="p-8">
+            {/* STEP 1: Personal Information */}
             {step === 1 && (
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
@@ -327,6 +332,8 @@ const HomeInsurance = () => {
                     required
                     error={errors.fullName}
                   />
+                  
+                  {/* DROPDOWN: Nationality */}
                   <FormField
                     type="select"
                     name="nationality"
@@ -338,6 +345,7 @@ const HomeInsurance = () => {
                     required
                     error={errors.nationality}
                   />
+
                   <FormField
                     type="date"
                     name="dateOfBirth"
@@ -402,6 +410,7 @@ const HomeInsurance = () => {
               </motion.div>
             )}
 
+            {/* STEP 2: Property Details */}
             {step === 2 && (
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
@@ -416,6 +425,7 @@ const HomeInsurance = () => {
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* DROPDOWN: Property Type */}
                   <FormField
                     type="select"
                     name="propertyType"
@@ -427,7 +437,9 @@ const HomeInsurance = () => {
                     required
                     error={errors.propertyType}
                   />
+
                   <div />
+
                   <FormField
                     type="number"
                     name="livingSize"
@@ -438,15 +450,17 @@ const HomeInsurance = () => {
                     required
                     error={errors.livingSize}
                   />
+
                   <FormField
                     type="number"
                     name="outsideSize"
-                    label="Outside Size (m²)"
+                    label="Outside Size (m²) (Optional)"
                     value={formData.outsideSize}
                     onChange={handleChange}
                     placeholder="50"
-                    hint="Optional - Garage, Carport, Casita"
+                    hint="Garage, Carport, Casita"
                   />
+
                   <FormField
                     type="number"
                     name="bedrooms"
@@ -457,6 +471,7 @@ const HomeInsurance = () => {
                     required
                     error={errors.bedrooms}
                   />
+
                   <FormField
                     type="number"
                     name="bathrooms"
@@ -467,6 +482,8 @@ const HomeInsurance = () => {
                     required
                     error={errors.bathrooms}
                   />
+
+                  {/* DROPDOWN: Construction Year */}
                   <FormField
                     type="select"
                     name="constructionYear"
@@ -478,16 +495,19 @@ const HomeInsurance = () => {
                     required
                     error={errors.constructionYear}
                   />
+
+                  {/* DROPDOWN: Refurbished Year */}
                   <FormField
                     type="select"
                     name="refurbishedYear"
-                    label="Refurbished Year"
+                    label="Refurbished Year (Optional)"
                     value={formData.refurbishedYear}
                     onChange={handleChange}
                     options={[{ value: '', label: 'Not refurbished' }, ...yearOptions.map(year => ({ value: year, label: year }))]}
                     placeholder="Select year"
-                    hint="Optional"
                   />
+
+                  {/* DROPDOWN: Residence Usage */}
                   <FormField
                     type="select"
                     name="residenceUsage"
@@ -499,6 +519,7 @@ const HomeInsurance = () => {
                     error={errors.residenceUsage}
                     className="md:col-span-2"
                   />
+
                   <FormField
                     type="number"
                     name="contentsValue"
@@ -510,40 +531,45 @@ const HomeInsurance = () => {
                     error={errors.contentsValue}
                     hint="Estimated value of your belongings"
                   />
+
+                  {/* OPTIONAL: Google Maps Link */}
                   <FormField
                     type="url"
                     name="googleMapsLink"
-                    label="Google Maps Link"
+                    label="Google Maps Link (Optional)"
                     value={formData.googleMapsLink}
                     onChange={handleChange}
                     placeholder="https://maps.google.com/..."
                     className="md:col-span-2"
-                    hint="Optional"
                   />
+
+                  {/* OPTIONAL: Catastro Number */}
                   <FormField
                     type="text"
                     name="catastroNumber"
-                    label="Catastro Number"
+                    label="Catastro Number (Optional)"
                     value={formData.catastroNumber}
                     onChange={handleChange}
                     placeholder="123456789012345678AA"
                     className="md:col-span-2"
-                    hint="Optional"
                   />
+
+                  {/* OPTIONAL: Special Items */}
                   <FormField
                     type="textarea"
                     name="specialItems"
-                    label="Special Items to Insure"
+                    label="Special Items to Insure (Optional)"
                     value={formData.specialItems}
                     onChange={handleChange}
                     placeholder="Jewelry, art, electronics, etc."
                     className="md:col-span-2"
-                    hint="Optional - List any high-value items that need additional coverage"
+                    hint="List any high-value items that need additional coverage"
                   />
                 </div>
               </motion.div>
             )}
 
+            {/* STEP 3: Current Insurance */}
             {step === 3 && (
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
@@ -569,6 +595,7 @@ const HomeInsurance = () => {
                     error={errors.currentProvider}
                     className="md:col-span-2"
                   />
+
                   <FormField
                     type="number"
                     name="currentPremium"
@@ -584,6 +611,7 @@ const HomeInsurance = () => {
               </motion.div>
             )}
 
+            {/* STEP 4: Review & Submit */}
             {step === 4 && (
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
@@ -598,6 +626,7 @@ const HomeInsurance = () => {
                 </p>
 
                 <div className="space-y-6">
+                  {/* Personal Information Review */}
                   <div className="bg-gray-50 rounded-lg p-6">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
@@ -611,6 +640,7 @@ const HomeInsurance = () => {
                     </div>
                   </div>
 
+                  {/* Property Details Review */}
                   <div className="bg-gray-50 rounded-lg p-6">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Property Details</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
@@ -635,20 +665,29 @@ const HomeInsurance = () => {
                       </div>
                       <div><div className="text-gray-500">Contents Value</div><div className="font-medium">€{formData.contentsValue}</div></div>
                       {formData.googleMapsLink && (
-                        <div className="md:col-span-2"><div className="text-gray-500">Google Maps Link</div><div className="font-medium"><a href={formData.googleMapsLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">View on Maps</a></div></div>
+                        <div className="md:col-span-2">
+                          <div className="text-gray-500">Google Maps Link (Optional)</div>
+                          <div className="font-medium">
+                            <a href={formData.googleMapsLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">View on Maps</a>
+                          </div>
+                        </div>
                       )}
                       {formData.catastroNumber && (
-                        <div className="md:col-span-2"><div className="text-gray-500">Catastro Number</div><div className="font-medium">{formData.catastroNumber}</div></div>
+                        <div className="md:col-span-2">
+                          <div className="text-gray-500">Catastro Number (Optional)</div>
+                          <div className="font-medium">{formData.catastroNumber}</div>
+                        </div>
                       )}
                       {formData.specialItems && (
                         <div className="md:col-span-2">
-                          <div className="text-gray-500">Special Items</div>
+                          <div className="text-gray-500">Special Items (Optional)</div>
                           <div className="font-medium">{formData.specialItems}</div>
                         </div>
                       )}
                     </div>
                   </div>
 
+                  {/* Current Insurance Review */}
                   <div className="bg-gray-50 rounded-lg p-6">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Current Insurance</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
@@ -669,6 +708,7 @@ const HomeInsurance = () => {
               </motion.div>
             )}
 
+            {/* Navigation buttons */}
             <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">
               {step > 1 && (
                 <Button
