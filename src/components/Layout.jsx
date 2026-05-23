@@ -151,176 +151,53 @@ const Layout = () => {
       <main className="pt-16">
         <Outlet />
       </main>
-
-    {/* Footer - Simplified */}
-<footer className="bg-gray-900 text-white">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
-    {/* Logo and Tagline */}
-    <div className="flex items-center justify-center space-x-2 mb-4">
-      <Shield className="w-6 h-6 text-white" />
-      <span className="text-xl font-bold">Insurance<span className="text-blue-600">Pro</span></span>
-    </div>
-    <p className="text-gray-400 text-sm mb-6">Smart Insurance. Simple Savings.</p>
-
-    {/* Email and Website ONLY */}
-    <div className="space-y-2 mb-6">
-      <p className="text-gray-400 text-sm">
-        Email: <a href="mailto:your@email.com" className="text-blue-400 hover:text-white">your@email.com</a>
-      </p>
-      <p className="text-gray-400 text-sm">
-        Website: <a href="https://yourwebsite.com" className="text-blue-400 hover:text-white">https://yourwebsite.com</a>
-      </p>
-    </div>
-
-    {/* Resources: ONLY FAQ and Privacy Policy */}
-    <div className="flex justify-center space-x-6 mb-6">
-      <a
-        href="/faq"
-        onClick={(e) => { e.preventDefault(); navigate('/faq'); }}
-        className="text-gray-400 hover:text-white text-sm"
-      >
-        FAQ
-      </a>
-      <a
-        href="/privacy-policy"
-        onClick={(e) => { e.preventDefault(); navigate('/privacy-policy'); }}
-        className="text-gray-400 hover:text-white text-sm"
-      >
-        Privacy Policy
-      </a>
-    </div>
-
-    {/* Copyright */}
-    <div className="border-t border-gray-800 pt-6">
-      <p className="text-gray-400 text-sm">© {new Date().getFullYear()} InsurancePro. All rights reserved.</p>
-    </div>
-  </div>
-</footer>
-            {/* Quick Links */}
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-              <ul className="space-y-3">
-                <li>
-                  <a
-                    href="/car-insurance"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate('/car-insurance');
-                    }}
-                    className="text-gray-400 hover:text-white transition-colors text-sm"
-                  >
-                    Car Insurance
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="/home-insurance"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate('/home-insurance');
-                    }}
-                    className="text-gray-400 hover:text-white transition-colors text-sm"
-                  >
-                    Home Insurance
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="/about"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate('/about');
-                    }}
-                    className="text-gray-400 hover:text-white transition-colors text-sm"
-                  >
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="/contact"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate('/contact');
-                    }}
-                    className="text-gray-400 hover:text-white transition-colors text-sm"
-                  >
-                    Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Resources */}
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Resources</h3>
-              <ul className="space-y-3">
-                <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">
-                    FAQ
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">
-                    Blog
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">
-                    Guides
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">
-                    Privacy Policy
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Contact Info */}
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
-              <ul className="space-y-3">
-                <li className="flex items-center space-x-2">
-                  <Mail className="w-4 h-4 text-blue-500" />
-                  <span className="text-gray-400 text-sm">info@insurancepro.es</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <Phone className="w-4 h-4 text-blue-500" />
-                  <span className="text-gray-400 text-sm">+34 900 123 456</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <Globe className="w-4 h-4 text-blue-500 mt-0.5" />
-                  <span className="text-gray-400 text-sm">www.insurancepro.es</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <Home className="w-4 h-4 text-blue-500 mt-0.5" />
-                  <span className="text-gray-400 text-sm">
-                    Calle Gran Vía, 123
-                    <br />
-                    28013 Madrid, Spain
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Bottom Bar */}
-          <div className="border-t border-gray-800 mt-12 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <p className="text-gray-400 text-sm mb-4 md:mb-0">
-                © {new Date().getFullYear()} InsurancePro. All rights reserved.
-              </p>
-              <p className="text-gray-400 text-sm">
-                Made with <Heart className="w-4 h-4 inline text-red-500" /> in Spain
-              </p>
-            </div>
-          </div>
+{/* Footer - Simplified */}
+    <footer className="bg-gray-900 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+        {/* Logo and Tagline */}
+        <div className="flex items-center justify-center space-x-2 mb-4">
+          <Shield className="w-6 h-6 text-white" />
+          <span className="text-xl font-bold">Insurance<span className="text-blue-600">Pro</span></span>
         </div>
-      </footer>
+        <p className="text-gray-400 text-sm mb-6">Smart Insurance. Simple Savings.</p>
+
+        {/* Email and Website ONLY */}
+        <div className="space-y-2 mb-6">
+          <p className="text-gray-400 text-sm">
+            Email: <a href="mailto:your@email.com" className="text-blue-400 hover:text-white">your@email.com</a>
+          </p>
+          <p className="text-gray-400 text-sm">
+            Website: <a href="https://yourwebsite.com" className="text-blue-400 hover:text-white">https://yourwebsite.com</a>
+          </p>
+        </div>
+
+        {/* Resources: ONLY FAQ and Privacy Policy */}
+        <div className="flex justify-center space-x-6 mb-6">
+          <a
+            href="/faq"
+            onClick={(e) => { e.preventDefault(); navigate('/faq'); }}
+            className="text-gray-400 hover:text-white text-sm"
+          >
+            FAQ
+          </a>
+          <a
+            href="/privacy-policy"
+            onClick={(e) => { e.preventDefault(); navigate('/privacy-policy'); }}
+            className="text-gray-400 hover:text-white text-sm"
+          >
+            Privacy Policy
+          </a>
+        </div>
+
+        {/* Copyright */}
+        <div className="border-t border-gray-800 pt-6">
+          <p className="text-gray-400 text-sm">© {new Date().getFullYear()} InsurancePro. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
     </div>
   );
 };
 
 export default Layout;
+  
