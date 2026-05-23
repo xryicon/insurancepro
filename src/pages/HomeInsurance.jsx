@@ -6,7 +6,7 @@ import {
   Check, ChevronLeft, ChevronRight, Building, Bed, Bath, Ruler
 } from 'lucide-react';
 import  Button  from '../components/ui/Button';
-import { Card } from '../components/ui/Card';
+import { Card, InsuranceCard, FeatureCard, StatCard, TestimonialCard, ProviderCard } from '../components/ui/Card';
 import FormField from '../components/forms/FormField';
 import ImageUpload from '../components/forms/ImageUpload';
 import {
