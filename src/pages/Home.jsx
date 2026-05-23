@@ -14,7 +14,7 @@ export default function Home() {
         <title>InsurancePro - Compare & Save on Insurance in Spain</title>
         <meta
           name="description"
-          content="Compare car and home insurance from top providers and save up to 40%."
+          content="Compare car and home insurance and save money"
         />
       </Helmet>
 
@@ -35,7 +35,7 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mt-6 text-xl text-gray-600 max-w-3xl mx-auto"
           >
-            {t('Get the best rates from top providers in minutes.')}
+            {t('Get the best rates from us in minutes.')}
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
