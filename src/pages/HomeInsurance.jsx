@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
   Home, User, Mail, Phone, Calendar, MapPin, Shield, ArrowLeft,
-  Check, ChevronLeft, ChevronRight, Building, Bed, Bath, Ruler, X, Globe, FileText
+  Check, ChevronLeft, ChevronRight, Building, Bed, Bath, Ruler, Globe, FileText
 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -19,15 +19,10 @@ import {
   EMAIL_REGEX
 } from '../data/constants';
 
-const residenceTypeOptions = [
-  { value: 'main', label: 'Main Residence' },
-  { value: 'second', label: 'Second Residence' },
-];
-
-const maxOccupancyOptions = [
-  { value: '90', label: 'Maximum 90 days' },
-  { value: '180', label: 'Maximum 180 days' },
-  { value: '180+', label: 'More than 180 days' },
+const residenceUsageOptions = [
+  { value: 'main', label: 'Main residence' },
+  { value: 'second', label: 'Second residence' },
+  { value: 'max_occupancy', label: 'Maximum continued occupancy' },
 ];
 
 const HomeInsurance = () => {
@@ -39,7 +34,7 @@ const HomeInsurance = () => {
   const [formData, setFormData] = useState({
     fullName: '', nationality: '', dateOfBirth: '', nieNumber: '', address: '',
     email: '', phone: '', propertyType: '', livingSize: '', outsideSize: '', bedrooms: '',
-    bathrooms: '', constructionYear: '', refurbishedYear: '', residenceType: '', maxOccupancy: '',
+    bathrooms: '', constructionYear: '', refurbishedYear: '', residenceUsage: '',
     contentsValue: '', propertyValue: '', googleMapsLink: '', catastroNumber: '',
     currentProvider: '', coverageType: '', currentPremium: '',
     specialItems: '',
@@ -106,8 +101,7 @@ const HomeInsurance = () => {
       newErrors.bathrooms = 'Please enter a valid number';
     }
     if (!formData.constructionYear) newErrors.constructionYear = 'Construction year is required';
-    if (!formData.residenceType) newErrors.residenceType = 'Residence type is required';
-    if (!formData.maxOccupancy) newErrors.maxOccupancy = 'Maximum occupancy is required';
+    if (!formData.residenceUsage) newErrors.residenceUsage = 'Residence usage is required';
     if (!formData.contentsValue) {
       newErrors.contentsValue = 'Contents value is required';
     } else if (isNaN(formData.contentsValue) || parseInt(formData.contentsValue) <= 0) {
@@ -172,7 +166,7 @@ const HomeInsurance = () => {
     setFormData({
       fullName: '', nationality: '', dateOfBirth: '', nieNumber: '', address: '',
       email: '', phone: '', propertyType: '', livingSize: '', outsideSize: '', bedrooms: '',
-      bathrooms: '', constructionYear: '', refurbishedYear: '', residenceType: '', maxOccupancy: '',
+      bathrooms: '', constructionYear: '', refurbishedYear: '', residenceUsage: '',
       contentsValue: '', propertyValue: '', googleMapsLink: '', catastroNumber: '',
       currentProvider: '', coverageType: '', currentPremium: '',
       specialItems: '',
@@ -227,6 +221,7 @@ const HomeInsurance = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header and steps remain the same */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -481,23 +476,14 @@ const HomeInsurance = () => {
                   />
                   <FormField
                     type="select"
-                    name="residenceType"
-                    label="Residence Type"
-                    value={formData.residenceType}
+                    name="residenceUsage"
+                    label="Residence Usage"
+                    value={formData.residenceUsage}
                     onChange={handleChange}
-                    options={residenceTypeOptions}
+                    options={residenceUsageOptions}
                     required
-                    error={errors.residenceType}
-                  />
-                  <FormField
-                    type="select"
-                    name="maxOccupancy"
-                    label="Maximum Occupancy"
-                    value={formData.maxOccupancy}
-                    onChange={handleChange}
-                    options={maxOccupancyOptions}
-                    required
-                    error={errors.maxOccupancy}
+                    error={errors.residenceUsage}
+                    className="md:col-span-2"
                   />
                   <FormField
                     type="number"
@@ -646,10 +632,13 @@ const HomeInsurance = () => {
                       {formData.refurbishedYear && (
                         <div><div className="text-gray-500">Refurbished Year</div><div className="font-medium">{formData.refurbishedYear}</div></div>
                       )}
-                      <div><div className="text-gray-500">Residence Type</div><div className="font-medium">{formData.residenceType === 'main' ? 'Main Residence' : 'Second Residence'}</div></div>
-                      <div><div className="text-gray-500">Max Occupancy</div><div className="font-medium">
-                        {formData.maxOccupancy === '90' ? '90 days' : formData.maxOccupancy === '180' ? '180 days' : 'More than 180 days'}
-                      </div></div>
+                      <div className="md:col-span-2">
+                        <div className="text-gray-500">Residence Usage</div>
+                        <div className="font-medium">
+                          {formData.residenceUsage === 'main' ? 'Main residence' :
+                           formData.residenceUsage === 'second' ? 'Second residence' : 'Maximum continued occupancy'}
+                        </div>
+                      </div>
                       <div><div className="text-gray-500">Contents Value</div><div className="font-medium">€{formData.contentsValue}</div></div>
                       <div><div className="text-gray-500">Property Value</div><div className="font-medium">€{formData.propertyValue}</div></div>
                       {formData.googleMapsLink && (
