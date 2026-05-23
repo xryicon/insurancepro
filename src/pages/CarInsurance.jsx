@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -46,14 +46,8 @@ const schema = z.object({
 export default function CarInsurance() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const logbookImage = watch('logbookImage');
-useEffect(() => {
-  return () => {
-    if (logbookImage) {
-      URL.revokeObjectURL(URL.createObjectURL(logbookImage));
-    }
-  };
-}, [logbookImage]);
+  const [useLogbookImage, setUseLogbookImage] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -65,6 +59,15 @@ useEffect(() => {
   } = useForm({
     resolver: zodResolver(schema),
   });
+
+  const logbookImage = watch('logbookImage');
+  useEffect(() => {
+    return () => {
+      if (logbookImage) {
+        URL.revokeObjectURL(URL.createObjectURL(logbookImage));
+      }
+    };
+  }, [logbookImage]);
 
   const handleNext = async () => {
     const fieldsToValidate = {
@@ -95,7 +98,7 @@ useEffect(() => {
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-bold text-gray-900">
-               Compare and Save on Your Car Insurance
+              Compare and Save on Your Car Insurance
             </h1>
             <Button
               variant="outline"
@@ -329,12 +332,15 @@ useEffect(() => {
                     ) : (
                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                         <ImageUpload
-  onImageSelect={(file) => setValue('logbookImage', file)}  // ✅ "Here’s the picture!"
-  onImageRemove={() => setValue('logbookImage', undefined)}  // ✅ "Throw it away!"
-  imagePreview={watch('logbookImage') ? URL.createObjectURL(watch('logbookImage')) : ''}  // ✅ "Show this picture!"
-  label="Upload Logbook Image"
-  hint="Upload your car logbook (V5C)"
-/>
+                          onImageSelect={(file) => setValue('logbookImage', file)}
+                          onImageRemove={() => setValue('logbookImage', undefined)}
+                          imagePreview={logbookImage ? URL.createObjectURL(logbookImage) : ''}
+                          label="Upload Logbook Image"
+                          hint="Upload your car logbook (V5C certificate)"
+                        />
+                      </div>
+                    )}
+                  </>
                 )}
 
                 {/* Step 3: Current Insurance */}
@@ -444,7 +450,9 @@ useEffect(() => {
                           <div className="mt-6">
                             <h4 className="text-md font-medium text-gray-900 mb-2">Car Details</h4>
                             <p className="text-sm text-gray-500">Logbook Image</p>
-                            <p className="font-medium">Uploaded (will be reviewed)</p>
+                            <p className="font-medium">
+                              {logbookImage ? 'Uploaded (will be reviewed)' : 'Not uploaded'}
+                            </p>
                           </div>
                         )}
 
