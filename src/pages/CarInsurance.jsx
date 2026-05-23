@@ -9,8 +9,50 @@ import Button from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import FormField from '../components/forms/FormField';
 import ImageUpload from '../components/forms/ImageUpload';
+import { useNavigate } from 'react-router-dom';
 
-const schema = z.object({
+export default function CarInsurance() {
+  const navigate = useNavigate();
+  const [step, setStep] = useState(1);
+  const [useLogbookImage, setUseLogbookImage] = useState(false);
+  const schema = z.object({
+    return (
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        {/* Header with title and back button */}
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-2xl font-bold text-gray-900">
+              Car Insurance Quote: Compare and Save Up to 35% on Your Car Insurance
+            </h1>
+            <Button
+              variant="outline"
+              onClick={() => navigate('/')}
+              className="flex items-center space-x-2"
+            >
+              <ChevronLeft className="w-5 h-5" />
+              <span>Go Back to Home</span>
+            </Button>
+          </div>
+          <p className="text-gray-600 text-sm">
+            Fill in the details below to get the best quotes from top providers.
+          </p>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Card>
+            {/* Rest of your form */}
+          </Card>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+    
   // Step 1: Personal Details
   fullName: z.string().min(1, 'Full name is required'),
   dateOfBirth: z.string().min(1, 'Date of birth is required'),
