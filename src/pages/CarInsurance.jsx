@@ -1,17 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Upload } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'react-toastify';
 import Button from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import FormField from '../components/forms/FormField';
-import ImageUpload from '../components/forms/ImageUpload';
 import { useNavigate } from 'react-router-dom';
 
 const schema = z.object({
+  // Personal Details
   fullName: z.string().min(1, 'Full name is required'),
   dateOfBirth: z.string().min(1, 'Date of birth is required'),
   nationality: z.string().min(1, 'Nationality is required'),
@@ -22,16 +22,19 @@ const schema = z.object({
   postcode: z.string().min(1, 'Postcode is required'),
   email: z.string().email('Invalid email address').min(1, 'Email is required'),
   telephone: z.string().min(1, 'Telephone is required'),
+
+  // Car Details (always required)
   carMake: z.string().min(1, 'Car make is required'),
   carModel: z.string().min(1, 'Car model is required'),
   year: z.number().min(1990, 'Year must be after 1990'),
   registration: z.string().min(1, 'Registration number is required'),
-  horsepower: z.number().min(1, 'Horsepower must be positive').optional(),
-  engineSize: z.number().min(1, 'Engine size must be positive').optional(),
+  horsepower: z.number().min(1, 'Horsepower must be positive'),
+  engineSize: z.number().min(1, 'Engine size must be positive'),
   transmissionType: z.enum(['Manual', 'Automatic', 'Hybrid', 'Full Electric'], {
     errorMap: () => ({ message: 'Transmission type is required' }),
-  }).optional(),
-  logbookImage: z.instanceof(File).optional(),
+  }),
+
+  // Current Insurance
   currentCompany: z.string().min(1, 'Current company is required'),
   currentPremium: z.number().min(0, 'Premium must be positive'),
   currentCover: z.string().min(1, 'Current cover is required'),
@@ -40,7 +43,6 @@ const schema = z.object({
 export default function CarInsurance() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [useLogbookImage, setUseLogbookImage] = useState(false);
 
   const {
     register,
@@ -48,25 +50,14 @@ export default function CarInsurance() {
     formState: { errors, isSubmitting },
     trigger,
     getValues,
-    setValue,
-    watch,
   } = useForm({
     resolver: zodResolver(schema),
   });
 
-  const logbookImage = watch('logbookImage');
-  useEffect(() => {
-    return () => {
-      if (logbookImage) {
-        URL.revokeObjectURL(URL.createObjectURL(logbookImage));
-      }
-    };
-  }, [logbookImage]);
-
   const handleNext = async () => {
     const fieldsToValidate = {
       1: ['fullName', 'dateOfBirth', 'nationality', 'nieNumber', 'dateOfCarLicense', 'nationalityOfCarLicense', 'address', 'postcode', 'email', 'telephone'],
-      2: useLogbookImage ? ['logbookImage'] : ['carMake', 'carModel', 'year', 'registration', 'horsepower', 'engineSize', 'transmissionType'],
+      2: ['carMake', 'carModel', 'year', 'registration', 'horsepower', 'engineSize', 'transmissionType'],
       3: ['currentCompany', 'currentPremium', 'currentCover'],
     }[step];
 
@@ -76,34 +67,19 @@ export default function CarInsurance() {
 
   const handlePrevious = () => setStep(step - 1);
 
-const onSubmit = async (data) => {
-  const formData = new FormData();
+  const onSubmit = async (data) => {
+    const response = await fetch('https://formspree.io/f/xjgzokzw', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' },
+    });
 
-  // Append all fields to formData
-  Object.entries(data).forEach(([key, value]) => {
-    if (value instanceof File) {
-      // Append files directly
-      formData.append(key, value);
-    } else if (value !== undefined && value !== null) {
-      // Convert non-files to strings
-      formData.append(key, String(value));
+    if (response.ok) {
+      toast.success('Quote submitted successfully!');
+    } else {
+      toast.error('Failed to submit quote.');
     }
-  });
-
-  // Send to Formspree
-  const response = await fetch('https://formspree.io/f/xjgzokzw', {
-    method: 'POST',
-    body: formData, // No Content-Type header! Let the browser set it automatically.
-  });
-
-  if (response.ok) {
-    toast.success('Quote submitted successfully!');
-  } else {
-    const errorData = await response.json();
-    console.error('Formspree error:', errorData);
-    toast.error('Failed to submit quote.');
-  }
-};
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -255,100 +231,74 @@ const onSubmit = async (data) => {
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">
                       Car Details
                     </h2>
-                    <div className="mb-6">
-                      <label className="flex items-center space-x-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={useLogbookImage}
-                          onChange={(e) => setUseLogbookImage(e.target.checked)}
-                          className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
-                        />
-                        <span className="text-sm text-gray-600">
-                          I don't know my car details, I'll upload a logbook image
-                        </span>
-                      </label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        label="Car Make"
+                        id="carMake"
+                        placeholder="e.g., Toyota"
+                        error={errors.carMake?.message}
+                        {...register('carMake')}
+                      />
+                      <FormField
+                        label="Car Model"
+                        id="carModel"
+                        placeholder="e.g., Corolla"
+                        error={errors.carModel?.message}
+                        {...register('carModel')}
+                      />
+                      <FormField
+                        label="Year"
+                        id="year"
+                        type="number"
+                        placeholder="e.g., 2020"
+                        error={errors.year?.message}
+                        {...register('year', { valueAsNumber: true })}
+                      />
+                      <FormField
+                        label="Registration Number"
+                        id="registration"
+                        placeholder="e.g., 1234ABC"
+                        error={errors.registration?.message}
+                        {...register('registration')}
+                      />
+                      <FormField
+                        label="Horsepower (CV)"
+                        id="horsepower"
+                        type="number"
+                        placeholder="e.g., 150"
+                        error={errors.horsepower?.message}
+                        {...register('horsepower', { valueAsNumber: true })}
+                      />
+                      <FormField
+                        label="Engine Size (cc)"
+                        id="engineSize"
+                        type="number"
+                        placeholder="e.g., 2000"
+                        error={errors.engineSize?.message}
+                        {...register('engineSize', { valueAsNumber: true })}
+                      />
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Transmission Type
+                        </label>
+                        <select
+                          id="transmissionType"
+                          className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                          {...register('transmissionType')}
+                        >
+                          <option value="">Select transmission type</option>
+                          <option value="Manual">Manual</option>
+                          <option value="Automatic">Automatic</option>
+                          <option value="Hybrid">Hybrid</option>
+                          <option value="Full Electric">Full Electric</option>
+                        </select>
+                        {errors.transmissionType && (
+                          <p className="text-sm text-red-500 mt-1">
+                            {errors.transmissionType.message}
+                          </p>
+                        )}
+                      </div>
                     </div>
-
-                    {!useLogbookImage ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <FormField
-                          label="Car Make"
-                          id="carMake"
-                          placeholder="e.g., Toyota"
-                          error={errors.carMake?.message}
-                          {...register('carMake')}
-                        />
-                        <FormField
-                          label="Car Model"
-                          id="carModel"
-                          placeholder="e.g., Corolla"
-                          error={errors.carModel?.message}
-                          {...register('carModel')}
-                        />
-                        <FormField
-                          label="Year"
-                          id="year"
-                          type="number"
-                          placeholder="e.g., 2020"
-                          error={errors.year?.message}
-                          {...register('year', { valueAsNumber: true })}
-                        />
-                        <FormField
-                          label="Registration Number"
-                          id="registration"
-                          placeholder="e.g., 1234ABC"
-                          error={errors.registration?.message}
-                          {...register('registration')}
-                        />
-                        <FormField
-                          label="Horsepower (CV)"
-                          id="horsepower"
-                          type="number"
-                          placeholder="e.g., 150"
-                          error={errors.horsepower?.message}
-                          {...register('horsepower', { valueAsNumber: true })}
-                        />
-                        <FormField
-                          label="Engine Size (cc)"
-                          id="engineSize"
-                          type="number"
-                          placeholder="e.g., 2000"
-                          error={errors.engineSize?.message}
-                          {...register('engineSize', { valueAsNumber: true })}
-                        />
-                        <div className="md:col-span-2">
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Transmission Type
-                          </label>
-                          <select
-                            id="transmissionType"
-                            className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                            {...register('transmissionType')}
-                          >
-                            <option value="">Select transmission type</option>
-                            <option value="Manual">Manual</option>
-                            <option value="Automatic">Automatic</option>
-                            <option value="Hybrid">Hybrid</option>
-                            <option value="Full Electric">Full Electric</option>
-                          </select>
-                          {errors.transmissionType && (
-                            <p className="text-sm text-red-500 mt-1">
-                              {errors.transmissionType.message}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                        <ImageUpload
-                          onImageSelect={(file) => setValue('logbookImage', file)}
-                          onImageRemove={() => setValue('logbookImage', undefined)}
-                          imagePreview={logbookImage ? URL.createObjectURL(logbookImage) : ''}
-                          label="Upload Logbook Image"
-                          hint="Upload your car logbook (V5C certificate)"
-                        />
-                      </div>
-                    )}
                   </>
                 )}
 
@@ -419,49 +369,39 @@ const onSubmit = async (data) => {
                           </div>
                         </div>
 
-                        {!useLogbookImage ? (
-                          <div className="mt-6">
-                            <h4 className="text-md font-medium text-gray-900 mb-2">Car Details</h4>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div>
-                                <p className="text-sm text-gray-500">Car Make</p>
-                                <p className="font-medium">{getValues('carMake')}</p>
-                              </div>
-                              <div>
-                                <p className="text-sm text-gray-500">Car Model</p>
-                                <p className="font-medium">{getValues('carModel')}</p>
-                              </div>
-                              <div>
-                                <p className="text-sm text-gray-500">Year</p>
-                                <p className="font-medium">{getValues('year')}</p>
-                              </div>
-                              <div>
-                                <p className="text-sm text-gray-500">Registration</p>
-                                <p className="font-medium">{getValues('registration')}</p>
-                              </div>
-                              <div>
-                                <p className="text-sm text-gray-500">Horsepower</p>
-                                <p className="font-medium">{getValues('horsepower') || 'N/A'} CV</p>
-                              </div>
-                              <div>
-                                <p className="text-sm text-gray-500">Engine Size</p>
-                                <p className="font-medium">{getValues('engineSize') || 'N/A'} cc</p>
-                              </div>
-                              <div>
-                                <p className="text-sm text-gray-500">Transmission</p>
-                                <p className="font-medium">{getValues('transmissionType') || 'N/A'}</p>
-                              </div>
+                        <div className="mt-6">
+                          <h4 className="text-md font-medium text-gray-900 mb-2">Car Details</h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-sm text-gray-500">Car Make</p>
+                              <p className="font-medium">{getValues('carMake')}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-500">Car Model</p>
+                              <p className="font-medium">{getValues('carModel')}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-500">Year</p>
+                              <p className="font-medium">{getValues('year')}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-500">Registration</p>
+                              <p className="font-medium">{getValues('registration')}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-500">Horsepower</p>
+                              <p className="font-medium">{getValues('horsepower')} CV</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-500">Engine Size</p>
+                              <p className="font-medium">{getValues('engineSize')} cc</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-500">Transmission</p>
+                              <p className="font-medium">{getValues('transmissionType')}</p>
                             </div>
                           </div>
-                        ) : (
-                          <div className="mt-6">
-                            <h4 className="text-md font-medium text-gray-900 mb-2">Car Details</h4>
-                            <p className="text-sm text-gray-500">Logbook Image</p>
-                            <p className="font-medium">
-                              {logbookImage ? 'Uploaded (will be reviewed)' : 'Not uploaded'}
-                            </p>
-                          </div>
-                        )}
+                        </div>
 
                         <div className="mt-6">
                           <h4 className="text-md font-medium text-gray-900 mb-2">Current Insurance</h4>
@@ -487,38 +427,37 @@ const onSubmit = async (data) => {
 
                 {/* Navigation Buttons */}
                 <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-between">
-  {step > 1 && (
-    <Button
-      onClick={handlePrevious}
-      type="button"
-      variant="outline"
-      className="w-full sm:w-auto"
-    >
-      <ChevronLeft className="w-5 h-5 mr-2" />
-      Back
-    </Button>
-  )}
-  {step < 4 ? (
-    <Button
-      onClick={handleNext}
-      type="button"
-      className="w-full sm:w-auto ml-auto"
-    >
-      Next
-      <ChevronRight className="w-5 h-5 ml-2" />
-    </Button>
-  ) : (
-    <Button
-      type="submit"
-      disabled={isSubmitting}
-      loading={isSubmitting}
-      className="w-full sm:w-auto ml-auto bg-primary hover:bg-primary/90"
-    >
-      {isSubmitting ? 'Submitting...' : 'Submit Quote Request'}
-    </Button>
-  )}
-</div>
-               
+                  {step > 1 && (
+                    <Button
+                      onClick={handlePrevious}
+                      type="button"
+                      variant="outline"
+                      className="w-full sm:w-auto"
+                    >
+                      <ChevronLeft className="w-5 h-5 mr-2" />
+                      Back
+                    </Button>
+                  )}
+                  {step < 4 ? (
+                    <Button
+                      onClick={handleNext}
+                      type="button"
+                      className="w-full sm:w-auto ml-auto"
+                    >
+                      Next
+                      <ChevronRight className="w-5 h-5 ml-2" />
+                    </Button>
+                  ) : (
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      loading={isSubmitting}
+                      className="w-full sm:w-auto ml-auto bg-primary hover:bg-primary/90"
+                    >
+                      {isSubmitting ? 'Submitting...' : 'Submit Quote Request'}
+                    </Button>
+                  )}
+                </div>
               </form>
             </div>
           </Card>
