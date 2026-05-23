@@ -496,24 +496,22 @@ const onSubmit = async (data) => {
                     </Button>
                   )}
                   {step < 4 ? (
-                    <Button
-                      onClick={handleNext}
-                      type="button"
-                      className="w-full sm:w-auto ml-auto"
-                    >
-                      Next
-                      <ChevronRight className="w-5 h-5 ml-2" />
-                    </Button>
-                  ) : (
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      loading={isSubmitting}
-                      className="w-full sm:w-auto ml-auto bg-primary hover:bg-primary/90"
-                    >
-                      {isSubmitting ? 'Submitting...' : 'Submit Quote Request'}
-                    </Button>
-                  )}
+  <Button
+    onClick={(e) => {
+      e.preventDefault(); // <-- ADD THIS
+      handleNext();
+    }}
+    type="button"
+    className="w-full sm:w-auto ml-auto"
+  >
+    Next
+    <ChevronRight className="w-5 h-5 ml-2" />
+  </Button>
+) : (
+  <Button type="submit" disabled={isSubmitting} loading={isSubmitting} className="w-full sm:w-auto ml-auto bg-primary hover:bg-primary/90">
+    {isSubmitting ? 'Submitting...' : 'Submit Quote Request'}
+  </Button>
+)}
                 </div>
               </form>
             </div>
