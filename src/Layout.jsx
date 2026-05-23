@@ -17,7 +17,7 @@ export default function Layout() {
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          {/* Left side: Logo + Navigation */}
+          {/* LEFT: Logo + Home/About Us */}
           <div className="flex items-center space-x-8">
             <motion.div
               initial={{ opacity: 0 }}
@@ -26,7 +26,6 @@ export default function Layout() {
             >
               InsurancePro
             </motion.div>
-
             <nav className="hidden md:flex items-center space-x-6">
               <Link to="/" className="text-gray-600 hover:text-primary transition-colors">
                 Home
@@ -37,7 +36,7 @@ export default function Layout() {
             </nav>
           </div>
 
-          {/* Right side: Contact + Get a Quote + Language */}
+          {/* RIGHT: Contact (📞) + Get a Quote + Language */}
           <div className="flex items-center space-x-4">
             <Link
               to="/contact"
@@ -53,26 +52,28 @@ export default function Layout() {
             >
               Get a Quote
             </Button>
-            <button
-              onClick={() => changeLanguage('en')}
-              className={`px-3 py-1 rounded-md text-sm font-medium ${
-                i18n.language === 'en'
-                  ? 'bg-primary text-white'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              English
-            </button>
-            <button
-              onClick={() => changeLanguage('es')}
-              className={`px-3 py-1 rounded-md text-sm font-medium ${
-                i18n.language === 'es'
-                  ? 'bg-primary text-white'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              Español
-            </button>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => changeLanguage('en')}
+                className={`px-3 py-1 rounded-md text-sm font-medium ${
+                  i18n.language === 'en'
+                    ? 'bg-primary text-white'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                EN
+              </button>
+              <button
+                onClick={() => changeLanguage('es')}
+                className={`px-3 py-1 rounded-md text-sm font-medium ${
+                  i18n.language === 'es'
+                    ? 'bg-primary text-white'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                ES
+              </button>
+            </div>
           </div>
         </div>
       </header>
