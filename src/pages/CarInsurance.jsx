@@ -82,14 +82,18 @@ export default function CarInsurance() {
 
   const handlePrevious = () => setStep(step - 1);
 
-  const onSubmit = async (data) => {
-    try {
-      console.log('Submitting:', data);
-      toast.success('Quote submitted successfully!');
-    } catch (error) {
-      toast.error('Failed to submit quote.');
-    }
-  };
+const onSubmit = async (data) => {
+  const response = await fetch('https://formspree.io/f/xjgzokzw', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: { 'Content-Type': 'application/json' }
+  });
+  if (response.ok) {
+    toast.success('Quote submitted successfully!');
+  } else {
+    toast.error('Failed to submit quote.');
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
