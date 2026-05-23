@@ -1,6 +1,7 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
+import { Phone } from 'lucide-react'; // ← Added Phone icon
 import Button from './components/ui/Button';
 
 export default function Layout() {
@@ -8,7 +9,7 @@ export default function Layout() {
   const navigate = useNavigate();
 
   const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
+    i18n.changeLanguage(lng).catch(err => console.error(err)); // ← Added error handling
   };
 
   return (
@@ -27,23 +28,18 @@ export default function Layout() {
 
             {/* Navigation Links */}
             <nav className="hidden md:flex items-center space-x-6">
-              <Link
-                to="/"
-                className="text-gray-600 hover:text-primary transition-colors"
-              >
+              <Link to="/" className="text-gray-600 hover:text-primary transition-colors">
                 Home
               </Link>
-              <Link
-                to="/about"
-                className="text-gray-600 hover:text-primary transition-colors"
-              >
+              <Link to="/about" className="text-gray-600 hover:text-primary transition-colors">
                 About Us
               </Link>
               <Link
                 to="/contact"
-                className="text-gray-600 hover:text-primary transition-colors"
+                className="flex items-center space-x-1 text-gray-600 hover:text-primary transition-colors"
               >
-                Contact
+                <Phone className="w-4 h-4" /> {/* ← Phone icon added */}
+                <span>Contact</span>
               </Link>
               <Button
                 variant="outline"
@@ -55,7 +51,7 @@ export default function Layout() {
             </nav>
           </div>
 
-          {/* Language Switcher */}
+          {/* Language Switcher - FIXED */}
           <div className="flex items-center space-x-4">
             <button
               onClick={() => changeLanguage('en')}
