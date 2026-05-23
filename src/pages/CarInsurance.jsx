@@ -122,73 +122,89 @@ export default function CarInsurance() {
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 {/* Step 1: Personal Details */}
-                {step === 1 && (
-                  <>
-                    <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                      Personal Details
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <FormField
-                        label="Full Name"
-                        id="fullName"
-                        placeholder="Enter your full name"
-                        error={errors.fullName?.message}
-                        {...register('fullName')}
-                      />
-                      <FormField
-                        label="Date of Birth"
-                        id="dateOfBirth"
-                        type="date"
-                        error={errors.dateOfBirth?.message}
-                        {...register('dateOfBirth')}
-                      />
-                      <FormField
-                        label="Nationality"
-                        id="nationality"
-                        placeholder="e.g., Spanish"
-                        error={errors.nationality?.message}
-                        {...register('nationality')}
-                      />
-                      <FormField
-                        label="NIE Number"
-                        id="nieNumber"
-                        placeholder="e.g., X1234567A"
-                        error={errors.nieNumber?.message}
-                        {...register('nieNumber')}
-                      />
-                      <FormField
-                        label="Date of Car License"
-                        id="dateOfCarLicense"
-                        type="date"
-                        error={errors.dateOfCarLicense?.message}
-                        {...register('dateOfCarLicense')}
-                      />
-                      <FormField
-                        label="Nationality of Car License"
-                        id="nationalityOfCarLicense"
-                        placeholder="e.g., Spanish"
-                        error={errors.nationalityOfCarLicense?.message}
-                        {...register('nationalityOfCarLicense')}
-                      />
-                      <FormField
-                        label="Address"
-                        id="address"
-                        placeholder="Enter your address"
-                        error={errors.address?.message}
-                        {...register('address')}
-                        className="md:col-span-2"
-                      />
-                      <FormField
-                        label="Postcode"
-                        id="postcode"
-                        placeholder="e.g., 28001"
-                        error={errors.postcode?.message}
-                        {...register('postcode')}
-                        className="md:col-span-2"
-                      />
-                    </div>
-                  </>
-                )}
+{step === 1 && (
+  <>
+    <h2 className="text-xl font-semibold text-gray-900 mb-4">
+      Personal Details
+    </h2>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <FormField
+        label="Full Name"
+        id="fullName"
+        placeholder="Enter your full name"
+        error={errors.fullName?.message}
+        {...register('fullName')}
+      />
+      <FormField
+        label="Date of Birth"
+        id="dateOfBirth"
+        type="date"
+        error={errors.dateOfBirth?.message}
+        {...register('dateOfBirth')}
+      />
+      <FormField
+        label="Nationality"
+        id="nationality"
+        placeholder="e.g., Spanish"
+        error={errors.nationality?.message}
+        {...register('nationality')}
+      />
+      <FormField
+        label="NIE Number"
+        id="nieNumber"
+        placeholder="e.g., X1234567A"
+        error={errors.nieNumber?.message}
+        {...register('nieNumber')}
+      />
+      <FormField
+        label="Email Address"
+        id="email"
+        type="email"
+        placeholder="e.g., john@example.com"
+        error={errors.email?.message}
+        {...register('email')}
+      />
+      <FormField
+        label="Telephone"
+        id="telephone"
+        type="tel"
+        placeholder="+34 123 456 789"
+        error={errors.telephone?.message}
+        {...register('telephone')}
+      />
+      <FormField
+        label="Date of Car License"
+        id="dateOfCarLicense"
+        type="date"
+        error={errors.dateOfCarLicense?.message}
+        {...register('dateOfCarLicense')}
+      />
+      <FormField
+        label="Nationality of Car License"
+        id="nationalityOfCarLicense"
+        placeholder="e.g., Spanish"
+        error={errors.nationalityOfCarLicense?.message}
+        {...register('nationalityOfCarLicense')}
+      />
+      <FormField
+        label="Address"
+        id="address"
+        placeholder="Enter your address"
+        error={errors.address?.message}
+        {...register('address')}
+        className="md:col-span-2"
+      />
+      <FormField
+        label="Postcode"
+        id="postcode"
+        placeholder="e.g., 28001"
+        error={errors.postcode?.message}
+        {...register('postcode')}
+        className="md:col-span-2"
+      />
+    </div>
+  </>
+)}
 
                 {/* Step 2: Car Details */}
                 {step === 2 && (
