@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
   Home, User, Mail, Phone, Calendar, MapPin, Shield, ArrowLeft,
-  Check, ChevronLeft, ChevronRight, Building, Bed, Bath, Ruler, Globe, FileText
+  Check, ChevronLeft, ChevronRight, Building, Bed, Bath, Ruler
 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -11,7 +11,6 @@ import FormField from '../components/forms/FormField';
 import {
   propertyTypeOptions,
   insuranceProviders,
-  coverageTypeOptions,
   nationalityOptions,
   getYearOptions,
   NIE_REGEX,
@@ -22,7 +21,8 @@ import {
 const residenceUsageOptions = [
   { value: 'main', label: 'Main residence' },
   { value: 'second', label: 'Second residence' },
-  { value: 'max_occupancy', label: 'Maximum continued occupancy' },
+  { value: 'rented', label: 'Rented residence' },
+  { value: 'other', label: 'Other' },
 ];
 
 const HomeInsurance = () => {
@@ -32,11 +32,11 @@ const HomeInsurance = () => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const [formData, setFormData] = useState({
-    fullName: '', nationality: '', dateOfBirth: '', nieNumber: '', address: '',
+    fullName: '', nationality: '', dateOfBirth: '', nieNumber: '', address: '', postalCode: '',
     email: '', phone: '', propertyType: '', livingSize: '', outsideSize: '', bedrooms: '',
     bathrooms: '', constructionYear: '', refurbishedYear: '', residenceUsage: '',
-    contentsValue: '', propertyValue: '', googleMapsLink: '', catastroNumber: '',
-    currentProvider: '', coverageType: '', currentPremium: '',
+    contentsValue: '', googleMapsLink: '', catastroNumber: '',
+    currentProvider: '', currentPremium: '',
     specialItems: '',
   });
 
@@ -70,6 +70,7 @@ const HomeInsurance = () => {
       newErrors.nieNumber = 'Please enter a valid NIE number (e.g., X1234567A)';
     }
     if (!formData.address.trim()) newErrors.address = 'Address is required';
+    if (!formData.postalCode.trim()) newErrors.postalCode = 'Postal code is required';
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!EMAIL_REGEX.test(formData.email)) {
@@ -107,11 +108,6 @@ const HomeInsurance = () => {
     } else if (isNaN(formData.contentsValue) || parseInt(formData.contentsValue) <= 0) {
       newErrors.contentsValue = 'Please enter a valid amount';
     }
-    if (!formData.propertyValue) {
-      newErrors.propertyValue = 'Property value is required';
-    } else if (isNaN(formData.propertyValue) || parseInt(formData.propertyValue) <= 0) {
-      newErrors.propertyValue = 'Please enter a valid amount';
-    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }, [formData]);
@@ -119,7 +115,6 @@ const HomeInsurance = () => {
   const validateCurrentInsurance = useCallback(() => {
     const newErrors = {};
     if (!formData.currentProvider) newErrors.currentProvider = 'Current provider is required';
-    if (!formData.coverageType) newErrors.coverageType = 'Coverage type is required';
     if (!formData.currentPremium) {
       newErrors.currentPremium = 'Current premium is required';
     } else if (isNaN(formData.currentPremium)) {
@@ -152,11 +147,22 @@ const HomeInsurance = () => {
   const handleSubmit = useCallback(async () => {
     setIsSubmitting(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setSubmitSuccess(true);
-      console.log('Form submitted:', formData);
+      const response = await fetch('https://formspree.io/f/xjgzokzw', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setSubmitSuccess(true);
+      } else {
+        throw new Error('Submission failed');
+      }
     } catch (error) {
       console.error('Submission error:', error);
+      alert('There was an error submitting your form. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -164,11 +170,11 @@ const HomeInsurance = () => {
 
   const handleStartOver = useCallback(() => {
     setFormData({
-      fullName: '', nationality: '', dateOfBirth: '', nieNumber: '', address: '',
+      fullName: '', nationality: '', dateOfBirth: '', nieNumber: '', address: '', postalCode: '',
       email: '', phone: '', propertyType: '', livingSize: '', outsideSize: '', bedrooms: '',
       bathrooms: '', constructionYear: '', refurbishedYear: '', residenceUsage: '',
-      contentsValue: '', propertyValue: '', googleMapsLink: '', catastroNumber: '',
-      currentProvider: '', coverageType: '', currentPremium: '',
+      contentsValue: '', googleMapsLink: '', catastroNumber: '',
+      currentProvider: '', currentPremium: '',
       specialItems: '',
     });
     setErrors({});
@@ -221,7 +227,6 @@ const HomeInsurance = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header and steps remain the same */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -359,10 +364,19 @@ const HomeInsurance = () => {
                     label="Property Address"
                     value={formData.address}
                     onChange={handleChange}
-                    placeholder="Calle Gran Vía, 123, Madrid"
+                    placeholder="Calle Gran Vía, 123"
                     required
                     error={errors.address}
-                    className="md:col-span-2"
+                  />
+                  <FormField
+                    type="text"
+                    name="postalCode"
+                    label="Postal Code"
+                    value={formData.postalCode}
+                    onChange={handleChange}
+                    placeholder="28001"
+                    required
+                    error={errors.postalCode}
                   />
                   <FormField
                     type="email"
@@ -427,11 +441,11 @@ const HomeInsurance = () => {
                   <FormField
                     type="number"
                     name="outsideSize"
-                    label="Outside Size (m²) - Garage, Carport, Casita"
+                    label="Outside Size (m²)"
                     value={formData.outsideSize}
                     onChange={handleChange}
                     placeholder="50"
-                    hint="Optional"
+                    hint="Optional - Garage, Carport, Casita"
                   />
                   <FormField
                     type="number"
@@ -497,17 +511,6 @@ const HomeInsurance = () => {
                     hint="Estimated value of your belongings"
                   />
                   <FormField
-                    type="number"
-                    name="propertyValue"
-                    label="Property Value (€)"
-                    value={formData.propertyValue}
-                    onChange={handleChange}
-                    placeholder="300000"
-                    required
-                    error={errors.propertyValue}
-                    hint="Rough estimate of property value"
-                  />
-                  <FormField
                     type="url"
                     name="googleMapsLink"
                     label="Google Maps Link"
@@ -515,7 +518,7 @@ const HomeInsurance = () => {
                     onChange={handleChange}
                     placeholder="https://maps.google.com/..."
                     className="md:col-span-2"
-                    hint="Optional - Help us locate your property"
+                    hint="Optional"
                   />
                   <FormField
                     type="text"
@@ -525,7 +528,7 @@ const HomeInsurance = () => {
                     onChange={handleChange}
                     placeholder="123456789012345678AA"
                     className="md:col-span-2"
-                    hint="Optional - Spanish property registry number"
+                    hint="Optional"
                   />
                   <FormField
                     type="textarea"
@@ -535,7 +538,7 @@ const HomeInsurance = () => {
                     onChange={handleChange}
                     placeholder="Jewelry, art, electronics, etc."
                     className="md:col-span-2"
-                    hint="List any high-value items that need additional coverage"
+                    hint="Optional - List any high-value items that need additional coverage"
                   />
                 </div>
               </motion.div>
@@ -556,26 +559,15 @@ const HomeInsurance = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField
-                    type="select"
+                    type="text"
                     name="currentProvider"
-                    label="Current Provider"
+                    label="Write your current provider"
                     value={formData.currentProvider}
                     onChange={handleChange}
-                    options={insuranceProviders.map(provider => ({ value: provider.value, label: provider.label }))}
-                    placeholder="Select your current provider"
+                    placeholder="e.g., Allianz, Mapfre, etc."
                     required
                     error={errors.currentProvider}
-                  />
-                  <FormField
-                    type="select"
-                    name="coverageType"
-                    label="Coverage Type"
-                    value={formData.coverageType}
-                    onChange={handleChange}
-                    options={coverageTypeOptions}
-                    placeholder="Select coverage type"
-                    required
-                    error={errors.coverageType}
+                    className="md:col-span-2"
                   />
                   <FormField
                     type="number"
@@ -615,6 +607,7 @@ const HomeInsurance = () => {
                       <div><div className="text-gray-500">Phone</div><div className="font-medium">{formData.phone || 'Not provided'}</div></div>
                       <div><div className="text-gray-500">NIE Number</div><div className="font-medium">{formData.nieNumber}</div></div>
                       <div><div className="text-gray-500">Address</div><div className="font-medium">{formData.address}</div></div>
+                      <div><div className="text-gray-500">Postal Code</div><div className="font-medium">{formData.postalCode}</div></div>
                     </div>
                   </div>
 
@@ -636,11 +629,11 @@ const HomeInsurance = () => {
                         <div className="text-gray-500">Residence Usage</div>
                         <div className="font-medium">
                           {formData.residenceUsage === 'main' ? 'Main residence' :
-                           formData.residenceUsage === 'second' ? 'Second residence' : 'Maximum continued occupancy'}
+                           formData.residenceUsage === 'second' ? 'Second residence' :
+                           formData.residenceUsage === 'rented' ? 'Rented residence' : 'Other'}
                         </div>
                       </div>
                       <div><div className="text-gray-500">Contents Value</div><div className="font-medium">€{formData.contentsValue}</div></div>
-                      <div><div className="text-gray-500">Property Value</div><div className="font-medium">€{formData.propertyValue}</div></div>
                       {formData.googleMapsLink && (
                         <div className="md:col-span-2"><div className="text-gray-500">Google Maps Link</div><div className="font-medium"><a href={formData.googleMapsLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">View on Maps</a></div></div>
                       )}
@@ -660,7 +653,6 @@ const HomeInsurance = () => {
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Current Insurance</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                       <div><div className="text-gray-500">Current Provider</div><div className="font-medium">{formData.currentProvider}</div></div>
-                      <div><div className="text-gray-500">Coverage Type</div><div className="font-medium">{formData.coverageType}</div></div>
                       <div className="md:col-span-2"><div className="text-gray-500">Current Annual Premium</div><div className="font-medium">€{formData.currentPremium}</div></div>
                     </div>
                   </div>
