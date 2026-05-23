@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'react-toastify';
 import Button from '../components/ui/Button';
-import Card from '../components/ui/Card';
+import { Card, InsuranceCard, FeatureCard, StatCard, TestimonialCard, ProviderCard } from '../components/ui/Card';
 import FormField from '../components/forms/FormField';
 import ImageUpload from '../components/forms/ImageUpload';
 
