@@ -89,7 +89,7 @@ export default function CarInsurance() {
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-bold text-gray-900">
-              Car Insurance Quote: Compare and Save Up to 35% on Your Car Insurance
+               Compare and Save on Your Car Insurance
             </h1>
             <Button
               variant="outline"
