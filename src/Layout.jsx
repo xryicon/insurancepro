@@ -8,8 +8,12 @@ export default function Layout() {
   const { i18n } = useTranslation();
   const navigate = useNavigate();
 
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng).catch(err => console.error(err));
+  const changeLanguage = async (lng) => {
+    try {
+      await i18n.changeLanguage(lng);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -36,7 +40,7 @@ export default function Layout() {
             </nav>
           </div>
 
-          {/* RIGHT: Contact (📞) + Get a Quote + Language */}
+          {/* RIGHT: Contact (📞 + text) + Get a Quote + Language */}
           <div className="flex items-center space-x-4">
             <Link
               to="/contact"
@@ -48,12 +52,13 @@ export default function Layout() {
             <Button
               variant="outline"
               size="small"
-              onClick={() => navigate('/quote')}
+              onClick={() => navigate('/insuranceselection')}
             >
               Get a Quote
             </Button>
             <div className="flex items-center space-x-2">
               <button
+                type="button"
                 onClick={() => changeLanguage('en')}
                 className={`px-3 py-1 rounded-md text-sm font-medium ${
                   i18n.language === 'en'
@@ -64,6 +69,7 @@ export default function Layout() {
                 EN
               </button>
               <button
+                type="button"
                 onClick={() => changeLanguage('es')}
                 className={`px-3 py-1 rounded-md text-sm font-medium ${
                   i18n.language === 'es'
