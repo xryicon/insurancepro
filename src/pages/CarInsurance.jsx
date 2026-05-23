@@ -54,16 +54,25 @@ export default function CarInsurance() {
     resolver: zodResolver(schema),
   });
 
-  const handleNext = async () => {
-    const fieldsToValidate = {
-      1: ['fullName', 'dateOfBirth', 'nationality', 'nieNumber', 'dateOfCarLicense', 'nationalityOfCarLicense', 'address', 'postcode', 'email', 'telephone'],
-      2: ['carMake', 'carModel', 'year', 'registration', 'horsepower', 'engineSize', 'transmissionType'],
-      3: ['currentCompany', 'currentPremium', 'currentCover'],
-    }[step];
+const handleNext = async (e) => {
+  // Prevent any default behavior (safeguard)
+  if (e) e.preventDefault();
 
-    const isValid = await trigger(fieldsToValidate);
-    if (isValid) setStep(step + 1);
-  };
+  const fieldsToValidate = {
+    1: ['fullName', 'dateOfBirth', 'nationality', 'nieNumber', 'dateOfCarLicense', 'nationalityOfCarLicense', 'address', 'postcode', 'email', 'telephone'],
+    2: ['carMake', 'carModel', 'year', 'registration', 'horsepower', 'engineSize', 'transmissionType'],
+    3: ['currentCompany', 'currentPremium', 'currentCover'],
+  }[step];
+
+  const isValid = await trigger(fieldsToValidate, { shouldFocus: true });
+  console.log('Validation result for step', step, ':', isValid); // Debug log
+
+  if (isValid) {
+    setStep(step + 1);
+  } else {
+    toast.error('Please fill in all required fields correctly.');
+  }
+};
 
   const handlePrevious = () => setStep(step - 1);
 
@@ -444,14 +453,14 @@ export default function CarInsurance() {
                   </Button>
                 )}
                 {step < 4 ? (
-                  <Button
-                    onClick={handleNext}
-                    type="button"
-                    className="w-full sm:w-auto ml-auto"
-                  >
-                    Next
-                    <ChevronRight className="w-5 h-5 ml-2" />
-                  </Button>
+              <Button
+  onClick={(e) => handleNext(e)} // Pass the event object
+  type="button"
+  className="w-full sm:w-auto ml-auto"
+>
+  Next
+  <ChevronRight className="w-5 h-5 ml-2" />
+</Button>
                 ) : (
                   <Button
                     type="submit"
