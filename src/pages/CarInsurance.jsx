@@ -230,10 +230,11 @@ export default function CarInsurance() {
                         />
                         <FormField
                           label="Date of Birth"
-                          id="dateOfBirth"
-                          type="date"
-                          error={errors.dateOfBirth?.message}
-                          {...register('dateOfBirth')}
+        id="dateOfBirth"
+        type="text"  // Changed from "date" to "text"
+        placeholder="DD/MM/YYYY"  // Added placeholder for clarity
+        error={errors.dateOfBirth?.message}
+        {...register('dateOfBirth')}
                         />
                         <FormField
                           label="Nationality"
@@ -267,10 +268,11 @@ export default function CarInsurance() {
                         />
                         <FormField
                           label="Date of Car License"
-                          id="dateOfCarLicense"
-                          type="date"
-                          error={errors.dateOfCarLicense?.message}
-                          {...register('dateOfCarLicense')}
+        id="dateOfCarLicense"
+        type="text"  // Changed from "date" to "text"
+        placeholder="DD/MM/YYYY"  // Added placeholder for clarity
+        error={errors.dateOfCarLicense?.message}
+        {...register('dateOfCarLicense')}
                         />
                         <FormField
                           label="Nationality of Car License"
