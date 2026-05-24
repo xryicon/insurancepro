@@ -1,26 +1,32 @@
-// src/pages/InsuranceSelection.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Button from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import { Home, Car, Heart, Shield } from 'lucide-react';
+import { Home, Car } from 'lucide-react';
 
 const insuranceTypes = [
-  { id: 'home', name: 'Home Insurance', icon: Home, description: 'Protect your home and belongings' },
-  { id: 'car', name: 'Car Insurance', icon: Car, description: 'Coverage for your vehicle' },
-  { id: 'life', name: 'Life Insurance', icon: Heart, description: 'Financial security for your loved ones' },
-  { id: 'health', name: 'Health Insurance', icon: Shield, description: 'Medical coverage and wellness' },
+  {
+    id: 'home-insurance',
+    name: 'Home Insurance',
+    icon: Home,
+    description: 'Protect your home and belongings',
+    path: '/home-insurance'
+  },
+  {
+    id: 'car-insurance',
+    name: 'Car Insurance',
+    icon: Car,
+    description: 'Coverage for your vehicle',
+    path: '/car-insurance'
+  },
 ];
 
 const InsuranceSelection = () => {
   const navigate = useNavigate();
 
-  const handleSelect = (type) => {
-    // Navigate to the specific insurance form
-    // Example: navigate(`/quote/${type}`);
-    // For now, just navigate to home insurance as example
-    navigate('/home-insurance');
+  const handleSelect = (path) => {
+    navigate(path);
   };
 
   return (
@@ -43,7 +49,7 @@ const InsuranceSelection = () => {
               <Card
                 key={insurance.id}
                 className="p-6 text-center cursor-pointer hover:shadow-lg transition-shadow"
-                onClick={() => handleSelect(insurance.id)}
+                onClick={() => handleSelect(insurance.path)}
               >
                 <div className="flex flex-col items-center">
                   <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
