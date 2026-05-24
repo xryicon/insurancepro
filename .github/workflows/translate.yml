@@ -3,7 +3,8 @@ name: Auto Extract and Translate
 on:
   push:
     paths:
-      - 'src/**/*.{js,jsx}'
+      - 'src/**/*.js'
+      - 'src/**/*.jsx'
 
 jobs:
   translate:
