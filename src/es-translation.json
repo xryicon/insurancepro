@@ -209,5 +209,7 @@
   "formnavigationreview": "form.navigation.review",
   "formnavigationnext": "form.navigation.next",
   "formnavigationsubmit": "form.navigation.submit",
-  "insurancepro_compare__save_on_insurance_in_spain": "insurancepro_compare__save_on_insurance_in_spain"
+  "insurancepro_compare__save_on_insurance_in_spain": "insurancepro_compare__save_on_insurance_in_spain",
+  "current_cover": "current_cover",
+  "next": "next"
 }
