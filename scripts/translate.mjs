@@ -55,16 +55,28 @@ const __dirname = dirname(__filename);
     en[key] = text;
   });
 
-  // 3. Save files
+  // 3. Load existing translations
   const srcDir = `${__dirname}/../src`;
   await fs.mkdir(srcDir, { recursive: true });
+
+  // Load existing files
+  let existingEs = {};
+  let existingNl = {};
+  try { existingEs = JSON.parse(await fs.readFile(`${srcDir}/es-translation.json`, 'utf8')); } catch {}
+  try { existingNl = JSON.parse(await fs.readFile(`${srcDir}/nl-translation.json`, 'utf8')); } catch {}
+
+  // 4. Save English (always overwrite - this is source)
   await fs.writeFile(`${srcDir}/en-translation.json`, JSON.stringify(en, null, 2));
   console.log('✅ English translations saved');
 
-  // 4. Translate to Spanish
+  // 5. Translate to Spanish (only new keys)
   console.log('🔄 Translating to Spanish...');
-  const es = {};
+  const es = { ...existingEs };
   for (const [key, value] of Object.entries(en)) {
+    if (es[key]) {
+      console.log(`  ✅ Already translated: ${value}`);
+      continue;
+    }
     try {
       const response = await axios.post('https://libretranslate.com/translate', {
         q: value,
@@ -82,10 +94,14 @@ const __dirname = dirname(__filename);
   await fs.writeFile(`${srcDir}/es-translation.json`, JSON.stringify(es, null, 2));
   console.log('✅ Spanish translations saved');
 
-  // 5. Translate to Dutch
+  // 6. Translate to Dutch (only new keys)
   console.log('🔄 Translating to Dutch...');
-  const nl = {};
+  const nl = { ...existingNl };
   for (const [key, value] of Object.entries(en)) {
+    if (nl[key]) {
+      console.log(`  ✅ Already translated: ${value}`);
+      continue;
+    }
     try {
       const response = await axios.post('https://libretranslate.com/translate', {
         q: value,
