@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Menu, X, Phone } from 'lucide-react';
 import { navLinks } from '../data/constants';
 import { useTranslation } from 'react-i18next';
- 
+
 const Layout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -46,8 +46,8 @@ const Layout = () => {
                 <Shield className="w-6 h-6 text-white" />
               </div>
               <div>
-                <span className="text-xl font-bold text-gray-900">{t('Insurance')}</span>
-                <span className="text-xl font-bold text-blue-600">{t('Pro')}</span>
+                <span className="text-xl font-bold text-gray-900">{t('insurance')}</span>
+                <span className="text-xl font-bold text-blue-600">{t('pro')}</span>
               </div>
             </div>
 
@@ -114,13 +114,13 @@ const Layout = () => {
                 className="flex items-center space-x-1 px-4 py-2 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
               >
                 <Phone className="w-4 h-4" />
-                <span>{t('Contact')}</span>
+                <span>{t('contact')}</span>
               </button>
               <button
                 onClick={() => navigate('/quote')}
                 className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
               >
-                {t('Get a Quote')}
+                {t('get_a_quote')}
               </button>
             </div>
 
@@ -205,13 +205,13 @@ const Layout = () => {
                     className="w-full flex items-center justify-center space-x-1 px-4 py-3 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
                   >
                     <Phone className="w-4 h-4" />
-                    <span>{t('Contact')}</span>
+                    <span>{t('contact')}</span>
                   </button>
                   <button
                     onClick={() => navigate('/quote')}
                     className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all duration-200"
                   >
-                    {t('Get a Quote')}
+                    {t('get_a_quote')}
                   </button>
                 </div>
               </div>
@@ -231,13 +231,13 @@ const Layout = () => {
           <div className="flex items-center justify-center space-x-2 mb-4">
             <Shield className="w-6 h-6 text-white" />
             <span className="text-xl font-bold">
-              {t('Insurance')}<span className="text-blue-600">{t('Pro')}</span>
+              {t('insurance')}<span className="text-blue-600">{t('pro')}</span>
             </span>
           </div>
-          <p className="text-gray-400 text-sm mb-6">{t('Smart Insurance. Simple Savings.')}</p>
+          <p className="text-gray-400 text-sm mb-6">{t('smart_insurance_simple_savings')}</p>
           <div className="space-y-2 mb-6">
             <p className="text-gray-400 text-sm">
-              {t('Email')}:{' '}
+              {t('email')}:{' '}
               <a
                 href="mailto:Info@insurancepro.es"
                 className="text-blue-400 hover:text-white"
@@ -246,7 +246,7 @@ const Layout = () => {
               </a>
             </p>
             <p className="text-gray-400 text-sm">
-              {t('Website')}:{' '}
+              {t('website')}:{' '}
               <a
                 href="https://insurancepro.es"
                 className="text-blue-400 hover:text-white"
@@ -261,19 +261,19 @@ const Layout = () => {
               onClick={(e) => { e.preventDefault(); navigate('/faq'); }}
               className="text-gray-400 hover:text-white text-sm"
             >
-              {t('FAQ')}
+              {t('faq')}
             </a>
             <a
               href="/privacy-policy"
-              onClick={(e) => { e.preventDefault(); navigate('/privacy-policy'); }}
+              onClick={(e) => { e.preventDefault(); navigate('/faq'); }}
               className="text-gray-400 hover:text-white text-sm"
             >
-              {t('Privacy Policy')}
+              {t('privacy_policy')}
             </a>
           </div>
           <div className="border-t border-gray-800 pt-6">
             <p className="text-gray-400 text-sm">
-              &copy; {new Date().getFullYear()} {t('InsurancePro. All rights reserved.')}
+              &copy; {new Date().getFullYear()} {t('insurancepro_all_rights_reserved')}
             </p>
           </div>
         </div>
