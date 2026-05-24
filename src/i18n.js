@@ -2,37 +2,29 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
-// Dynamically import translation files (required for Vite)
-const loadTranslations = async () => {
-  try {
-    const enTranslations = await import('../public/locales/en/translation.json').then((m) => m.default);
-    const esTranslations = await import('../public/locales/es/translation.json').then((m) => m.default);
-    const nlTranslations = await import('../public/locales/nl/translation.json').then((m) => m.default);
+// Import translation files from /src/
+import enTranslations from './en-translation.json';
+import esTranslations from './es-translation.json';
+import nlTranslations from './nl-translation.json';
 
-    i18n
-      .use(LanguageDetector)
-      .use(initReactI18next)
-      .init({
-        resources: {
-          en: { translation: enTranslations },
-          es: { translation: esTranslations },
-          nl: { translation: nlTranslations },
-        },
-        fallbackLng: 'en',
-        debug: true, // Logs i18n events to the console for debugging
-        interpolation: {
-          escapeValue: false, // React already escapes values
-        },
-        detection: {
-          order: ['navigator', 'localStorage', 'htmlTag'],
-          caches: ['localStorage'],
-        },
-      });
-  } catch (error) {
-    console.error('Failed to load translations:', error);
-  }
-};
-
-loadTranslations();
+i18n
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    resources: {
+      en: { translation: enTranslations },
+      es: { translation: esTranslations },
+      nl: { translation: nlTranslations },
+    },
+    fallbackLng: 'en',
+    debug: true, // Enable to see i18n logs in the console
+    interpolation: {
+      escapeValue: false,
+    },
+    detection: {
+      order: ['navigator', 'localStorage', 'htmlTag'],
+      caches: ['localStorage'],
+    },
+  });
 
 export default i18n;
