@@ -228,15 +228,15 @@ export default function CarInsurance() {
                           error={errors.fullName?.message}
                           {...register('fullName')}
                         />
-                        <FormField
-                          label="Date of Birth"
+          <FormField
+  label="Date of Birth"
   id="dateOfBirth"
   type="text"
   inputMode="numeric"  // Encourages numeric keypad
-  placeholder="DDMMYYYY"  // Example: 25121990 for 25/12/1990
+  placeholder="DDMMYYYY"  // Example: 25121990
   error={errors.dateOfBirth?.message}
-  {...register('dateOfBirth')
-                        />
+  {...register('dateOfBirth')}
+/>
                         <FormField
                           label="Nationality"
                           id="nationality"
