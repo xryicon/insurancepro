@@ -1,53 +1,68 @@
 import axios from 'axios';
-import fs from 'fs';
+import fs from 'fs/promises';
+import { glob } from 'glob';
+import { parse } from '@babel/parser';
+import traverse from '@babel/traverse';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Your English text
-const en = {
-  'about_us_title': 'About Us | InsurancePro - Your Trusted Insurance Partner in Spain',
-  'about_us_description': 'Learn about InsurancePro: a mission-driven platform to help you save money on insurance in Spain. Created by Dylan.',
-  'about': 'About',
-  'insurance_pro': 'InsurancePro',
-  'tagline': 'Helping you save money on insurance in Spain — the easy way.',
-  'our_story': 'Our Story',
-  'story_part1': 'A few years ago, I found myself struggling to find a',
-  'simple_transparent_affordable': 'simple, transparent, and affordable',
-  'story_part2': 'way to compare insurance quotes in Spain. Most websites were either too complicated, lacked clear pricing, or didn\'t cater to expats and locals alike.',
-  'that_why': 'That\'s why I created',
-  'fast_easy_trustworthy': 'fast, easy, and trustworthy',
-  'story_part3': 'way to compare insurance options and save money. No jargon, no hidden fees, just the best deals tailored to your needs.',
-  'mission': 'Whether you\'re looking for car, home, or other types of insurance, we\'ve got you covered. Our mission is to make insurance simple, accessible, and affordable for everyone in Spain.',
-  'why_choose': 'Why Choose InsurancePro?',
-  'simple_fast': 'Simple & Fast',
-  'simple_fast_desc': 'Compare quotes in minutes with our easy-to-use platform. No complicated forms or endless paperwork.',
-  'trusted_partners': 'Trusted Partners',
-  'trusted_partners_desc': 'We work with the best insurance providers in Spain to bring you reliable, high-quality coverage.',
-  'save_money': 'Save Money',
-  'save_money_desc': 'Our platform helps you find the best rates, so you can save up to 40% on your insurance premiums.',
-  'meet_founder': 'Meet the Founder',
-  'hi_im': 'Hi, I\'m',
-  'dylan': 'Dylan',
-  'founder_story': 'the creator of InsurancePro. After years of frustration trying to navigate the complex world of insurance in Spain, I decided to build a solution that puts',
-  'you': 'you',
-  'founder_goal': 'first. My goal is to make insurance simple, transparent, and affordable for everyone.',
-  'contact': 'If you have any questions or feedback, feel free to reach out. I\'d love to hear from you!'
-};
+// 1. Extract all text from components
+const files = glob.sync('src/**/*.{js,jsx}');
+const extractedText = new Set();
 
-// Create src directory if it doesn't exist
-const srcDir = `${__dirname}/../src`;
-if (!fs.existsSync(srcDir)) {
-  fs.mkdirSync(srcDir, { recursive: true });
+for (const file of files) {
+  try {
+    const content = await fs.readFile(file, 'utf8');
+    const ast = parse(content, {
+      sourceType: 'module',
+      plugins: ['jsx']
+    });
+
+    traverse.default(ast, {
+      // Extract from t() calls
+      CallExpression(path) {
+        if (
+          path.node.callee.type === 'Identifier' &&
+          path.node.callee.name === 't' &&
+          path.node.arguments.length > 0 &&
+          path.node.arguments[0].type === 'StringLiteral'
+        ) {
+          extractedText.add(path.node.arguments[0].value);
+        }
+      },
+      // Extract from JSX text (fallback)
+      JSXText(path) {
+        const text = path.node.value.trim();
+        if (text && !text.match(/^\s*$/)) {
+          extractedText.add(text);
+        }
+      }
+    });
+  } catch (error) {
+    console.error(`Error processing ${file}:`, error.message);
+  }
 }
 
-// Save English translations
-fs.writeFileSync(`${srcDir}/en-translation.json`, JSON.stringify(en, null, 2));
+// 2. Create English translation file
+const en = {};
+Array.from(extractedText).forEach((text) => {
+  const key = text
+    .replace(/\s+/g, '_')
+    .replace(/[^a-zA-Z0-9_]/g, '')
+    .toLowerCase();
+  en[key] = text;
+});
+
+// 3. Save files
+const srcDir = `${__dirname}/../src`;
+await fs.mkdir(srcDir, { recursive: true });
+await fs.writeFile(`${srcDir}/en-translation.json`, JSON.stringify(en, null, 2));
 console.log('✅ English translations saved');
 
-// Translate to Spanish
+// 4. Translate to Spanish
 console.log('🔄 Translating to Spanish...');
 const es = {};
 for (const [key, value] of Object.entries(en)) {
@@ -59,15 +74,14 @@ for (const [key, value] of Object.entries(en)) {
     });
     es[key] = response.data.translatedText || value;
   } catch (e) {
-    console.error(`⚠️ Error translating "${value}" to Spanish:`, e.message);
     es[key] = value;
   }
   await new Promise(resolve => setTimeout(resolve, 500));
 }
-fs.writeFileSync(`${srcDir}/es-translation.json`, JSON.stringify(es, null, 2));
+await fs.writeFile(`${srcDir}/es-translation.json`, JSON.stringify(es, null, 2));
 console.log('✅ Spanish translations saved');
 
-// Translate to Dutch
+// 5. Translate to Dutch
 console.log('🔄 Translating to Dutch...');
 const nl = {};
 for (const [key, value] of Object.entries(en)) {
@@ -79,12 +93,11 @@ for (const [key, value] of Object.entries(en)) {
     });
     nl[key] = response.data.translatedText || value;
   } catch (e) {
-    console.error(`⚠️ Error translating "${value}" to Dutch:`, e.message);
     nl[key] = value;
   }
   await new Promise(resolve => setTimeout(resolve, 500));
 }
-fs.writeFileSync(`${srcDir}/nl-translation.json`, JSON.stringify(nl, null, 2));
+await fs.writeFile(`${srcDir}/nl-translation.json`, JSON.stringify(nl, null, 2));
 console.log('✅ Dutch translations saved');
 
 console.log('🎉 All translations completed successfully!');
