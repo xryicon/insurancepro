@@ -2,12 +2,10 @@ import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 
-// Make sure these files exist and have default exports
 const Home = lazy(() => import('./pages/Home'));
 const CarInsurance = lazy(() => import('./pages/CarInsurance'));
 const HomeInsurance = lazy(() => import('./pages/HomeInsurance'));
 const AboutUs = lazy(() => import('./pages/AboutUs'));
-const Contact = lazy(() => import('./pages/Contact'));
 const InsuranceSelection = lazy(() => import('./pages/InsuranceSelection'));
 
 function App() {
@@ -28,14 +26,6 @@ function App() {
             element={
               <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
                 <AboutUs />
-              </Suspense>
-            }
-          />
-          <Route
-            path="contact"
-            element={
-              <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
-                <Contact />
               </Suspense>
             }
           />
