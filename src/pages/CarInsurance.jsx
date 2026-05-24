@@ -11,6 +11,7 @@ import { Card } from '../components/ui/Card';
 import FormField from '../components/forms/FormField';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 // Zod schema (unchanged)
 const schema = z.object({
@@ -39,6 +40,7 @@ const schema = z.object({
 });
 
 export default function CarInsurance() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [dateOfBirth, setDateOfBirth] = useState('');
@@ -56,7 +58,6 @@ export default function CarInsurance() {
     resolver: zodResolver(schema),
   });
 
-  // Auto-format date as DD/MM/YYYY (unchanged)
   const formatDate = useCallback((value, setState, fieldName) => {
     let cleanedValue = value.replace(/\D/g, '');
     cleanedValue = cleanedValue.slice(0, 8);
@@ -86,11 +87,21 @@ export default function CarInsurance() {
   };
 
   const handleDateOfBirthBlur = () => {
-    validateDateFormat(dateOfBirth, setDateOfBirth, 'dateOfBirth', 'Date of birth must be in DD/MM/YYYY format');
+    validateDateFormat(
+      dateOfBirth,
+      setDateOfBirth,
+      'dateOfBirth',
+      t('form.errors.dateFormat')
+    );
   };
 
   const handleDateOfCarLicenseBlur = () => {
-    validateDateFormat(dateOfCarLicense, setDateOfCarLicense, 'dateOfCarLicense', 'Date of car license must be in DD/MM/YYYY format');
+    validateDateFormat(
+      dateOfCarLicense,
+      setDateOfCarLicense,
+      'dateOfCarLicense',
+      t('form.errors.dateFormat')
+    );
   };
 
   const handleKeyDown = useCallback((e) => {
@@ -106,7 +117,7 @@ export default function CarInsurance() {
     }[step];
     const isValid = await trigger(fieldsToValidate, { shouldFocus: true });
     if (isValid) setStep(step + 1);
-    else toast.error('Please fill in all required fields correctly.');
+    else toast.error(t('form.errors.fillAllFields'));
   };
 
   const handlePrevious = () => setStep(step - 1);
@@ -121,7 +132,7 @@ export default function CarInsurance() {
     if (response.ok) {
       setSubmitSuccess(true);
     } else {
-      toast.error('Failed to submit quote.');
+      toast.error(t('form.errors.submitFailed'));
     }
   };
 
@@ -130,18 +141,17 @@ export default function CarInsurance() {
     setDateOfBirth('');
     setDateOfCarLicense('');
     setSubmitSuccess(false);
-    // Reset form fields (optional)
     Object.keys(getValues()).forEach(key => setValue(key, ''));
   };
 
   const steps = [
-    { number: 1, label: 'Personal Details' },
-    { number: 2, label: 'Car Details' },
-    { number: 3, label: 'Current Insurance' },
-    { number: 4, label: 'Review & Submit' },
+    { number: 1, label: t('form.steps.personalDetails') },
+    { number: 2, label: t('form.steps.carDetails') },
+    { number: 3, label: t('form.steps.currentInsurance') },
+    { number: 4, label: t('form.steps.reviewSubmit') },
   ];
 
-  // Success page (new, matching Home Insurance)
+  // Success page
   if (submitSuccess) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -156,18 +166,17 @@ export default function CarInsurance() {
                 <Check className="w-10 h-10 text-green-600" />
               </div>
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Quote Request Submitted!
+                {t('success.title')}
               </h2>
               <p className="text-gray-600 mb-8">
-                Thank you for your request. Our team will review your information
-                and get back to you with the best car insurance quotes within 24 hours.
+                {t('success.message')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="large" onClick={() => navigate('/')}>
-                  Back to Home
+                  {t('success.backToHome')}
                 </Button>
                 <Button variant="outline" size="large" onClick={handleStartOver}>
-                  Start New Quote
+                  {t('success.startNewQuote')}
                 </Button>
               </div>
             </motion.div>
@@ -193,7 +202,7 @@ export default function CarInsurance() {
       />
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Header section (updated to match Home Insurance) */}
+          {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -205,21 +214,21 @@ export default function CarInsurance() {
               className="flex items-center text-gray-600 hover:text-green-600 transition-colors mb-4"
             >
               <ArrowLeft className="w-5 h-5 mr-2" />
-              Back to Home
+              {t('form.backToHome')}
             </button>
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">
-                  Car Insurance Quote
+                  {t('form.title')}
                 </h1>
                 <p className="text-gray-600 mt-1">
-                  Compare and save on your car insurance
+                  {t('form.subtitle')}
                 </p>
               </div>
             </div>
           </motion.div>
 
-          {/* Progress steps (updated to match Home Insurance) */}
+          {/* Progress steps */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -277,7 +286,7 @@ export default function CarInsurance() {
                 onKeyDown={handleKeyDown}
                 className="space-y-6"
               >
-                {/* Step 1: Personal Details (updated animations and layout) */}
+                {/* Step 1: Personal Details */}
                 {step === 1 && (
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
@@ -285,28 +294,28 @@ export default function CarInsurance() {
                     transition={{ duration: 0.5 }}
                   >
                     <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                      Personal Details
+                      {t('form.personalDetails.title')}
                     </h2>
                     <p className="text-gray-600 mb-8">
-                      Please provide your personal details for accurate quotes
+                      {t('form.personalDetails.subtitle')}
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <FormField
-                        label="Full Name"
+                        label={t('form.personalDetails.fullName')}
                         id="fullName"
-                        placeholder="Enter your full name"
+                        placeholder={t('form.personalDetails.fullNamePlaceholder')}
                         error={errors.fullName?.message}
                         {...register('fullName')}
                       />
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Date of Birth
+                          {t('form.personalDetails.dateOfBirth')}
                         </label>
                         <input
                           id="dateOfBirth"
                           type="text"
                           inputMode="numeric"
-                          placeholder="DD/MM/YYYY"
+                          placeholder={t('form.datePlaceholder')}
                           value={dateOfBirth}
                           onChange={handleDateOfBirthChange}
                           onBlur={handleDateOfBirthBlur}
@@ -321,44 +330,44 @@ export default function CarInsurance() {
                         )}
                       </div>
                       <FormField
-                        label="Nationality"
+                        label={t('form.personalDetails.nationality')}
                         id="nationality"
-                        placeholder="e.g., Spanish"
+                        placeholder={t('form.personalDetails.nationalityPlaceholder')}
                         error={errors.nationality?.message}
                         {...register('nationality')}
                       />
                       <FormField
-                        label="NIE Number"
+                        label={t('form.personalDetails.nieNumber')}
                         id="nieNumber"
-                        placeholder="e.g., X1234567A"
+                        placeholder={t('form.personalDetails.nieNumberPlaceholder')}
                         error={errors.nieNumber?.message}
                         {...register('nieNumber')}
                       />
                       <FormField
-                        label="Email Address"
+                        label={t('form.personalDetails.email')}
                         id="email"
                         type="email"
-                        placeholder="e.g., john@example.com"
+                        placeholder={t('form.personalDetails.emailPlaceholder')}
                         error={errors.email?.message}
                         {...register('email')}
                       />
                       <FormField
-                        label="Telephone"
+                        label={t('form.personalDetails.telephone')}
                         id="telephone"
                         type="tel"
-                        placeholder="+34 123 456 789"
+                        placeholder={t('form.personalDetails.telephonePlaceholder')}
                         error={errors.telephone?.message}
                         {...register('telephone')}
                       />
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Date of Car License
+                          {t('form.personalDetails.dateOfCarLicense')}
                         </label>
                         <input
                           id="dateOfCarLicense"
                           type="text"
                           inputMode="numeric"
-                          placeholder="DD/MM/YYYY"
+                          placeholder={t('form.datePlaceholder')}
                           value={dateOfCarLicense}
                           onChange={handleDateOfCarLicenseChange}
                           onBlur={handleDateOfCarLicenseBlur}
@@ -373,24 +382,24 @@ export default function CarInsurance() {
                         )}
                       </div>
                       <FormField
-                        label="Nationality of Car License"
+                        label={t('form.personalDetails.nationalityOfCarLicense')}
                         id="nationalityOfCarLicense"
-                        placeholder="e.g., Spanish"
+                        placeholder={t('form.personalDetails.nationalityOfCarLicensePlaceholder')}
                         error={errors.nationalityOfCarLicense?.message}
                         {...register('nationalityOfCarLicense')}
                       />
                       <FormField
-                        label="Address"
+                        label={t('form.personalDetails.address')}
                         id="address"
-                        placeholder="Enter your address"
+                        placeholder={t('form.personalDetails.addressPlaceholder')}
                         error={errors.address?.message}
                         {...register('address')}
                         className="md:col-span-2"
                       />
                       <FormField
-                        label="Postcode"
+                        label={t('form.personalDetails.postcode')}
                         id="postcode"
-                        placeholder="e.g., 28001"
+                        placeholder={t('form.personalDetails.postcodePlaceholder')}
                         error={errors.postcode?.message}
                         {...register('postcode')}
                         className="md:col-span-2"
@@ -399,7 +408,7 @@ export default function CarInsurance() {
                   </motion.div>
                 )}
 
-                {/* Step 2: Car Details (updated animations and layout) */}
+                {/* Step 2: Car Details */}
                 {step === 2 && (
                   <motion.div
                     initial={{ opacity: 0, x: 20 }}
@@ -407,71 +416,71 @@ export default function CarInsurance() {
                     transition={{ duration: 0.5 }}
                   >
                     <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                      Car Details
+                      {t('form.carDetails.title')}
                     </h2>
                     <p className="text-gray-600 mb-8">
-                      Tell us about your car for accurate quotes
+                      {t('form.carDetails.subtitle')}
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <FormField
-                        label="Car Make"
+                        label={t('form.carDetails.carMake')}
                         id="carMake"
-                        placeholder="e.g., Toyota"
+                        placeholder={t('form.carDetails.carMakePlaceholder')}
                         error={errors.carMake?.message}
                         {...register('carMake')}
                       />
                       <FormField
-                        label="Car Model"
+                        label={t('form.carDetails.carModel')}
                         id="carModel"
-                        placeholder="e.g., Corolla"
+                        placeholder={t('form.carDetails.carModelPlaceholder')}
                         error={errors.carModel?.message}
                         {...register('carModel')}
                       />
                       <FormField
-                        label="Year"
+                        label={t('form.carDetails.year')}
                         id="year"
                         type="number"
-                        placeholder="e.g., 2020"
+                        placeholder={t('form.carDetails.yearPlaceholder')}
                         error={errors.year?.message}
                         {...register('year', { valueAsNumber: true })}
                       />
                       <FormField
-                        label="Registration Number"
+                        label={t('form.carDetails.registration')}
                         id="registration"
-                        placeholder="e.g., 1234ABC"
+                        placeholder={t('form.carDetails.registrationPlaceholder')}
                         error={errors.registration?.message}
                         {...register('registration')}
                       />
                       <FormField
-                        label="Horsepower (CV)"
+                        label={t('form.carDetails.horsepower')}
                         id="horsepower"
                         type="number"
-                        placeholder="e.g., 150"
+                        placeholder={t('form.carDetails.horsepowerPlaceholder')}
                         error={errors.horsepower?.message}
                         {...register('horsepower', { valueAsNumber: true })}
                       />
                       <FormField
-                        label="Engine Size (cc)"
+                        label={t('form.carDetails.engineSize')}
                         id="engineSize"
                         type="number"
-                        placeholder="e.g., 2000"
+                        placeholder={t('form.carDetails.engineSizePlaceholder')}
                         error={errors.engineSize?.message}
                         {...register('engineSize', { valueAsNumber: true })}
                       />
                       <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Transmission Type
+                          {t('form.carDetails.transmissionType')}
                         </label>
                         <select
                           id="transmissionType"
                           className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                           {...register('transmissionType')}
                         >
-                          <option value="">Select transmission type</option>
-                          <option value="Manual">Manual</option>
-                          <option value="Automatic">Automatic</option>
-                          <option value="Hybrid">Hybrid</option>
-                          <option value="Full Electric">Full Electric</option>
+                          <option value="">{t('form.carDetails.selectTransmission')}</option>
+                          <option value="Manual">{t('form.carDetails.manual')}</option>
+                          <option value="Automatic">{t('form.carDetails.automatic')}</option>
+                          <option value="Hybrid">{t('form.carDetails.hybrid')}</option>
+                          <option value="Full Electric">{t('form.carDetails.fullElectric')}</option>
                         </select>
                         {errors.transmissionType && (
                           <p className="text-sm text-red-500 mt-1">
@@ -483,7 +492,7 @@ export default function CarInsurance() {
                   </motion.div>
                 )}
 
-                {/* Step 3: Current Insurance (updated animations and layout) */}
+                {/* Step 3: Current Insurance */}
                 {step === 3 && (
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
@@ -491,31 +500,31 @@ export default function CarInsurance() {
                     transition={{ duration: 0.5 }}
                   >
                     <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                      Current Insurance
+                      {t('form.currentInsurance.title')}
                     </h2>
                     <p className="text-gray-600 mb-8">
-                      Information about your current coverage helps us find better deals
+                      {t('form.currentInsurance.subtitle')}
                     </p>
                     <div className="grid grid-cols-1 gap-6">
                       <FormField
-                        label="Current Insurance Company"
+                        label={t('form.currentInsurance.currentCompany')}
                         id="currentCompany"
-                        placeholder="e.g., Allianz, Mapfre, AXA"
+                        placeholder={t('form.currentInsurance.currentCompanyPlaceholder')}
                         error={errors.currentCompany?.message}
                         {...register('currentCompany')}
                       />
                       <FormField
-                        label="Current Premium (€)"
+                        label={t('form.currentInsurance.currentPremium')}
                         id="currentPremium"
                         type="number"
-                        placeholder="e.g., 500"
+                        placeholder={t('form.currentInsurance.currentPremiumPlaceholder')}
                         error={errors.currentPremium?.message}
                         {...register('currentPremium', { valueAsNumber: true })}
                       />
                       <FormField
-                        label="Current Cover"
+                        label={t('form.currentInsurance.currentCover')}
                         id="currentCover"
-                        placeholder="e.g., Third-Party, Comprehensive"
+                        placeholder={t('form.currentInsurance.currentCoverPlaceholder')}
                         error={errors.currentCover?.message}
                         {...register('currentCover')}
                       />
@@ -523,7 +532,7 @@ export default function CarInsurance() {
                   </motion.div>
                 )}
 
-                {/* Step 4: Review & Submit (updated to match Home Insurance) */}
+                {/* Step 4: Review & Submit */}
                 {step === 4 && (
                   <motion.div
                     initial={{ opacity: 0, x: 20 }}
@@ -531,55 +540,57 @@ export default function CarInsurance() {
                     transition={{ duration: 0.5 }}
                   >
                     <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                      Review & Submit
+                      {t('form.reviewSubmit.title')}
                     </h2>
                     <p className="text-gray-600 mb-8">
-                      Please review your information before submitting
+                      {t('form.reviewSubmit.subtitle')}
                     </p>
 
                     <div className="space-y-6">
                       {/* Personal Details Review */}
                       <div className="bg-gray-50 rounded-lg p-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Personal Details</h3>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                          {t('form.reviewSubmit.personalDetails')}
+                        </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                           <div>
-                            <div className="text-gray-500">Full Name</div>
+                            <div className="text-gray-500">{t('form.personalDetails.fullName')}</div>
                             <div className="font-medium">{getValues('fullName')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">Date of Birth</div>
+                            <div className="text-gray-500">{t('form.personalDetails.dateOfBirth')}</div>
                             <div className="font-medium">{getValues('dateOfBirth')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">Nationality</div>
+                            <div className="text-gray-500">{t('form.personalDetails.nationality')}</div>
                             <div className="font-medium">{getValues('nationality')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">NIE Number</div>
+                            <div className="text-gray-500">{t('form.personalDetails.nieNumber')}</div>
                             <div className="font-medium">{getValues('nieNumber')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">Address</div>
+                            <div className="text-gray-500">{t('form.personalDetails.address')}</div>
                             <div className="font-medium">{getValues('address')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">Postcode</div>
+                            <div className="text-gray-500">{t('form.personalDetails.postcode')}</div>
                             <div className="font-medium">{getValues('postcode')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">Email</div>
+                            <div className="text-gray-500">{t('form.personalDetails.email')}</div>
                             <div className="font-medium">{getValues('email')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">Telephone</div>
+                            <div className="text-gray-500">{t('form.personalDetails.telephone')}</div>
                             <div className="font-medium">{getValues('telephone')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">Date of Car License</div>
+                            <div className="text-gray-500">{t('form.personalDetails.dateOfCarLicense')}</div>
                             <div className="font-medium">{getValues('dateOfCarLicense')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">Nationality of Car License</div>
+                            <div className="text-gray-500">{t('form.personalDetails.nationalityOfCarLicense')}</div>
                             <div className="font-medium">{getValues('nationalityOfCarLicense')}</div>
                           </div>
                         </div>
@@ -587,34 +598,36 @@ export default function CarInsurance() {
 
                       {/* Car Details Review */}
                       <div className="bg-gray-50 rounded-lg p-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Car Details</h3>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                          {t('form.reviewSubmit.carDetails')}
+                        </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                           <div>
-                            <div className="text-gray-500">Car Make</div>
+                            <div className="text-gray-500">{t('form.carDetails.carMake')}</div>
                             <div className="font-medium">{getValues('carMake')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">Car Model</div>
+                            <div className="text-gray-500">{t('form.carDetails.carModel')}</div>
                             <div className="font-medium">{getValues('carModel')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">Year</div>
+                            <div className="text-gray-500">{t('form.carDetails.year')}</div>
                             <div className="font-medium">{getValues('year')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">Registration</div>
+                            <div className="text-gray-500">{t('form.carDetails.registration')}</div>
                             <div className="font-medium">{getValues('registration')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">Horsepower</div>
+                            <div className="text-gray-500">{t('form.carDetails.horsepower')}</div>
                             <div className="font-medium">{getValues('horsepower')} CV</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">Engine Size</div>
+                            <div className="text-gray-500">{t('form.carDetails.engineSize')}</div>
                             <div className="font-medium">{getValues('engineSize')} cc</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">Transmission</div>
+                            <div className="text-gray-500">{t('form.carDetails.transmissionType')}</div>
                             <div className="font-medium">{getValues('transmissionType')}</div>
                           </div>
                         </div>
@@ -622,18 +635,20 @@ export default function CarInsurance() {
 
                       {/* Current Insurance Review */}
                       <div className="bg-gray-50 rounded-lg p-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Current Insurance</h3>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                          {t('form.reviewSubmit.currentInsurance')}
+                        </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                           <div>
-                            <div className="text-gray-500">Company</div>
+                            <div className="text-gray-500">{t('form.currentInsurance.currentCompany')}</div>
                             <div className="font-medium">{getValues('currentCompany')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">Premium</div>
+                            <div className="text-gray-500">{t('form.currentInsurance.currentPremium')}</div>
                             <div className="font-medium">€{getValues('currentPremium')}</div>
                           </div>
                           <div className="md:col-span-2">
-                            <div className="text-gray-500">Cover</div>
+                            <div className="text-gray-500">{t('form.currentInsurance.currentCover')}</div>
                             <div className="font-medium">{getValues('currentCover')}</div>
                           </div>
                         </div>
@@ -644,7 +659,7 @@ export default function CarInsurance() {
                       <div className="flex items-center">
                         <Check className="w-5 h-5 text-green-600 mr-3" />
                         <span className="text-green-700">
-                          Your information is secure and will only be used to provide you with insurance quotes.
+                          {t('form.reviewSubmit.privacyNotice')}
                         </span>
                       </div>
                     </div>
@@ -652,7 +667,7 @@ export default function CarInsurance() {
                 )}
               </form>
 
-              {/* Navigation buttons (updated to match Home Insurance) */}
+              {/* Navigation buttons */}
               <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">
                 {step > 1 && (
                   <Button
@@ -660,7 +675,7 @@ export default function CarInsurance() {
                     onClick={handlePrevious}
                     leftIcon={<ChevronLeft className="w-5 h-5" />}
                   >
-                    Back
+                    {t('form.navigation.back')}
                   </Button>
                 )}
                 {step < 4 ? (
@@ -669,7 +684,7 @@ export default function CarInsurance() {
                     loading={isSubmitting}
                     rightIcon={<ChevronRight className="w-5 h-5" />}
                   >
-                    {step === 3 ? 'Review' : 'Next'}
+                    {step === 3 ? t('form.navigation.review') : t('form.navigation.next')}
                   </Button>
                 ) : (
                   <Button
@@ -678,7 +693,7 @@ export default function CarInsurance() {
                     loading={isSubmitting}
                     rightIcon={<ChevronRight className="w-5 h-5" />}
                   >
-                    Submit Quote Request
+                    {t('form.navigation.submit')}
                   </Button>
                 )}
               </div>
