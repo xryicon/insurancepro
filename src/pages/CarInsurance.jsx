@@ -230,11 +230,12 @@ export default function CarInsurance() {
                         />
                         <FormField
                           label="Date of Birth"
-        id="dateOfBirth"
-        type="text"  // Changed from "date" to "text"
-        placeholder="DD/MM/YYYY"  // Added placeholder for clarity
-        error={errors.dateOfBirth?.message}
-        {...register('dateOfBirth')}
+  id="dateOfBirth"
+  type="text"
+  inputMode="numeric"  // Encourages numeric keypad
+  placeholder="DDMMYYYY"  // Example: 25121990 for 25/12/1990
+  error={errors.dateOfBirth?.message}
+  {...register('dateOfBirth')
                         />
                         <FormField
                           label="Nationality"
@@ -267,12 +268,14 @@ export default function CarInsurance() {
                           {...register('telephone')}
                         />
                         <FormField
-                          label="Date of Car License"
-        id="dateOfCarLicense"
-        type="text"  // Changed from "date" to "text"
-        placeholder="DD/MM/YYYY"  // Added placeholder for clarity
-        error={errors.dateOfCarLicense?.message}
-        {...register('dateOfCarLicense')}
+              <FormField
+  label="Date of Car License"
+  id="dateOfCarLicense"
+  type="text"
+  inputMode="numeric"  // Encourages numeric keypad
+  placeholder="DDMMYYYY"  // Example: 15052020
+  error={errors.dateOfCarLicense?.message}
+  {...register('dateOfCarLicense')}
                         />
                         <FormField
                           label="Nationality of Car License"
