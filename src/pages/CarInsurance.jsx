@@ -267,7 +267,6 @@ export default function CarInsurance() {
                           error={errors.telephone?.message}
                           {...register('telephone')}
                         />
-                        <FormField
               <FormField
   label="Date of Car License"
   id="dateOfCarLicense"
@@ -276,7 +275,8 @@ export default function CarInsurance() {
   placeholder="DDMMYYYY"  // Example: 15052020
   error={errors.dateOfCarLicense?.message}
   {...register('dateOfCarLicense')}
-                        />
+/>
+                        
                         <FormField
                           label="Nationality of Car License"
                           id="nationalityOfCarLicense"
