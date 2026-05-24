@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Car, Home, Shield, Menu, X, Phone, Mail, Globe, Heart
+  Car, Home, Shield, Menu, X, Globe, Heart
 } from 'lucide-react';
 import { navLinks, socialLinks } from '../data/constants';
 
@@ -71,17 +71,10 @@ const Layout = () => {
               ))}
             </nav>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons - UPDATED */}
             <div className="hidden lg:flex items-center space-x-3">
               <button
-                onClick={() => navigate('/contact')}
-                className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
-              >
-                <Phone className="w-4 h-4 inline mr-1" />
-                Contact
-              </button>
-              <button
-                onClick={() => navigate('/car-insurance')}
+                onClick={() => navigate('/quote')}  // <-- Updated to /quote
                 className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
               >
                 Get a Quote
@@ -98,7 +91,7 @@ const Layout = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu - UPDATED */}
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
@@ -128,14 +121,7 @@ const Layout = () => {
                 ))}
                 <div className="pt-3 border-t border-gray-100 space-y-2">
                   <button
-                    onClick={() => navigate('/contact')}
-                    className="w-full px-4 py-3 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors text-left"
-                  >
-                    <Phone className="w-4 h-4 inline mr-2" />
-                    Contact
-                  </button>
-                  <button
-                    onClick={() => navigate('/car-insurance')}
+                    onClick={() => navigate('/quote')}  // <-- Updated to /quote
                     className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all duration-200"
                   >
                     Get a Quote
@@ -151,53 +137,46 @@ const Layout = () => {
       <main className="pt-16">
         <Outlet />
       </main>
-{/* Footer - Simplified */}
-    <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
-        {/* Logo and Tagline */}
-        <div className="flex items-center justify-center space-x-2 mb-4">
-          <Shield className="w-6 h-6 text-white" />
-          <span className="text-xl font-bold">Insurance<span className="text-blue-600">Pro</span></span>
-        </div>
-        <p className="text-gray-400 text-sm mb-6">Smart Insurance. Simple Savings.</p>
 
-        {/* Email and Website ONLY */}
-        <div className="space-y-2 mb-6">
-          <p className="text-gray-400 text-sm">
-            Email: <a href="mailto:your@email.com" className="text-blue-400 hover:text-white">Info@insurancepro.es</a>
-          </p>
-          <p className="text-gray-400 text-sm">
-            Website: <a href="https://yourwebsite.com" className="text-blue-400 hover:text-white">https://insurancepro.es</a>
-          </p>
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+          <div className="flex items-center justify-center space-x-2 mb-4">
+            <Shield className="w-6 h-6 text-white" />
+            <span className="text-xl font-bold">Insurance<span className="text-blue-600">Pro</span></span>
+          </div>
+          <p className="text-gray-400 text-sm mb-6">Smart Insurance. Simple Savings.</p>
+          <div className="space-y-2 mb-6">
+            <p className="text-gray-400 text-sm">
+              Email: <a href="mailto:your@email.com" className="text-blue-400 hover:text-white">Info@insurancepro.es</a>
+            </p>
+            <p className="text-gray-400 text-sm">
+              Website: <a href="https://yourwebsite.com" className="text-blue-400 hover:text-white">https://insurancepro.es</a>
+            </p>
+          </div>
+          <div className="flex justify-center space-x-6 mb-6">
+            <a
+              href="/faq"
+              onClick={(e) => { e.preventDefault(); navigate('/faq'); }}
+              className="text-gray-400 hover:text-white text-sm"
+            >
+              FAQ
+            </a>
+            <a
+              href="/privacy-policy"
+              onClick={(e) => { e.preventDefault(); navigate('/privacy-policy'); }}
+              className="text-gray-400 hover:text-white text-sm"
+            >
+              Privacy Policy
+            </a>
+          </div>
+          <div className="border-t border-gray-800 pt-6">
+            <p className="text-gray-400 text-sm">© {new Date().getFullYear()} InsurancePro. All rights reserved.</p>
+          </div>
         </div>
-
-        {/* Resources: ONLY FAQ and Privacy Policy */}
-        <div className="flex justify-center space-x-6 mb-6">
-          <a
-            href="/faq"
-            onClick={(e) => { e.preventDefault(); navigate('/faq'); }}
-            className="text-gray-400 hover:text-white text-sm"
-          >
-            FAQ
-          </a>
-          <a
-            href="/privacy-policy"
-            onClick={(e) => { e.preventDefault(); navigate('/privacy-policy'); }}
-            className="text-gray-400 hover:text-white text-sm"
-          >
-            Privacy Policy
-          </a>
-        </div>
-
-        {/* Copyright */}
-        <div className="border-t border-gray-800 pt-6">
-          <p className="text-gray-400 text-sm">© {new Date().getFullYear()} InsurancePro. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
+      </footer>
     </div>
   );
 };
 
 export default Layout;
-  
