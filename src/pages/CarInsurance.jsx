@@ -10,6 +10,7 @@ import Button from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import FormField from '../components/forms/FormField';
 import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
 // Zod schema (unchanged)
 const schema = z.object({
