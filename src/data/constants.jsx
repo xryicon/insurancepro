@@ -1,5 +1,9 @@
-import { Check, Award, Clock, Headphones, Car, Home as HomeIcon, Shield, Star, Users, TrendingUp } from 'lucide-react';
-// Nationality options
+import {
+  Check, Award, Clock, Headphones, Car, Home as HomeIcon, Shield, Star, Users, TrendingUp,
+  Edit3, BarChart3
+} from 'lucide-react';
+
+// Nationality options (labels are keys for i18n)
 export const nationalityOptions = [
   { value: 'spanish', label: 'Spanish' },
   { value: 'british', label: 'British' },
@@ -62,7 +66,7 @@ export const insuranceProviders = [
   { value: 'axa', label: 'AXA' },
 ];
 
-// Brand options with models
+// Brand options with models (brand names are proper nouns and not translated)
 export const brandOptions = {
   'Volkswagen': ['Polo', 'Golf', 'Passat', 'Tiguan', 'T-Roc', 'Touareg', 'ID.3', 'ID.4'],
   'Peugeot': ['108', '208', '308', '3008', '5008', '2008', '508'],
@@ -103,19 +107,13 @@ export const getYearOptions = () => {
   return years;
 };
 
-// Spanish NIE validation regex
+// Regex patterns (no translation needed)
 export const NIE_REGEX = /^[XYZ]\d{7}[A-Z]$/i;
-
-// Spanish phone number validation regex
 export const PHONE_REGEX = /^(\+34|0034|34)?[67]\d{8}$/;
-
-// Spanish car registration validation regex (new format: 4 digits + 3 letters)
 export const REGISTRATION_REGEX = /^\d{4}[A-Z]{3}$/i;
-
-// Email validation regex
 export const EMAIL_REGEX = /^[\w\.-]+@[\w\.-]+\.[a-z]{2,}$/i;
 
-// Navigation links
+// Navigation links (labels are keys for i18n)
 export const navLinks = [
   { path: '/', label: 'Home' },
   { path: '/car-insurance', label: 'Car Insurance' },
@@ -123,18 +121,19 @@ export const navLinks = [
   { path: '/about', label: 'About Us' },
 ];
 
-// Footer links - UPDATED to only include email, website, FAQ, and Privacy Policy
+// Footer links (labels are keys for i18n)
 export const footerLinks = {
   contactInfo: [
-    { label: "Email", value: "your@email.com", type: "email" },
-    { label: "Website", value: "https://yourwebsite.com", type: "website" },
+    { label: 'Email', value: 'Info@insurancepro.es', type: 'email' },
+    { label: 'Website', value: 'https://insurancepro.es', type: 'website' },
   ],
   resources: [
     { path: '/faq', label: 'FAQ' },
     { path: '/privacy-policy', label: 'Privacy Policy' },
   ],
 };
-// Social media links
+
+// Social media links (icons are not translated)
 export const socialLinks = [
   { name: 'Facebook', href: '#', icon: 'Facebook' },
   { name: 'Twitter', href: '#', icon: 'Twitter' },
@@ -142,7 +141,7 @@ export const socialLinks = [
   { name: 'Instagram', href: '#', icon: 'Instagram' },
 ];
 
-// Testimonials
+// Testimonials (names/locations are proper nouns; comments are keys for i18n)
 export const testimonials = [
   {
     name: 'Maria Garcia',
@@ -174,35 +173,35 @@ export const testimonials = [
   },
 ];
 
-// How it works steps
+// How it works steps (titles and descriptions are keys for i18n)
 export const howItWorksSteps = [
   {
     step: 1,
     title: 'Choose Your Insurance',
     description: 'Select the type of insurance you need - car, home, or other.',
-    icon: 'Car',
+    icon: Car,
   },
   {
     step: 2,
     title: 'Fill in Your Details',
     description: 'Provide information about your needs and current coverage.',
-    icon: 'Edit3',
+    icon: Edit3,
   },
   {
     step: 3,
     title: 'Compare Quotes',
     description: 'View and compare offers from top insurance providers.',
-    icon: 'BarChart3',
+    icon: BarChart3,
   },
   {
     step: 4,
     title: 'Save Money',
     description: 'Choose the best deal and start saving immediately.',
-    icon: 'TrendingUp',
+    icon: TrendingUp,
   },
 ];
 
-// Stats
+// Stats (labels are keys for i18n)
 export const stats = [
   { number: '3500+', label: 'Happy Customers' },
   { number: '50+', label: 'Insurance Partners' },
@@ -210,37 +209,38 @@ export const stats = [
   { number: '4.8/5', label: 'Average Rating' },
 ];
 
+// Features (titles and descriptions are keys for i18n)
 export const features = [
   {
-    icon: Check,  // ✅ Now Check is defined
-    title: "100% Free",
-    description: "No hidden fees or obligations. Compare quotes for free.",
+    icon: Check,
+    title: '100% Free',
+    description: 'No hidden fees or obligations. Compare quotes for free.',
   },
   {
     icon: Award,
-    title: "Top Providers",
-    description: "Compare quotes from the best insurance companies in Spain.",
+    title: 'Top Providers',
+    description: 'Compare quotes from the best insurance companies in Spain.',
   },
   {
     icon: Clock,
-    title: "Fast and Easy",
-    description: "Get quotes in minutes with our simple, user-friendly process.",
+    title: 'Fast and Easy',
+    description: 'Get quotes in minutes with our simple, user-friendly process.',
   },
   {
     icon: Headphones,
-    title: "Expert Support",
-    description: "Our team is here to help you every step of the way.",
+    title: 'Expert Support',
+    description: 'Our team is here to help you every step of the way.',
   },
 ];
 
-// Insurance types for homepage
+// Insurance types for homepage (titles and descriptions are keys for i18n)
 export const insuranceTypes = [
   {
     type: 'car',
     title: 'Car Insurance',
     description: 'Compare comprehensive, third-party, and all-risk policies',
     save: 'Save up to 40%',
-    icon: 'Car',
+    icon: Car,
     color: 'blue',
     path: '/car-insurance',
   },
@@ -249,7 +249,7 @@ export const insuranceTypes = [
     title: 'Home Insurance',
     description: 'Protect your home and belongings with the best coverage',
     save: 'Save up to 35%',
-    icon: 'Home',
+    icon: HomeIcon,
     color: 'green',
     path: '/home-insurance',
   },
