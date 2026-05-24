@@ -4,9 +4,9 @@ const path = require('path');
 // Path to your translation files in src/
 const srcDir = path.join(__dirname, '../src');
 const translationFiles = [
-  'en_translation.json',
-  'es_translation.json',
-  'nl_translation.json'
+  'en-translation.json',
+  'es-translation.json',
+  'nl-translation.json'
 ];
 
 // Function to convert snake_case to Title Case
