@@ -15,10 +15,14 @@ import { useNavigate } from 'react-router-dom';
 const schema = z.object({
   // Personal Details
   fullName: z.string().min(1, 'Full name is required'),
-  dateOfBirth: z.string().min(1, 'Date of birth is required'),
+  dateOfBirth: z.string()
+    .min(1, 'Date of birth is required')
+    .regex(/^\d{2}\/\d{2}\/\d{4}$/, 'Date must be in DD/MM/YYYY format'),
   nationality: z.string().min(1, 'Nationality is required'),
   nieNumber: z.string().min(1, 'NIE number is required'),
-  dateOfCarLicense: z.string().min(1, 'Date of car license is required'),
+  dateOfCarLicense: z.string()
+    .min(1, 'Date of car license is required')
+    .regex(/^\d{2}\/\d{2}\/\d{4}$/, 'Date must be in DD/MM/YYYY format'),
   nationalityOfCarLicense: z.string().min(1, 'Nationality of car license is required'),
   address: z.string().min(1, 'Address is required'),
   postcode: z.string().min(1, 'Postcode is required'),
@@ -45,6 +49,8 @@ const schema = z.object({
 export default function CarInsurance() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [dateOfCarLicense, setDateOfCarLicense] = useState('');
 
   const {
     register,
@@ -52,9 +58,47 @@ export default function CarInsurance() {
     formState: { errors, isSubmitting },
     trigger,
     getValues,
+    setValue,
   } = useForm({
     resolver: zodResolver(schema),
   });
+
+  // Auto-format date as DD/MM/YYYY
+  const formatDate = useCallback((value) => {
+    // Remove all non-digit characters
+    let cleanedValue = value.replace(/\D/g, '');
+
+    // Limit to 8 digits (DDMMYYYY)
+    cleanedValue = cleanedValue.slice(0, 8);
+
+    // Add slashes automatically
+    let formattedValue = '';
+    if (cleanedValue.length > 0) {
+      formattedValue = cleanedValue.slice(0, 2);
+    }
+    if (cleanedValue.length > 2) {
+      formattedValue += '/' + cleanedValue.slice(2, 4);
+    }
+    if (cleanedValue.length > 4) {
+      formattedValue += '/' + cleanedValue.slice(4, 8);
+    }
+
+    return formattedValue;
+  }, []);
+
+  // Handle changes for Date of Birth
+  const handleDateOfBirthChange = (e) => {
+    const formattedValue = formatDate(e.target.value);
+    setDateOfBirth(formattedValue);
+    setValue('dateOfBirth', formattedValue);
+  };
+
+  // Handle changes for Date of Car License
+  const handleDateOfCarLicenseChange = (e) => {
+    const formattedValue = formatDate(e.target.value);
+    setDateOfCarLicense(formattedValue);
+    setValue('dateOfCarLicense', formattedValue);
+  };
 
   // Prevent Enter key from submitting the form in step 4
   const handleKeyDown = useCallback((e) => {
@@ -102,7 +146,7 @@ export default function CarInsurance() {
             <Button
               onClick={() => {
                 toast.dismiss(); // Close the toast
-                navigate('/home-insurance'); // Redirect to your existing Homeinsurance page
+                navigate('/home-insurance'); // Redirect to your existing Home Insurance page
               }}
               className="bg-primary hover:bg-primary/90 text-sm px-4 py-2"
             >
@@ -228,15 +272,28 @@ export default function CarInsurance() {
                           error={errors.fullName?.message}
                           {...register('fullName')}
                         />
-          <FormField
-  label="Date of Birth"
-  id="dateOfBirth"
-  type="text"
-  inputMode="numeric"  // Encourages numeric keypad
-  placeholder="DDMMYYYY"  // Example: 25121990
-  error={errors.dateOfBirth?.message}
-  {...register('dateOfBirth')}
-/>
+                        {/* Date of Birth Field with Auto-Formatting */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Date of Birth
+                          </label>
+                          <input
+                            id="dateOfBirth"
+                            type="text"
+                            inputMode="numeric"
+                            placeholder="DD/MM/YYYY"
+                            value={dateOfBirth}
+                            onChange={handleDateOfBirthChange}
+                            className={`w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+                              errors.dateOfBirth ? 'border-red-500' : 'border-gray-300'
+                            }`}
+                          />
+                          {errors.dateOfBirth && (
+                            <p className="text-sm text-red-500 mt-1">
+                              {errors.dateOfBirth.message}
+                            </p>
+                          )}
+                        </div>
                         <FormField
                           label="Nationality"
                           id="nationality"
@@ -267,16 +324,28 @@ export default function CarInsurance() {
                           error={errors.telephone?.message}
                           {...register('telephone')}
                         />
-              <FormField
-  label="Date of Car License"
-  id="dateOfCarLicense"
-  type="text"
-  inputMode="numeric"  // Encourages numeric keypad
-  placeholder="DDMMYYYY"  // Example: 15052020
-  error={errors.dateOfCarLicense?.message}
-  {...register('dateOfCarLicense')}
-/>
-                        
+                        {/* Date of Car License Field with Auto-Formatting */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Date of Car License
+                          </label>
+                          <input
+                            id="dateOfCarLicense"
+                            type="text"
+                            inputMode="numeric"
+                            placeholder="DD/MM/YYYY"
+                            value={dateOfCarLicense}
+                            onChange={handleDateOfCarLicenseChange}
+                            className={`w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+                              errors.dateOfCarLicense ? 'border-red-500' : 'border-gray-300'
+                            }`}
+                          />
+                          {errors.dateOfCarLicense && (
+                            <p className="text-sm text-red-500 mt-1">
+                              {errors.dateOfCarLicense.message}
+                            </p>
+                          )}
+                        </div>
                         <FormField
                           label="Nationality of Car License"
                           id="nationalityOfCarLicense"
