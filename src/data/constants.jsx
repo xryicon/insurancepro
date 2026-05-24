@@ -121,7 +121,6 @@ export const navLinks = [
   { path: '/car-insurance', label: 'Car Insurance' },
   { path: '/home-insurance', label: 'Home Insurance' },
   { path: '/about', label: 'About Us' },
-  { path: '/contact', label: 'Contact' },
 ];
 
 // Footer links - UPDATED to only include email, website, FAQ, and Privacy Policy
