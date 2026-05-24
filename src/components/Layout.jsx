@@ -3,12 +3,18 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Menu, X, Phone } from 'lucide-react';
 import { navLinks } from '../data/constants';
+import { useTranslation } from 'react-i18next';
 
 const Layout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { i18n } = useTranslation();
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -66,8 +72,40 @@ const Layout = () => {
               ))}
             </nav>
 
-            {/* CTA Buttons - Desktop */}
+            {/* CTA Buttons + Language Switcher - Desktop */}
             <div className="hidden lg:flex items-center space-x-3">
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => changeLanguage('en')}
+                  className={`flex items-center space-x-1 px-2 py-1 rounded-md text-sm font-medium transition-colors ${
+                    i18n.language === 'en'
+                      ? 'bg-blue-100 text-blue-700'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  <span className="fi fi-gb fis"></span>
+                </button>
+                <button
+                  onClick={() => changeLanguage('es')}
+                  className={`flex items-center space-x-1 px-2 py-1 rounded-md text-sm font-medium transition-colors ${
+                    i18n.language === 'es'
+                      ? 'bg-blue-100 text-blue-700'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  <span className="fi fi-es fis"></span>
+                </button>
+                <button
+                  onClick={() => changeLanguage('nl')}
+                  className={`flex items-center space-x-1 px-2 py-1 rounded-md text-sm font-medium transition-colors ${
+                    i18n.language === 'nl'
+                      ? 'bg-blue-100 text-blue-700'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  <span className="fi fi-nl fis"></span>
+                </button>
+              </div>
               <button
                 onClick={() => navigate('/contact')}
                 className="flex items-center space-x-1 px-4 py-2 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
@@ -122,6 +160,39 @@ const Layout = () => {
                   </a>
                 ))}
                 <div className="pt-3 border-t border-gray-100 space-y-2">
+                  {/* Mobile Language Switcher */}
+                  <div className="flex justify-center space-x-2 py-2">
+                    <button
+                      onClick={() => changeLanguage('en')}
+                      className={`flex items-center space-x-1 px-2 py-1 rounded-md text-sm font-medium transition-colors ${
+                        i18n.language === 'en'
+                          ? 'bg-blue-100 text-blue-700'
+                          : 'text-gray-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      <span className="fi fi-gb fis"></span>
+                    </button>
+                    <button
+                      onClick={() => changeLanguage('es')}
+                      className={`flex items-center space-x-1 px-2 py-1 rounded-md text-sm font-medium transition-colors ${
+                        i18n.language === 'es'
+                          ? 'bg-blue-100 text-blue-700'
+                          : 'text-gray-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      <span className="fi fi-es fis"></span>
+                    </button>
+                    <button
+                      onClick={() => changeLanguage('nl')}
+                      className={`flex items-center space-x-1 px-2 py-1 rounded-md text-sm font-medium transition-colors ${
+                        i18n.language === 'nl'
+                          ? 'bg-blue-100 text-blue-700'
+                          : 'text-gray-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      <span className="fi fi-nl fis"></span>
+                    </button>
+                  </div>
                   <button
                     onClick={() => navigate('/contact')}
                     className="w-full flex items-center justify-center space-x-1 px-4 py-3 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
