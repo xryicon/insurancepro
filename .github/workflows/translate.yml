@@ -9,13 +9,11 @@ on:
 jobs:
   translate:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write  # Required for GITHUB_TOKEN to push
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.1.1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}  # Explicit token for checkout
+          token: ${{ secrets.PAT }}
 
       - name: Set up Node.js 24
         uses: actions/setup-node@v4.0.2
@@ -35,5 +33,5 @@ jobs:
           git add src/en-translation.json src/es-translation.json src/nl-translation.json
           if ! git diff --cached --quiet; then
             git commit -m "🤖 Auto-extract and translate text"
-            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ github.ref_name }}
+            git push https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }}.git HEAD:${{ github.ref_name }}
           fi
