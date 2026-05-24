@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Menu, X, Phone } from 'lucide-react';
 import { navLinks } from '../data/constants';
 import { useTranslation } from 'react-i18next';
-
+ 
 const Layout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
