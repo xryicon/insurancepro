@@ -90,14 +90,14 @@ export default function CarInsurance() {
   const handleDateOfBirthChange = (e) => {
     const formattedValue = formatDate(e.target.value);
     setDateOfBirth(formattedValue);
-    setValue('dateOfBirth', formattedValue);
+    setValue('dateOfBirth', formattedValue, { shouldValidate: true });
   };
 
   // Handle changes for Date of Car License
   const handleDateOfCarLicenseChange = (e) => {
     const formattedValue = formatDate(e.target.value);
     setDateOfCarLicense(formattedValue);
-    setValue('dateOfCarLicense', formattedValue);
+    setValue('dateOfCarLicense', formattedValue, { shouldValidate: true });
   };
 
   // Prevent Enter key from submitting the form in step 4
@@ -145,8 +145,8 @@ export default function CarInsurance() {
           <div className="flex gap-2">
             <Button
               onClick={() => {
-                toast.dismiss(); // Close the toast
-                navigate('/home-insurance'); // Redirect to your existing Home Insurance page
+                toast.dismiss();
+                navigate('/home-insurance');
               }}
               className="bg-primary hover:bg-primary/90 text-sm px-4 py-2"
             >
@@ -154,8 +154,8 @@ export default function CarInsurance() {
             </Button>
             <Button
               onClick={() => {
-                toast.dismiss(); // Close the toast
-                navigate('/'); // Redirect to homepage
+                toast.dismiss();
+                navigate('/');
               }}
               variant="outline"
               className="text-sm px-4 py-2"
@@ -234,9 +234,11 @@ export default function CarInsurance() {
                       >
                         {s}
                       </div>
-                      <span className={`text-xs mt-1 ${
-                        s <= step ? 'text-primary font-medium' : 'text-gray-400'
-                      }`}>
+                      <span
+                        className={`text-xs mt-1 ${
+                          s <= step ? 'text-primary font-medium' : 'text-gray-400'
+                        }`}
+                      >
                         {label}
                       </span>
                     </div>
