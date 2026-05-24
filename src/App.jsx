@@ -1,7 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
-import ErrorBoundary from './components/ErrorBoundary';
 
 // Lazy-loaded pages
 const Home = lazy(() => import('./pages/Home'));
@@ -19,61 +18,49 @@ function App() {
           <Route
             index
             element={
-              <ErrorBoundary>
-                <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
-                  <Home />
-                </Suspense>
-              </ErrorBoundary>
+              <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
+                <Home />
+              </Suspense>
             }
           />
           <Route
             path="about"
             element={
-              <ErrorBoundary>
-                <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
-                  <AboutUs />
-                </Suspense>
-              </ErrorBoundary>
+              <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
+                <AboutUs />
+              </Suspense>
             }
           />
           <Route
             path="contact"
             element={
-              <ErrorBoundary>
-                <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
-                  <Contact />
-                </Suspense>
-              </ErrorBoundary>
+              <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
+                <Contact />
+              </Suspense>
             }
           />
           <Route
             path="quote"
             element={
-              <ErrorBoundary>
-                <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
-                  <InsuranceSelection />
-                </Suspense>
-              </ErrorBoundary>
+              <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
+                <InsuranceSelection />
+              </Suspense>
             }
           />
           <Route
             path="car-insurance"
             element={
-              <ErrorBoundary>
-                <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
-                  <CarInsurance />
-                </Suspense>
-              </ErrorBoundary>
+              <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
+                <CarInsurance />
+              </Suspense>
             }
           />
           <Route
             path="home-insurance"
             element={
-              <ErrorBoundary>
-                <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
-                  <HomeInsurance />
-                </Suspense>
-              </ErrorBoundary>
+              <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
+                <HomeInsurance />
+              </Suspense>
             }
           />
         </Route>
