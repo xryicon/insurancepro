@@ -1,7 +1,6 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Phone } from 'lucide-react';
 import Button from './components/ui/Button';
 
 export default function Layout() {
@@ -40,19 +39,12 @@ export default function Layout() {
             </nav>
           </div>
 
-          {/* RIGHT: Contact (📞 + text) + Get a Quote + Language */}
+          {/* RIGHT: Get a Quote + Language */}
           <div className="flex items-center space-x-4">
-            <Link
-              to="/contact"
-              className="flex items-center space-x-1 text-gray-600 hover:text-primary transition-colors"
-            >
-              <Phone className="w-4 h-4" />
-              <span>Contact</span>
-            </Link>
             <Button
               variant="outline"
               size="small"
-              onClick={() => navigate('/insuranceselection')}
+              onClick={() => navigate('/quote')}
             >
               Get a Quote
             </Button>
