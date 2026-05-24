@@ -1,0 +1,40 @@
+name: Fix Translation Values
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/en_translation.json'
+      - 'src/es_translation.json'
+      - 'src/nl_translation.json'
+
+jobs:
+  fix-translations:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          token: ${{ secrets.PAT }}  # Uses your existing PAT
+          fetch-depth: 0  # Required for git push
+
+      - name: Pull latest changes
+        run: git pull --rebase origin main
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: 24  # Matches your existing workflow
+
+      - name: Run fix-translations script
+        run: node scripts/fix-translations.js
+
+      - name: Commit and push fixes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add src/en_translation.json src/es_translation.json src/nl_translation.json
+          if ! git diff --cached --quiet; then
+            git commit -m "🤖 Auto-fixed translation values"
+            git push https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }}.git HEAD:${{ github.ref_name }}
+          fi
