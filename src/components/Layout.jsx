@@ -10,7 +10,7 @@ const Layout = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
@@ -46,8 +46,8 @@ const Layout = () => {
                 <Shield className="w-6 h-6 text-white" />
               </div>
               <div>
-                <span className="text-xl font-bold text-gray-900">Insurance</span>
-                <span className="text-xl font-bold text-blue-600">Pro</span>
+                <span className="text-xl font-bold text-gray-900">{t('Insurance')}</span>
+                <span className="text-xl font-bold text-blue-600">{t('Pro')}</span>
               </div>
             </div>
 
@@ -67,7 +67,7 @@ const Layout = () => {
                       : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
                   }`}
                 >
-                  {link.label}
+                  {t(link.label)}
                 </a>
               ))}
             </nav>
@@ -82,6 +82,7 @@ const Layout = () => {
                       ? 'bg-blue-100 text-blue-700'
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
+                  aria-label="English"
                 >
                   <span className="fi fi-gb fis"></span>
                 </button>
@@ -92,6 +93,7 @@ const Layout = () => {
                       ? 'bg-blue-100 text-blue-700'
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
+                  aria-label="Español"
                 >
                   <span className="fi fi-es fis"></span>
                 </button>
@@ -102,6 +104,7 @@ const Layout = () => {
                       ? 'bg-blue-100 text-blue-700'
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
+                  aria-label="Nederlands"
                 >
                   <span className="fi fi-nl fis"></span>
                 </button>
@@ -111,13 +114,13 @@ const Layout = () => {
                 className="flex items-center space-x-1 px-4 py-2 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
               >
                 <Phone className="w-4 h-4" />
-                <span>Contact</span>
+                <span>{t('Contact')}</span>
               </button>
               <button
                 onClick={() => navigate('/quote')}
                 className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
               >
-                Get a Quote
+                {t('Get a Quote')}
               </button>
             </div>
 
@@ -125,6 +128,7 @@ const Layout = () => {
             <button
               onClick={toggleMobileMenu}
               className="lg:hidden p-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+              aria-label="Toggle menu"
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -156,7 +160,7 @@ const Layout = () => {
                         : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
                     }`}
                   >
-                    {link.label}
+                    {t(link.label)}
                   </a>
                 ))}
                 <div className="pt-3 border-t border-gray-100 space-y-2">
@@ -169,6 +173,7 @@ const Layout = () => {
                           ? 'bg-blue-100 text-blue-700'
                           : 'text-gray-600 hover:bg-gray-100'
                       }`}
+                      aria-label="English"
                     >
                       <span className="fi fi-gb fis"></span>
                     </button>
@@ -179,6 +184,7 @@ const Layout = () => {
                           ? 'bg-blue-100 text-blue-700'
                           : 'text-gray-600 hover:bg-gray-100'
                       }`}
+                      aria-label="Español"
                     >
                       <span className="fi fi-es fis"></span>
                     </button>
@@ -189,6 +195,7 @@ const Layout = () => {
                           ? 'bg-blue-100 text-blue-700'
                           : 'text-gray-600 hover:bg-gray-100'
                       }`}
+                      aria-label="Nederlands"
                     >
                       <span className="fi fi-nl fis"></span>
                     </button>
@@ -198,13 +205,13 @@ const Layout = () => {
                     className="w-full flex items-center justify-center space-x-1 px-4 py-3 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
                   >
                     <Phone className="w-4 h-4" />
-                    <span>Contact</span>
+                    <span>{t('Contact')}</span>
                   </button>
                   <button
                     onClick={() => navigate('/quote')}
                     className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all duration-200"
                   >
-                    Get a Quote
+                    {t('Get a Quote')}
                   </button>
                 </div>
               </div>
@@ -223,15 +230,29 @@ const Layout = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <Shield className="w-6 h-6 text-white" />
-            <span className="text-xl font-bold">Insurance<span className="text-blue-600">Pro</span></span>
+            <span className="text-xl font-bold">
+              {t('Insurance')}<span className="text-blue-600">{t('Pro')}</span>
+            </span>
           </div>
-          <p className="text-gray-400 text-sm mb-6">Smart Insurance. Simple Savings.</p>
+          <p className="text-gray-400 text-sm mb-6">{t('Smart Insurance. Simple Savings.')}</p>
           <div className="space-y-2 mb-6">
             <p className="text-gray-400 text-sm">
-              Email: <a href="mailto:your@email.com" className="text-blue-400 hover:text-white">Info@insurancepro.es</a>
+              {t('Email')}:{' '}
+              <a
+                href="mailto:Info@insurancepro.es"
+                className="text-blue-400 hover:text-white"
+              >
+                Info@insurancepro.es
+              </a>
             </p>
             <p className="text-gray-400 text-sm">
-              Website: <a href="https://yourwebsite.com" className="text-blue-400 hover:text-white">https://insurancepro.es</a>
+              {t('Website')}:{' '}
+              <a
+                href="https://insurancepro.es"
+                className="text-blue-400 hover:text-white"
+              >
+                https://insurancepro.es
+              </a>
             </p>
           </div>
           <div className="flex justify-center space-x-6 mb-6">
@@ -240,18 +261,20 @@ const Layout = () => {
               onClick={(e) => { e.preventDefault(); navigate('/faq'); }}
               className="text-gray-400 hover:text-white text-sm"
             >
-              FAQ
+              {t('FAQ')}
             </a>
             <a
               href="/privacy-policy"
               onClick={(e) => { e.preventDefault(); navigate('/privacy-policy'); }}
               className="text-gray-400 hover:text-white text-sm"
             >
-              Privacy Policy
+              {t('Privacy Policy')}
             </a>
           </div>
           <div className="border-t border-gray-800 pt-6">
-            <p className="text-gray-400 text-sm">© {new Date().getFullYear()} InsurancePro. All rights reserved.</p>
+            <p className="text-gray-400 text-sm">
+              &copy; {new Date().getFullYear()} {t('InsurancePro. All rights reserved.')}
+            </p>
           </div>
         </div>
       </footer>
