@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <>
       <Helmet>
-        <title>{t('insurancepro_compare__save_on_insurance_in_spain')}</title>
+        <title>{t('insurancepro__compare__save_on_insurance_in_spain')}</title>
         <meta
           name="description"
           content={t('compare_insurance_quotes_in_spain')}
@@ -28,7 +28,7 @@ export default function Home() {
             transition={{ duration: 0.5 }}
             className="text-4xl font-bold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl"
           >
-            {t('compare insurance quotes in spain')}
+            {t('compare_insurance_quotes_in_spain')}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -36,7 +36,7 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mt-6 text-xl text-gray-600 max-w-3xl mx-auto"
           >
-            {t('get the best rates from us in minutes')}
+            {t('get_the_best_rates_from_us_in_minutes')}
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
