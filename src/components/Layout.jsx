@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Car, Home, Shield, Menu, X, Globe, Heart
+  Shield, Menu, X, Phone
 } from 'lucide-react';
-import { navLinks, socialLinks } from '../data/constants';
+import { navLinks } from '../data/constants';
 
 const Layout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -16,7 +16,6 @@ const Layout = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -32,9 +31,7 @@ const Layout = () => {
       {/* Header */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
-            ? 'bg-white shadow-lg'
-            : 'bg-white/90 backdrop-blur-sm'
+          isScrolled ? 'bg-white shadow-lg' : 'bg-white/90 backdrop-blur-sm'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -71,10 +68,17 @@ const Layout = () => {
               ))}
             </nav>
 
-            {/* CTA Buttons - UPDATED */}
+            {/* CTA Buttons - Desktop */}
             <div className="hidden lg:flex items-center space-x-3">
               <button
-                onClick={() => navigate('/quote')}  // <-- Updated to /quote
+                onClick={() => navigate('/contact')}
+                className="flex items-center space-x-1 px-4 py-2 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
+              >
+                <Phone className="w-4 h-4" />
+                <span>Contact</span>
+              </button>
+              <button
+                onClick={() => navigate('/quote')}
                 className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
               >
                 Get a Quote
@@ -91,7 +95,7 @@ const Layout = () => {
           </div>
         </div>
 
-        {/* Mobile Menu - UPDATED */}
+        {/* Mobile Menu */}
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
@@ -121,7 +125,14 @@ const Layout = () => {
                 ))}
                 <div className="pt-3 border-t border-gray-100 space-y-2">
                   <button
-                    onClick={() => navigate('/quote')}  // <-- Updated to /quote
+                    onClick={() => navigate('/contact')}
+                    className="w-full flex items-center justify-center space-x-1 px-4 py-3 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
+                  >
+                    <Phone className="w-4 h-4" />
+                    <span>Contact</span>
+                  </button>
+                  <button
+                    onClick={() => navigate('/quote')}
                     className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all duration-200"
                   >
                     Get a Quote
