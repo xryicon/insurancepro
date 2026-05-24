@@ -1,147 +1,53 @@
-name: Extract Text and Auto-Translate
+- name: Translate to Spanish and Dutch
+  run: |
+    node -e "
+    const axios = require('axios');
+    const fs = require('fs');
+    const path = require('path');
 
-on:
-  push:
-    paths:
-      - 'src/**/*.{js,jsx}'  # Trigger when any JS/JSX file in src/ changes
+    const sourcePath = 'src/en-translation.json';
+    let sourceTranslations;
+    try {
+      sourceTranslations = JSON.parse(fs.readFileSync(sourcePath, 'utf8'));
+    } catch (parseError) {
+      console.error('❌ Invalid JSON in source file:', parseError.message);
+      process.exit(1);
+    }
 
-jobs:
-  extract-and-translate:
-    runs-on: ubuntu-latest
+    const targets = [
+      { lang: 'es', path: 'src/es-translation.json' },
+      { lang: 'nl', path: 'src/nl-translation.json' }
+    ];
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4.1.1
+    async function translateText(text, targetLang) {
+      try {
+        const response = await axios.post('https://libretranslate.de/translate', {
+          q: text,
+          source: 'en',
+          target: targetLang,
+        });
+        return typeof response.data.translatedText === 'string'
+          ? response.data.translatedText
+          : text;
+      } catch (error) {
+        console.error(\`⚠️ Error translating text: \${text}\`, error.message);
+        return text; // Fallback to English if translation fails
+      }
+    }
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4.0.2
-        with:
-          node-version: 24
+    async function translateAll() {
+      for (const target of targets) {
+        const translatedJSON = {};
+        for (const [key, value] of Object.entries(sourceTranslations)) {
+          translatedJSON[key] = await translateText(value, target.lang);
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
+        // Ensure the output is valid JSON
+        const jsonString = JSON.stringify(translatedJSON, null, 2);
+        fs.writeFileSync(target.path, jsonString);
+        console.log(\`✅ Translated to \${target.lang}\`);
+      }
+    }
 
-      - name: Install dependencies
-        run: npm install @babel/parser @babel/traverse glob axios
-
-      - name: Extract text from code
-        run: |
-          node -e "
-          const parser = require('@babel/parser');
-          const traverse = require('@babel/traverse').default;
-          const glob = require('glob');
-          const fs = require('fs');
-          const path = require('path');
-
-          const files = glob.sync('src/**/*.{js,jsx}');
-          const extractedText = new Set();
-
-          files.forEach((file) => {
-            try {
-              const content = fs.readFileSync(file, 'utf8');
-              const ast = parser.parse(content, {
-                sourceType: 'module',
-                plugins: ['jsx'],
-              });
-
-              traverse(ast, {
-                JSXText(path) {
-                  const text = path.node.value.trim();
-                  if (text && !text.match(/^\s*$/)) {
-                    extractedText.add(text);
-                  }
-                },
-                StringLiteral(path) {
-                  if (
-                    path.node.value &&
-                    !path.node.value.startsWith('.') &&
-                    !path.node.value.startsWith('/') &&
-                    !path.node.value.includes('node_modules')
-                  ) {
-                    extractedText.add(path.node.value);
-                  }
-                },
-              });
-            } catch (error) {
-              console.error(\`Error processing file \${file}:\`, error.message);
-            }
-          });
-
-          const translationJSON = {};
-          extractedText.forEach((text) => {
-            const key = text
-              .replace(/\s+/g, '_')
-              .replace(/[^a-zA-Z0-9_]/g, '')
-              .toLowerCase();
-            translationJSON[key] = text;
-          });
-
-          const outputDir = path.join(__dirname, 'src');
-          if (!fs.existsSync(outputDir)) {
-            fs.mkdirSync(outputDir, { recursive: true });
-          }
-          fs.writeFileSync(
-            path.join(outputDir, 'en-translation.json'),
-            JSON.stringify(translationJSON, null, 2)
-          );
-          console.log('✅ Extracted text and saved to src/en-translation.json');
-          "
-
-      - name: Translate to Spanish and Dutch
-        run: |
-          node -e "
-          const axios = require('axios');
-          const fs = require('fs');
-          const path = require('path');
-
-          const sourcePath = 'src/en-translation.json';
-          let sourceTranslations;
-          try {
-            sourceTranslations = JSON.parse(fs.readFileSync(sourcePath, 'utf8'));
-          } catch (parseError) {
-            console.error('❌ Invalid JSON in source file:', parseError.message);
-            process.exit(1);
-          }
-
-          const targets = [
-            { lang: 'es', path: 'src/es-translation.json' },
-            { lang: 'nl', path: 'src/nl-translation.json' }
-          ];
-
-          async function translateText(text, targetLang) {
-            try {
-              const response = await axios.post('https://libretranslate.de/translate', {
-                q: text,
-                source: 'en',
-                target: targetLang,
-              });
-              return response.data.translatedText;
-            } catch (error) {
-              console.error(\`⚠️ Error translating text: \${text}\`, error.message);
-              return text;
-            }
-          }
-
-          async function translateAll() {
-            for (const target of targets) {
-              const translatedJSON = {};
-              for (const [key, value] of Object.entries(sourceTranslations)) {
-                translatedJSON[key] = await translateText(value, target.lang);
-                await new Promise(resolve => setTimeout(resolve, 500));
-              }
-              fs.writeFileSync(target.path, JSON.stringify(translatedJSON, null, 2));
-              console.log(\`✅ Translated to \${target.lang}\`);
-            }
-          }
-
-          translateAll().catch(console.error);
-          "
-
-      - name: Commit and push changes
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git add src/en-translation.json src/es-translation.json src/nl-translation.json
-          if ! git diff --cached --quiet; then
-            git commit -m "🤖 Auto-extract text and translate to Spanish and Dutch"
-            git push
-          else
-            echo "No changes to commit."
-          fi
+    translateAll().catch(console.error);
+    "
