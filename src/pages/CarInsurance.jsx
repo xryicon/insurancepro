@@ -91,7 +91,7 @@ export default function CarInsurance() {
       dateOfBirth,
       setDateOfBirth,
       'dateOfBirth',
-      t('form.errors.dateFormat')
+      t('formerrorsdateformat')
     );
   };
 
@@ -100,7 +100,7 @@ export default function CarInsurance() {
       dateOfCarLicense,
       setDateOfCarLicense,
       'dateOfCarLicense',
-      t('form.errors.dateFormat')
+      t('formerrorsdateformat')
     );
   };
 
@@ -117,7 +117,7 @@ export default function CarInsurance() {
     }[step];
     const isValid = await trigger(fieldsToValidate, { shouldFocus: true });
     if (isValid) setStep(step + 1);
-    else toast.error(t('form.errors.fillAllFields'));
+    else toast.error(t('formerrorsfillallfields'));
   };
 
   const handlePrevious = () => setStep(step - 1);
@@ -132,7 +132,7 @@ export default function CarInsurance() {
     if (response.ok) {
       setSubmitSuccess(true);
     } else {
-      toast.error(t('form.errors.submitFailed'));
+      toast.error(t('formerrorssubmitfailed'));
     }
   };
 
@@ -145,10 +145,10 @@ export default function CarInsurance() {
   };
 
   const steps = [
-    { number: 1, label: t('form.steps.personalDetails') },
-    { number: 2, label: t('form.steps.carDetails') },
-    { number: 3, label: t('form.steps.currentInsurance') },
-    { number: 4, label: t('form.steps.reviewSubmit') },
+    { number: 1, label: t('formstepspersonaldetails') },
+    { number: 2, label: t('formstepscardetails') },
+    { number: 3, label: t('formstepscurrentinsurance') },
+    { number: 4, label: t('formstepsreviewsubmit') },
   ];
 
   // Success page
@@ -166,17 +166,17 @@ export default function CarInsurance() {
                 <Check className="w-10 h-10 text-green-600" />
               </div>
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                {t('success.title')}
+                {t('quote_request_submitted')}
               </h2>
               <p className="text-gray-600 mb-8">
-                {t('success.message')}
+                {t('thank_you_for_your_request_our_team_will_review_your_information_and_get_back_to_you_with_the_best_home_insurance_quotes_within_24_hours')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="large" onClick={() => navigate('/')}>
-                  {t('success.backToHome')}
+                  {t('back_to_home')}
                 </Button>
                 <Button variant="outline" size="large" onClick={handleStartOver}>
-                  {t('success.startNewQuote')}
+                  {t('start_new_quote')}
                 </Button>
               </div>
             </motion.div>
@@ -214,15 +214,15 @@ export default function CarInsurance() {
               className="flex items-center text-gray-600 hover:text-green-600 transition-colors mb-4"
             >
               <ArrowLeft className="w-5 h-5 mr-2" />
-              {t('form.backToHome')}
+              {t('back_to_home')}
             </button>
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">
-                  {t('form.title')}
+                  {t('car_insurance')}
                 </h1>
                 <p className="text-gray-600 mt-1">
-                  {t('form.subtitle')}
+                  {t('compare_and_save_up_to_35_on_your_home_insurance')}
                 </p>
               </div>
             </div>
@@ -294,28 +294,28 @@ export default function CarInsurance() {
                     transition={{ duration: 0.5 }}
                   >
                     <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                      {t('form.personalDetails.title')}
+                      {t('personal_information')}
                     </h2>
                     <p className="text-gray-600 mb-8">
-                      {t('form.personalDetails.subtitle')}
+                      {t('please_provide_your_personal_details_for_accurate_quotes')}
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <FormField
-                        label={t('form.personalDetails.fullName')}
+                        label={t('full_name')}
                         id="fullName"
-                        placeholder={t('form.personalDetails.fullNamePlaceholder')}
+                        placeholder={t('full_name')}
                         error={errors.fullName?.message}
                         {...register('fullName')}
                       />
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t('form.personalDetails.dateOfBirth')}
+                          {t('date_of_birth')}
                         </label>
                         <input
                           id="dateOfBirth"
                           type="text"
                           inputMode="numeric"
-                          placeholder={t('form.datePlaceholder')}
+                          placeholder={t('formdateplaceholder')}
                           value={dateOfBirth}
                           onChange={handleDateOfBirthChange}
                           onBlur={handleDateOfBirthBlur}
@@ -330,44 +330,44 @@ export default function CarInsurance() {
                         )}
                       </div>
                       <FormField
-                        label={t('form.personalDetails.nationality')}
+                        label={t('nationality')}
                         id="nationality"
-                        placeholder={t('form.personalDetails.nationalityPlaceholder')}
+                        placeholder={t('nationality')}
                         error={errors.nationality?.message}
                         {...register('nationality')}
                       />
                       <FormField
-                        label={t('form.personalDetails.nieNumber')}
+                        label={t('nie_number')}
                         id="nieNumber"
-                        placeholder={t('form.personalDetails.nieNumberPlaceholder')}
+                        placeholder={t('nie_number')}
                         error={errors.nieNumber?.message}
                         {...register('nieNumber')}
                       />
                       <FormField
-                        label={t('form.personalDetails.email')}
+                        label={t('email')}
                         id="email"
                         type="email"
-                        placeholder={t('form.personalDetails.emailPlaceholder')}
+                        placeholder={t('email')}
                         error={errors.email?.message}
                         {...register('email')}
                       />
                       <FormField
-                        label={t('form.personalDetails.telephone')}
+                        label={t('phone')}
                         id="telephone"
                         type="tel"
-                        placeholder={t('form.personalDetails.telephonePlaceholder')}
+                        placeholder={t('phone')}
                         error={errors.telephone?.message}
                         {...register('telephone')}
                       />
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t('form.personalDetails.dateOfCarLicense')}
+                          {t('date_of_car_license')}
                         </label>
                         <input
                           id="dateOfCarLicense"
                           type="text"
                           inputMode="numeric"
-                          placeholder={t('form.datePlaceholder')}
+                          placeholder={t('formdateplaceholder')}
                           value={dateOfCarLicense}
                           onChange={handleDateOfCarLicenseChange}
                           onBlur={handleDateOfCarLicenseBlur}
@@ -382,24 +382,24 @@ export default function CarInsurance() {
                         )}
                       </div>
                       <FormField
-                        label={t('form.personalDetails.nationalityOfCarLicense')}
+                        label={t('nationality_of_car_license')}
                         id="nationalityOfCarLicense"
-                        placeholder={t('form.personalDetails.nationalityOfCarLicensePlaceholder')}
+                        placeholder={t('nationality_of_car_license')}
                         error={errors.nationalityOfCarLicense?.message}
                         {...register('nationalityOfCarLicense')}
                       />
                       <FormField
-                        label={t('form.personalDetails.address')}
+                        label={t('address')}
                         id="address"
-                        placeholder={t('form.personalDetails.addressPlaceholder')}
+                        placeholder={t('address')}
                         error={errors.address?.message}
                         {...register('address')}
                         className="md:col-span-2"
                       />
                       <FormField
-                        label={t('form.personalDetails.postcode')}
+                        label={t('postal_code')}
                         id="postcode"
-                        placeholder={t('form.personalDetails.postcodePlaceholder')}
+                        placeholder={t('postal_code')}
                         error={errors.postcode?.message}
                         {...register('postcode')}
                         className="md:col-span-2"
@@ -416,71 +416,71 @@ export default function CarInsurance() {
                     transition={{ duration: 0.5 }}
                   >
                     <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                      {t('form.carDetails.title')}
+                      {t('car_details')}
                     </h2>
                     <p className="text-gray-600 mb-8">
-                      {t('form.carDetails.subtitle')}
+                      {t('tell_us_about_your_property_for_accurate_quotes')}
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <FormField
-                        label={t('form.carDetails.carMake')}
+                        label={t('car_make')}
                         id="carMake"
-                        placeholder={t('form.carDetails.carMakePlaceholder')}
+                        placeholder={t('car_make')}
                         error={errors.carMake?.message}
                         {...register('carMake')}
                       />
                       <FormField
-                        label={t('form.carDetails.carModel')}
+                        label={t('car_model')}
                         id="carModel"
-                        placeholder={t('form.carDetails.carModelPlaceholder')}
+                        placeholder={t('car_model')}
                         error={errors.carModel?.message}
                         {...register('carModel')}
                       />
                       <FormField
-                        label={t('form.carDetails.year')}
+                        label={t('year')}
                         id="year"
                         type="number"
-                        placeholder={t('form.carDetails.yearPlaceholder')}
+                        placeholder={t('year')}
                         error={errors.year?.message}
                         {...register('year', { valueAsNumber: true })}
                       />
                       <FormField
-                        label={t('form.carDetails.registration')}
+                        label={t('registration')}
                         id="registration"
-                        placeholder={t('form.carDetails.registrationPlaceholder')}
+                        placeholder={t('registration')}
                         error={errors.registration?.message}
                         {...register('registration')}
                       />
                       <FormField
-                        label={t('form.carDetails.horsepower')}
+                        label={t('horsepower')}
                         id="horsepower"
                         type="number"
-                        placeholder={t('form.carDetails.horsepowerPlaceholder')}
+                        placeholder={t('horsepower')}
                         error={errors.horsepower?.message}
                         {...register('horsepower', { valueAsNumber: true })}
                       />
                       <FormField
-                        label={t('form.carDetails.engineSize')}
+                        label={t('engine_size')}
                         id="engineSize"
                         type="number"
-                        placeholder={t('form.carDetails.engineSizePlaceholder')}
+                        placeholder={t('engine_size')}
                         error={errors.engineSize?.message}
                         {...register('engineSize', { valueAsNumber: true })}
                       />
                       <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t('form.carDetails.transmissionType')}
+                          {t('transmission_type')}
                         </label>
                         <select
                           id="transmissionType"
                           className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                           {...register('transmissionType')}
                         >
-                          <option value="">{t('form.carDetails.selectTransmission')}</option>
-                          <option value="Manual">{t('form.carDetails.manual')}</option>
-                          <option value="Automatic">{t('form.carDetails.automatic')}</option>
-                          <option value="Hybrid">{t('form.carDetails.hybrid')}</option>
-                          <option value="Full Electric">{t('form.carDetails.fullElectric')}</option>
+                          <option value="">{t('select_transmission_type')}</option>
+                          <option value="Manual">{t('manual')}</option>
+                          <option value="Automatic">{t('automatic')}</option>
+                          <option value="Hybrid">{t('hybrid')}</option>
+                          <option value="Full Electric">{t('full_electric')}</option>
                         </select>
                         {errors.transmissionType && (
                           <p className="text-sm text-red-500 mt-1">
@@ -500,31 +500,31 @@ export default function CarInsurance() {
                     transition={{ duration: 0.5 }}
                   >
                     <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                      {t('form.currentInsurance.title')}
+                      {t('current_insurance')}
                     </h2>
                     <p className="text-gray-600 mb-8">
-                      {t('form.currentInsurance.subtitle')}
+                      {t('information_about_your_current_coverage_helps_us_find_better_deals')}
                     </p>
                     <div className="grid grid-cols-1 gap-6">
                       <FormField
-                        label={t('form.currentInsurance.currentCompany')}
+                        label={t('current_provider')}
                         id="currentCompany"
-                        placeholder={t('form.currentInsurance.currentCompanyPlaceholder')}
+                        placeholder={t('current_provider')}
                         error={errors.currentCompany?.message}
                         {...register('currentCompany')}
                       />
                       <FormField
-                        label={t('form.currentInsurance.currentPremium')}
+                        label={t('current_annual_premium')}
                         id="currentPremium"
                         type="number"
-                        placeholder={t('form.currentInsurance.currentPremiumPlaceholder')}
+                        placeholder={t('current_annual_premium')}
                         error={errors.currentPremium?.message}
                         {...register('currentPremium', { valueAsNumber: true })}
                       />
                       <FormField
-                        label={t('form.currentInsurance.currentCover')}
+                        label={t('current_cover')}
                         id="currentCover"
-                        placeholder={t('form.currentInsurance.currentCoverPlaceholder')}
+                        placeholder={t('current_cover')}
                         error={errors.currentCover?.message}
                         {...register('currentCover')}
                       />
@@ -540,57 +540,57 @@ export default function CarInsurance() {
                     transition={{ duration: 0.5 }}
                   >
                     <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                      {t('form.reviewSubmit.title')}
+                      {t('review__submit')}
                     </h2>
                     <p className="text-gray-600 mb-8">
-                      {t('form.reviewSubmit.subtitle')}
+                      {t('please_review_your_information_before_submitting')}
                     </p>
 
                     <div className="space-y-6">
                       {/* Personal Details Review */}
                       <div className="bg-gray-50 rounded-lg p-6">
                         <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                          {t('form.reviewSubmit.personalDetails')}
+                          {t('personal_information')}
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                           <div>
-                            <div className="text-gray-500">{t('form.personalDetails.fullName')}</div>
+                            <div className="text-gray-500">{t('full_name')}</div>
                             <div className="font-medium">{getValues('fullName')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">{t('form.personalDetails.dateOfBirth')}</div>
+                            <div className="text-gray-500">{t('date_of_birth')}</div>
                             <div className="font-medium">{getValues('dateOfBirth')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">{t('form.personalDetails.nationality')}</div>
+                            <div className="text-gray-500">{t('nationality')}</div>
                             <div className="font-medium">{getValues('nationality')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">{t('form.personalDetails.nieNumber')}</div>
+                            <div className="text-gray-500">{t('nie_number')}</div>
                             <div className="font-medium">{getValues('nieNumber')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">{t('form.personalDetails.address')}</div>
+                            <div className="text-gray-500">{t('address')}</div>
                             <div className="font-medium">{getValues('address')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">{t('form.personalDetails.postcode')}</div>
+                            <div className="text-gray-500">{t('postal_code')}</div>
                             <div className="font-medium">{getValues('postcode')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">{t('form.personalDetails.email')}</div>
+                            <div className="text-gray-500">{t('email')}</div>
                             <div className="font-medium">{getValues('email')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">{t('form.personalDetails.telephone')}</div>
+                            <div className="text-gray-500">{t('phone')}</div>
                             <div className="font-medium">{getValues('telephone')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">{t('form.personalDetails.dateOfCarLicense')}</div>
+                            <div className="text-gray-500">{t('date_of_car_license')}</div>
                             <div className="font-medium">{getValues('dateOfCarLicense')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">{t('form.personalDetails.nationalityOfCarLicense')}</div>
+                            <div className="text-gray-500">{t('nationality_of_car_license')}</div>
                             <div className="font-medium">{getValues('nationalityOfCarLicense')}</div>
                           </div>
                         </div>
@@ -599,35 +599,35 @@ export default function CarInsurance() {
                       {/* Car Details Review */}
                       <div className="bg-gray-50 rounded-lg p-6">
                         <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                          {t('form.reviewSubmit.carDetails')}
+                          {t('car_details')}
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                           <div>
-                            <div className="text-gray-500">{t('form.carDetails.carMake')}</div>
+                            <div className="text-gray-500">{t('car_make')}</div>
                             <div className="font-medium">{getValues('carMake')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">{t('form.carDetails.carModel')}</div>
+                            <div className="text-gray-500">{t('car_model')}</div>
                             <div className="font-medium">{getValues('carModel')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">{t('form.carDetails.year')}</div>
+                            <div className="text-gray-500">{t('year')}</div>
                             <div className="font-medium">{getValues('year')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">{t('form.carDetails.registration')}</div>
+                            <div className="text-gray-500">{t('registration')}</div>
                             <div className="font-medium">{getValues('registration')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">{t('form.carDetails.horsepower')}</div>
-                            <div className="font-medium">{getValues('horsepower')} CV</div>
+                            <div className="text-gray-500">{t('horsepower')}</div>
+                            <div className="font-medium">{getValues('horsepower')} {t('cv')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">{t('form.carDetails.engineSize')}</div>
-                            <div className="font-medium">{getValues('engineSize')} cc</div>
+                            <div className="text-gray-500">{t('engine_size')}</div>
+                            <div className="font-medium">{getValues('engineSize')} {t('cc')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">{t('form.carDetails.transmissionType')}</div>
+                            <div className="text-gray-500">{t('transmission_type')}</div>
                             <div className="font-medium">{getValues('transmissionType')}</div>
                           </div>
                         </div>
@@ -636,19 +636,19 @@ export default function CarInsurance() {
                       {/* Current Insurance Review */}
                       <div className="bg-gray-50 rounded-lg p-6">
                         <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                          {t('form.reviewSubmit.currentInsurance')}
+                          {t('current_insurance')}
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                           <div>
-                            <div className="text-gray-500">{t('form.currentInsurance.currentCompany')}</div>
+                            <div className="text-gray-500">{t('current_provider')}</div>
                             <div className="font-medium">{getValues('currentCompany')}</div>
                           </div>
                           <div>
-                            <div className="text-gray-500">{t('form.currentInsurance.currentPremium')}</div>
+                            <div className="text-gray-500">{t('current_annual_premium')}</div>
                             <div className="font-medium">€{getValues('currentPremium')}</div>
                           </div>
                           <div className="md:col-span-2">
-                            <div className="text-gray-500">{t('form.currentInsurance.currentCover')}</div>
+                            <div className="text-gray-500">{t('current_cover')}</div>
                             <div className="font-medium">{getValues('currentCover')}</div>
                           </div>
                         </div>
@@ -659,7 +659,7 @@ export default function CarInsurance() {
                       <div className="flex items-center">
                         <Check className="w-5 h-5 text-green-600 mr-3" />
                         <span className="text-green-700">
-                          {t('form.reviewSubmit.privacyNotice')}
+                          {t('your_information_is_secure_and_will_only_be_used_to_provide_you_with_insurance_quotes')}
                         </span>
                       </div>
                     </div>
@@ -675,7 +675,7 @@ export default function CarInsurance() {
                     onClick={handlePrevious}
                     leftIcon={<ChevronLeft className="w-5 h-5" />}
                   >
-                    {t('form.navigation.back')}
+                    {t('back')}
                   </Button>
                 )}
                 {step < 4 ? (
@@ -684,7 +684,7 @@ export default function CarInsurance() {
                     loading={isSubmitting}
                     rightIcon={<ChevronRight className="w-5 h-5" />}
                   >
-                    {step === 3 ? t('form.navigation.review') : t('form.navigation.next')}
+                    {step === 3 ? t('review__submit') : t('next')}
                   </Button>
                 ) : (
                   <Button
@@ -693,7 +693,7 @@ export default function CarInsurance() {
                     loading={isSubmitting}
                     rightIcon={<ChevronRight className="w-5 h-5" />}
                   >
-                    {t('form.navigation.submit')}
+                    {t('submit_quote_request')}
                   </Button>
                 )}
               </div>
