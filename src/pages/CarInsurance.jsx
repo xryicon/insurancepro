@@ -11,18 +11,14 @@ import { Card } from '../components/ui/Card';
 import FormField from '../components/forms/FormField';
 import { useNavigate } from 'react-router-dom';
 
-// Zod schema for form validation
+// Zod schema for form validation (removed strict regex for date fields)
 const schema = z.object({
   // Personal Details
   fullName: z.string().min(1, 'Full name is required'),
-  dateOfBirth: z.string()
-    .min(1, 'Date of birth is required')
-    .regex(/^\d{2}\/\d{2}\/\d{4}$/, 'Date must be in DD/MM/YYYY format'),
+  dateOfBirth: z.string().min(1, 'Date of birth is required'),
   nationality: z.string().min(1, 'Nationality is required'),
   nieNumber: z.string().min(1, 'NIE number is required'),
-  dateOfCarLicense: z.string()
-    .min(1, 'Date of car license is required')
-    .regex(/^\d{2}\/\d{2}\/\d{4}$/, 'Date must be in DD/MM/YYYY format'),
+  dateOfCarLicense: z.string().min(1, 'Date of car license is required'),
   nationalityOfCarLicense: z.string().min(1, 'Nationality of car license is required'),
   address: z.string().min(1, 'Address is required'),
   postcode: z.string().min(1, 'Postcode is required'),
@@ -64,7 +60,7 @@ export default function CarInsurance() {
   });
 
   // Auto-format date as DD/MM/YYYY
-  const formatDate = useCallback((value) => {
+  const formatDate = useCallback((value, setState, fieldName) => {
     // Remove all non-digit characters
     let cleanedValue = value.replace(/\D/g, '');
 
@@ -83,21 +79,36 @@ export default function CarInsurance() {
       formattedValue += '/' + cleanedValue.slice(4, 8);
     }
 
+    setState(formattedValue);
+    setValue(fieldName, formattedValue, { shouldValidate: true });
     return formattedValue;
-  }, []);
+  }, [setValue]);
 
   // Handle changes for Date of Birth
   const handleDateOfBirthChange = (e) => {
-    const formattedValue = formatDate(e.target.value);
-    setDateOfBirth(formattedValue);
-    setValue('dateOfBirth', formattedValue, { shouldValidate: true });
+    formatDate(e.target.value, setDateOfBirth, 'dateOfBirth');
   };
 
   // Handle changes for Date of Car License
   const handleDateOfCarLicenseChange = (e) => {
-    const formattedValue = formatDate(e.target.value);
-    setDateOfCarLicense(formattedValue);
-    setValue('dateOfCarLicense', formattedValue, { shouldValidate: true });
+    formatDate(e.target.value, setDateOfCarLicense, 'dateOfCarLicense');
+  };
+
+  // Validate date format on blur
+  const validateDateFormat = (value, setState, fieldName, errorMessage) => {
+    if (value.length === 10 && !/^\d{2}\/\d{2}\/\d{4}$/.test(value)) {
+      toast.error(errorMessage);
+      setState('');
+      setValue(fieldName, '', { shouldValidate: true });
+    }
+  };
+
+  const handleDateOfBirthBlur = () => {
+    validateDateFormat(dateOfBirth, setDateOfBirth, 'dateOfBirth', 'Date of birth must be in DD/MM/YYYY format');
+  };
+
+  const handleDateOfCarLicenseBlur = () => {
+    validateDateFormat(dateOfCarLicense, setDateOfCarLicense, 'dateOfCarLicense', 'Date of car license must be in DD/MM/YYYY format');
   };
 
   // Prevent Enter key from submitting the form in step 4
@@ -286,6 +297,7 @@ export default function CarInsurance() {
                             placeholder="DD/MM/YYYY"
                             value={dateOfBirth}
                             onChange={handleDateOfBirthChange}
+                            onBlur={handleDateOfBirthBlur}
                             className={`w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
                               errors.dateOfBirth ? 'border-red-500' : 'border-gray-300'
                             }`}
@@ -338,6 +350,7 @@ export default function CarInsurance() {
                             placeholder="DD/MM/YYYY"
                             value={dateOfCarLicense}
                             onChange={handleDateOfCarLicenseChange}
+                            onBlur={handleDateOfCarLicenseBlur}
                             className={`w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
                               errors.dateOfCarLicense ? 'border-red-500' : 'border-gray-300'
                             }`}
