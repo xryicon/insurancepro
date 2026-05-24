@@ -28,45 +28,57 @@ jobs:
           const fs = require('fs');
           const path = require('path');
 
-          const sourcePath = 'public/locales/en/translation.json';
-          const sourceTranslations = JSON.parse(fs.readFileSync(sourcePath, 'utf8'));
-
-          const targets = [
-            { lang: 'es', path: 'public/locales/es/translation.json' },
-            { lang: 'nl', path: 'public/locales/nl/translation.json' }
-          ];
-
-          async function translateText(text, targetLang) {
+          try {
+            // Read and parse the source file
+            const sourcePath = 'public/locales/en/translation.json';
+            let sourceTranslations;
             try {
-              const response = await axios.post('https://libretranslate.de/translate', {
-                q: text,
-                source: 'en',
-                target: targetLang,
-              });
-              return response.data.translatedText;
-            } catch (error) {
-              console.error(\`Error translating text: \${text}\`, error.message);
-              return text;
+              sourceTranslations = JSON.parse(fs.readFileSync(sourcePath, 'utf8'));
+            } catch (parseError) {
+              console.error('❌ Invalid JSON in source file:', parseError.message);
+              process.exit(1); // Exit with error
             }
-          }
 
-          async function translateAll() {
-            for (const target of targets) {
-              const translatedJSON = {};
-              for (const [key, value] of Object.entries(sourceTranslations)) {
-                translatedJSON[key] = await translateText(value, target.lang);
-                await new Promise(resolve => setTimeout(resolve, 500));
+            const targets = [
+              { lang: 'es', path: 'public/locales/es/translation.json' },
+              { lang: 'nl', path: 'public/locales/nl/translation.json' }
+            ];
+
+            async function translateText(text, targetLang) {
+              try {
+                const response = await axios.post('https://libretranslate.de/translate', {
+                  q: text,
+                  source: 'en',
+                  target: targetLang,
+                });
+                return response.data.translatedText;
+              } catch (error) {
+                console.error(\`⚠️ Error translating text: \${text}\`, error.message);
+                return text; // Fallback to English
               }
-              const dir = path.dirname(target.path);
-              if (!fs.existsSync(dir)) {
-                fs.mkdirSync(dir, { recursive: true });
-              }
-              fs.writeFileSync(target.path, JSON.stringify(translatedJSON, null, 2));
-              console.log(\`✅ Translated to \${target.lang}\`);
             }
-          }
 
-          translateAll().catch(console.error);
+            async function translateAll() {
+              for (const target of targets) {
+                const translatedJSON = {};
+                for (const [key, value] of Object.entries(sourceTranslations)) {
+                  translatedJSON[key] = await translateText(value, target.lang);
+                  await new Promise(resolve => setTimeout(resolve, 500)); // Avoid rate limits
+                }
+                const dir = path.dirname(target.path);
+                if (!fs.existsSync(dir)) {
+                  fs.mkdirSync(dir, { recursive: true });
+                }
+                fs.writeFileSync(target.path, JSON.stringify(translatedJSON, null, 2));
+                console.log(\`✅ Translated to \${target.lang}\`);
+              }
+            }
+
+            translateAll().catch(console.error);
+          } catch (error) {
+            console.error('❌ Error in translation script:', error.message);
+            process.exit(1);
+          }
           "
 
       - name: Commit and push translated files
