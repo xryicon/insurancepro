@@ -27,11 +27,17 @@ jobs:
       - name: Install dependencies
         run: npm install axios @babel/parser @babel/traverse glob
 
-      - name: Fix translation values
+      # ✅ FIRST PASS: Fix existing values
+      - name: Fix translation values (first pass)
         run: node scripts/fix-translations.js
 
+      # ✅ TRANSLATE: Extract new keys
       - name: Run translation script
         run: node scripts/translate.mjs
+
+      # ✅ SECOND PASS: Fix any new underscores introduced by translate.mjs
+      - name: Fix translation values (second pass)
+        run: node scripts/fix-translations.js
 
       - name: Commit changes
         run: |
@@ -39,6 +45,6 @@ jobs:
           git config --global user.email "actions@github.com"
           git add src/en-translation.json src/es-translation.json src/nl-translation.json
           if ! git diff --cached --quiet; then
-            git commit -m "🤖 Auto-extract, translate, and fix text"
+            git commit -m "🤖 Auto-extract, translate, and fix text (double pass)"
             git push https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }}.git HEAD:${{ github.ref_name }}
           fi
