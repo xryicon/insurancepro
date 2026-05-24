@@ -120,7 +120,7 @@ const Layout = () => {
                 onClick={() => navigate('/quote')}
                 className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
               >
-                {t('get_a_quote')}
+                {t('get a quote')}
               </button>
             </div>
 
