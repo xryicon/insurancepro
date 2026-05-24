@@ -9,7 +9,7 @@ export default function AboutUs() {
   return (
     <>
       <Helmet>
-        <title>{t('About Us | InsurancePro - Your Trusted Insurance Partner in Spain')}</title>
+        <title>{t('About Us | InsurancePro -Your Trusted Insurance Partner in Spain')}</title>
         <meta
           name="description"
           content={t('Learn about InsurancePro: a mission-driven platform to help you save money on insurance in Spain. Created by Dylan Van Wesemael.')}
