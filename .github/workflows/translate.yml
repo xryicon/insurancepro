@@ -1,9 +1,9 @@
-name: Auto Translate
+name: Auto Extract and Translate
 
 on:
   push:
     paths:
-      - 'src/**'
+      - 'src/**/*.{js,jsx}'
 
 jobs:
   translate:
@@ -17,8 +17,8 @@ jobs:
         with:
           node-version: 24
 
-      - name: Install axios
-        run: npm install axios
+      - name: Install dependencies
+        run: npm install axios @babel/parser @babel/traverse glob
 
       - name: Run translation script
         run: node scripts/translate.mjs
@@ -28,9 +28,7 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add src/en-translation.json src/es-translation.json src/nl-translation.json
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "🤖 Update translations"
+          if ! git diff --cached --quiet; then
+            git commit -m "🤖 Auto-extract and translate text"
             git push
           fi
