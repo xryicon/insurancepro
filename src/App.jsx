@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
+import './i18n';
 
 // Lazy-loaded pages
 const Home = lazy(() => import('./pages/Home'));
