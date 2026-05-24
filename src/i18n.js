@@ -2,29 +2,24 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
-// Dynamic imports for JSON files (Vite compatibility)
-let enTranslations, esTranslations, nlTranslations;
+// Import translation files from src/locales/
+import enTranslations from './locales/en/translation.json';
+import esTranslations from './locales/es/translation.json';
+import nlTranslations from './locales/nl/translation.json';
 
-async function loadTranslations() {
-  enTranslations = (await import('./public/locales/en/translation.json')).default;
-  esTranslations = (await import('./public/locales/es/translation.json')).default;
-  nlTranslations = (await import('./public/locales/nl/translation.json')).default;
+i18n
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    fallbackLng: 'en',
+    interpolation: {
+      escapeValue: false,
+    },
+    resources: {
+      en: { translation: enTranslations },
+      es: { translation: esTranslations },
+      nl: { translation: nlTranslations },
+    },
+  });
 
-  i18n
-    .use(LanguageDetector)
-    .use(initReactI18next)
-    .init({
-      fallbackLng: 'en',
-      interpolation: {
-        escapeValue: false,
-      },
-      resources: {
-        en: { translation: enTranslations },
-        es: { translation: esTranslations },
-        nl: { translation: nlTranslations },
-      },
-    });
-}
-
-loadTranslations();
 export default i18n;
