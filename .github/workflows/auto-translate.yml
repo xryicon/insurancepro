@@ -1,0 +1,90 @@
+name: Auto-Translate JSON Files
+
+on:
+  push:
+    paths:
+      - 'public/locales/en/translation.json'  # Trigger when English file changes
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install axios
+
+      - name: Translate to Spanish and Dutch
+        run: |
+          node -e "
+          const axios = require('axios');
+          const fs = require('fs');
+          const path = require('path');
+
+          // Read the source (English) file
+          const sourcePath = 'public/locales/en/translation.json';
+          const sourceTranslations = JSON.parse(fs.readFileSync(sourcePath, 'utf8'));
+
+          // Target languages and paths
+          const targets = [
+            { lang: 'es', path: 'public/locales/es/translation.json' },
+            { lang: 'nl', path: 'public/locales/nl/translation.json' }
+          ];
+
+          // Function to translate text using LibreTranslate
+          async function translateText(text, targetLang) {
+            try {
+              const response = await axios.post('https://libretranslate.de/translate', {
+                q: text,
+                source: 'en',
+                target: targetLang,
+              });
+              return response.data.translatedText;
+            } catch (error) {
+              console.error(\`Error translating text: \${text}\`, error.message);
+              return text; // Fallback to English if translation fails
+            }
+          }
+
+          // Translate all keys for each target language
+          async function translateAll() {
+            for (const target of targets) {
+              const translatedJSON = {};
+              for (const [key, value] of Object.entries(sourceTranslations)) {
+                translatedJSON[key] = await translateText(value, target.lang);
+                // Add a small delay to avoid rate limits
+                await new Promise(resolve => setTimeout(resolve, 500));
+              }
+              // Ensure the directory exists
+              const dir = path.dirname(target.path);
+              if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, { recursive: true });
+              }
+              // Write the translated JSON file
+              fs.writeFileSync(target.path, JSON.stringify(translatedJSON, null, 2));
+              console.log(\`✅ Translated to \${target.lang} and saved to \${target.path}\`);
+            }
+          }
+
+          translateAll().catch(console.error);
+          "
+
+      - name: Commit and push translated files
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add public/locales/es/translation.json public/locales/nl/translation.json
+          # Only commit if there are changes
+          if ! git diff --cached --quiet; then
+            git commit -m "🤖 Auto-translate JSON files to Spanish and Dutch"
+            git push
+          else
+            echo "No changes to commit."
+          fi
