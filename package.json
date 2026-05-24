@@ -20,6 +20,7 @@
     "react-toastify": "^10.0.4",
     "i18next": "^23.7.6",
     "react-i18next": "^13.5.0",
+    "i18next-browser-languagedetector": "^7.1.0",  // <-- Add this line
     "framer-motion": "^10.16.16",
     "lucide-react": "^0.294.0",
     "react-helmet-async": "^2.0.4"
