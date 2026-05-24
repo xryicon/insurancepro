@@ -131,5 +131,9 @@
   "submit": "Enviar",
   "savings": "ahorros",
   "upload": "Subir",
-  "": "*"
+  "": "*",
+  "get_a_quote": "get_a_quote",
+  "get_quote": "Get Quote",
+  "back_to_home": "Back to Home",
+  "home_insurance_quote": "Home Insurance Quote"
 }

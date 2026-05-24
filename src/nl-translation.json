@@ -130,5 +130,9 @@
   "click_me": "Click me",
   "submit": "Submit",
   "savings": "savings",
-  "upload": "Upload"
+  "upload": "Upload",
+  "get_a_quote": "get_a_quote",
+  "get_quote": "Get Quote",
+  "start_new_quote": "Start New Quote",
+  "home_insurance_quote": "Home Insurance Quote"
 }
