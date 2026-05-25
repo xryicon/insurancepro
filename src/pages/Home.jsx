@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Zap, ShieldCheck, Euro } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import backgroundHero from '../../assets/images/background-hero.jpg'; // Import the image directly
+import backgroundHero from '../../assets/images/main-background-hero.jpg'; // Import the image directly
 
 export default function Home() {
   const { t } = useTranslation();
