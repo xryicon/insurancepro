@@ -1,6 +1,22 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
+// ========== ANIMATION VARIANTS ==========
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" }
+  },
+  hover: {
+    y: -8,
+    boxShadow: "0 15px 35px rgba(0, 0, 0, 0.15)",
+    transition: { duration: 0.3 }
+  }
+};
+
+// ========== BASE CARD COMPONENT ==========
 const Card = ({
   children,
   className = '',
@@ -26,7 +42,7 @@ const Card = ({
   );
 };
 
-// Insurance Card Component
+// ========== INSURANCE CARD COMPONENT ==========
 const InsuranceCard = ({
   icon: Icon,
   title,
@@ -69,27 +85,59 @@ const InsuranceCard = ({
   );
 };
 
-// Feature Card Component
+// ========== FEATURE CARD COMPONENT (UPDATED) ==========
 const FeatureCard = ({
   icon: Icon,
   title,
   description,
+  color = 'blue',
+  delay = 0,
   className = '',
 }) => {
+  const colorConfig = {
+    blue: {
+      bg: 'from-blue-50 to-blue-100',
+      iconBg: 'bg-blue-50',
+      iconText: 'text-blue-600',
+      titleText: 'text-blue-900',
+    },
+    green: {
+      bg: 'from-green-50 to-green-100',
+      iconBg: 'bg-green-50',
+      iconText: 'text-green-600',
+      titleText: 'text-green-900',
+    }
+  };
+
+  const config = colorConfig[color] || colorConfig.blue;
+
   return (
-    <Card hoverEffect className={className}>
-      <div className="text-center">
-        <div className="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-4">
-          <Icon className="w-7 h-7 text-blue-600" />
-        </div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
-        <p className="text-gray-600 text-sm">{description}</p>
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      whileHover="hover"
+      variants={cardVariants}
+      custom={delay}
+      className={`w-full max-w-sm p-8 rounded-xl text-center
+        bg-gradient-to-br ${config.bg}
+        shadow-lg ${className}`}
+      style={{ transition: 'all 0.5s ease' }}
+    >
+      <div className={`w-14 h-14 ${config.iconBg} rounded-xl
+        flex items-center justify-center mx-auto mb-4`}>
+        <Icon className={`w-7 h-7 ${config.iconText}`} />
       </div>
-    </Card>
+      <h3 className={`text-xl font-semibold ${config.titleText} mb-3`}>
+        {title}
+      </h3>
+      <p className="text-gray-600 text-sm">
+        {description}
+      </p>
+    </motion.div>
   );
 };
 
-// Stat Card Component
+// ========== STAT CARD COMPONENT ==========
 const StatCard = ({
   number,
   label,
@@ -109,7 +157,7 @@ const StatCard = ({
   );
 };
 
-// Testimonial Card Component
+// ========== TESTIMONIAL CARD COMPONENT ==========
 const TestimonialCard = ({
   name,
   location,
@@ -146,7 +194,7 @@ const TestimonialCard = ({
   );
 };
 
-// Provider Card Component
+// ========== PROVIDER CARD COMPONENT ==========
 const ProviderCard = ({
   name,
   logo,
@@ -166,6 +214,7 @@ const ProviderCard = ({
   );
 };
 
+// ========== EXPORTS ==========
 export {
   Card,
   InsuranceCard,
