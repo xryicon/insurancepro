@@ -131,7 +131,7 @@ body {
 .hero-background {
   background:
     linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
-    url('/src/assets/images/background-hero.jpg') center/cover no-repeat;
+    url('../assets/images/background-hero.jpg') center/cover no-repeat;
   background-size: cover;
   background-position: center;
   min-height: 50vh;
