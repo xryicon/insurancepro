@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Menu, X, Phone } from 'lucide-react';
 import { navLinks } from '../data/constants';
 import { useTranslation } from 'react-i18next';
+import CookieBanner from '../components/CookieBanner';
 
 const Layout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -32,6 +33,9 @@ const Layout = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Cookie Banner */}
+      <CookieBanner />
+
       {/* Header */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -120,7 +124,7 @@ const Layout = () => {
                 onClick={() => navigate('/quote')}
                 className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
               >
-                {t('get a quote')}
+                {t('get_a_quote')}
               </button>
             </div>
 
@@ -265,7 +269,7 @@ const Layout = () => {
             </a>
             <a
               href="/privacy-policy"
-              onClick={(e) => { e.preventDefault(); navigate('/faq'); }}
+              onClick={(e) => { e.preventDefault(); navigate('/privacy-policy'); }}
               className="text-gray-400 hover:text-white text-sm"
             >
               {t('privacy_policy')}
