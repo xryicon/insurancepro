@@ -5,10 +5,27 @@ import { motion } from 'framer-motion';
 import { Zap, ShieldCheck, Euro } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import '../../index.css' // Import the CSS file
+import backgroundHero from '../../assets/images/background-hero.jpg'; // Import the image directly
 
 export default function Home() {
   const { t } = useTranslation();
+
+  // Inline style for the hero background
+  const heroBackgroundStyle = {
+    background: `linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
+                url(${backgroundHero}) center/cover no-repeat`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    minHeight: '50vh',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    marginBottom: '2rem',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    borderRadius: '0.5rem',
+  };
 
   return (
     <>
@@ -22,7 +39,7 @@ export default function Home() {
 
       <div className="min-h-screen bg-gray-50">
         {/* Hero Section with Background Image */}
-        <div className="hero-background py-20 px-4 sm:px-6 lg:px-8 text-center">
+        <div style={heroBackgroundStyle} className="py-20 px-4 sm:px-6 lg:px-8">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
