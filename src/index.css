@@ -127,39 +127,8 @@ body {
   }
 }
 
-/* Hero Section with Mediterranean Background */
-.hero-background {
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
-    url('../assets/images/background-hero.jpg') center/cover no-repeat;
-  background-size: cover;
-  background-position: center;
-  min-height: 50vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 0.5rem;
-}
-
-/* Mobile Optimization for Hero Section */
+/* Mobile Optimization for Hero Buttons */
 @media (max-width: 768px) {
-  .hero-background {
-    padding: 4rem 1rem !important;
-    min-height: 40vh;
-  }
-
-  .hero-background h1 {
-    font-size: 1.75rem !important;
-  }
-
-  .hero-background p {
-    font-size: 1rem !important;
-  }
-
   .hero-buttons {
     flex-direction: column;
     align-items: center;
