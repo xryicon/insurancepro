@@ -11,7 +11,7 @@ const cardVariants = {
   },
   hover: {
     y: -8,
-    boxShadow: "0 15px 35px rgba(0, 0, 0, 0.15)",
+    boxShadow: "0 15px 35px rgba(0, 0, 0, 0.2)",
     transition: { duration: 0.3 }
   }
 };
@@ -85,32 +85,14 @@ const InsuranceCard = ({
   );
 };
 
-// ========== FEATURE CARD COMPONENT (UPDATED) ==========
+// ========== FEATURE CARD COMPONENT (UPDATED TO MATCH YOUR IMAGE) ==========
 const FeatureCard = ({
   icon: Icon,
   title,
   description,
-  color = 'blue',
   delay = 0,
   className = '',
 }) => {
-  const colorConfig = {
-    blue: {
-      bg: 'from-blue-50 to-blue-100',
-      iconBg: 'bg-blue-50',
-      iconText: 'text-blue-600',
-      titleText: 'text-blue-900',
-    },
-    green: {
-      bg: 'from-green-50 to-green-100',
-      iconBg: 'bg-green-50',
-      iconText: 'text-green-600',
-      titleText: 'text-green-900',
-    }
-  };
-
-  const config = colorConfig[color] || colorConfig.blue;
-
   return (
     <motion.div
       initial="hidden"
@@ -118,19 +100,24 @@ const FeatureCard = ({
       whileHover="hover"
       variants={cardVariants}
       custom={delay}
-      className={`w-full max-w-sm p-8 rounded-xl text-center
-        bg-gradient-to-br ${config.bg}
-        shadow-lg ${className}`}
-      style={{ transition: 'all 0.5s ease' }}
+      className={`w-full max-w-sm p-8 rounded-2xl text-center text-white
+        shadow-xl ${className}`}
+      style={{
+        background: 'linear-gradient(180deg, #6B9FFF 0%, #4A6BFF 100%)',
+        transition: 'all 0.5s ease'
+      }}
     >
-      <div className={`w-14 h-14 ${config.iconBg} rounded-xl
-        flex items-center justify-center mx-auto mb-4`}>
-        <Icon className={`w-7 h-7 ${config.iconText}`} />
+      {/* Circular icon container with glossy effect */}
+      <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6 backdrop-blur-sm border border-white/30">
+        <div className="w-14 h-14 bg-white/30 rounded-full flex items-center justify-center">
+          <Icon className="w-7 h-7 text-white" />
+        </div>
       </div>
-      <h3 className={`text-xl font-semibold ${config.titleText} mb-3`}>
+
+      <h3 className="text-xl font-bold mb-3 drop-shadow-md">
         {title}
       </h3>
-      <p className="text-gray-600 text-sm">
+      <p className="text-sm opacity-90 px-2">
         {description}
       </p>
     </motion.div>
