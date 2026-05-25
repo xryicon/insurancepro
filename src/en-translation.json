@@ -131,4 +131,16 @@
   "submit": "Submit",
   "savings": "Savings",
   "upload": "Upload"
+  "privacy_policy": "Privacy Policy",
+  "cookies": "Cookies",
+  "privacy_policy_cookies_description": "This website uses cookies to ensure basic functionality, such as remembering your language preference. These cookies are essential for the website to function and do not require your consent.",
+  "data_collection": "Data Collection",
+  "privacy_policy_data_collection_description": "We do not collect or store any personal data unless you explicitly provide it (e.g., via a contact form). Any data you provide will only be used for the purpose you intended (e.g., to respond to your inquiry).",
+  "your_rights": "Your Rights",
+  "privacy_policy_your_rights_description": "Under GDPR, you have the right to access, rectify, or delete your data. To exercise these rights, please contact us at Info@insurancepro.es.",
+  "we_value_your_privacy": "We Value Your Privacy",
+  "cookie_consent_message": "We use cookies to ensure basic functionality (e.g., language preference). By clicking Accept, you consent to our use of cookies.",
+  "learn_more": "Learn more about our privacy policy",
+  "accept": "Accept",
+  "reject": "Reject"
 }
