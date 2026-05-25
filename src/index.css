@@ -113,6 +113,16 @@ body {
   -webkit-backdrop-filter: blur(10px);
 }
 
+/* Hero background class */
+.hero-background {
+  background-image: url('https://raw.githubusercontent.com/xryicon/insurancepro/main/src/assets/images/main%20background%20hero.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  min-height: 500px; /* Adjust height as needed */
+}
+
 /* Custom utilities */
 @layer utilities {
   .text-balance {
