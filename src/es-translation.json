@@ -62,7 +62,7 @@
   "horsepower": "Potencia",
   "cv": "CV",
   "engine_size": "Tamaño del motor",
-  "cc": "cc",
+  "cc": "Cc",
   "transmission_type": "Tipo de transmisión",
   "select_transmission_type": "Selecciona el tipo de transmisión",
   "manual": "Manual",
@@ -144,5 +144,18 @@
   "data_collection": "Recolección de datos",
   "privacy_policy_data_collection_description": "No recopilamos ni almacenamos ningún dato personal a menos que lo proporciones explícitamente (por ejemplo, a través de un formulario de contacto). Cualquier dato que proporciones solo se utilizará para el propósito que pretendías (por ejemplo, para responder a tu consulta).",
   "your_rights": "Tus derechos",
-  "privacy_policy_your_rights_description": "De acuerdo con el GDPR, tienes derecho a acceder, rectificar o eliminar tus datos. Para ejercer estos derechos, contáctanos en info@insurancepro.es."
+  "privacy_policy_your_rights_description": "De acuerdo con el GDPR, tienes derecho a acceder, rectificar o eliminar tus datos. Para ejercer estos derechos, contáctanos en info@insurancepro.es.",
+  "": "*",
+  "your_information_is_secure_and_will_only_be_used_to_provide_you_with_insurance_quotes": "Your Information Is Secure And Will Only Be Used To Provide You With Insurance Quotes",
+  "insurancepro__compare__save_on_insurance_in_spain": "Insurancepro Compare Save On Insurance In Spain",
+  "compare_insurance_quotes_in_spain": "Compare Insurance Quotes In Spain",
+  "get_the_best_rates_from_us_in_minutes": "Get The Best Rates From Us In Minutes",
+  "telephone": "Telephone",
+  "formdateplaceholder": "Formdateplaceholder",
+  "pro": "Pro",
+  "contact": "Contact",
+  "we_use_cookies_to_ensure_basic_functionality_eg_language_preference_by_clicking": "We use cookies to ensure basic functionality (e.g., language preference).\n            By clicking",
+  "_you_consent_to_our_use_of_cookies": ", you consent to our use of cookies.",
+  "learn_more_about_our_privacy_policy": "Learn more about our privacy policy",
+  "savings": "Savings"
 }
