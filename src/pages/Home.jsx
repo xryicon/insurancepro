@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Zap, ShieldCheck, Euro } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import '../../index.css'; // Import the CSS file
+import '../../index.css' // Import the CSS file
 
 export default function Home() {
   const { t } = useTranslation();
