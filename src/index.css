@@ -131,39 +131,43 @@ body {
 .hero-background {
   background:
     linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
-    url('https://xryicon.github.io/insurancepro/src/assets/images/background-hero.jpg') center/cover;
+    url('/src/assets/images/background-hero.jpg') center/cover no-repeat;
   background-size: cover;
   background-position: center;
-  padding: 80px 20px;
-  border-radius: 10px;
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
 }
 
 /* Mobile Optimization for Hero Section */
 @media (max-width: 768px) {
   .hero-background {
-    padding: 60px 15px;
+    padding: 4rem 1rem !important;
+    min-height: 40vh;
   }
 
   .hero-background h1 {
-    font-size: 2rem;
+    font-size: 1.75rem !important;
   }
 
   .hero-background p {
-    font-size: 1rem;
+    font-size: 1rem !important;
   }
 
   .hero-buttons {
-    display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 0.75rem;
   }
 
-  .hero-buttons button {
+  .hero-buttons a {
     width: 100%;
-    max-width: 300px;
+    max-width: 16rem;
   }
 }
