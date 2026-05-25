@@ -44,14 +44,19 @@ const Layout = () => {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
+            {/* Logo - UPDATED WITH TAGLINE */}
             <div className="flex items-center space-x-2">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center">
                 <Shield className="w-6 h-6 text-white" />
               </div>
-              <div>
-                <span className="text-xl font-bold text-gray-900">{t('insurance')}</span>
-                <span className="text-xl font-bold text-blue-600">{t('pro')}</span>
+              <div className="flex flex-col">
+                <div className="flex items-baseline">
+                  <span className="text-xl font-bold text-gray-900">{t('insurance')}</span>
+                  <span className="text-xl font-bold text-blue-600">{t('pro')}</span>
+                </div>
+                <span className="text-xs text-gray-500 -mt-1 hidden sm:block">
+                  Save Money on Insurance
+                </span>
               </div>
             </div>
 
@@ -229,14 +234,19 @@ const Layout = () => {
         <Outlet />
       </main>
 
-      {/* Footer */}
+      {/* Footer - UPDATED WITH TAGLINE */}
       <footer className="bg-gray-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <Shield className="w-6 h-6 text-white" />
-            <span className="text-xl font-bold">
-              {t('insurance')}<span className="text-blue-600">{t('pro')}</span>
-            </span>
+            <div className="flex flex-col items-center">
+              <span className="text-xl font-bold">
+                {t('insurance')}<span className="text-blue-400">{t('pro')}</span>
+              </span>
+              <span className="text-xs text-gray-400 mt-0.5">
+                Save Money on Insurance
+              </span>
+            </div>
           </div>
           <p className="text-gray-400 text-sm mb-6">{t('smart_insurance_simple_savings')}</p>
           <div className="space-y-2 mb-6">
