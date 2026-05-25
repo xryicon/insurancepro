@@ -131,7 +131,7 @@ body {
 .hero-background {
   background:
     linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
-    url('/src/assets/images/background-hero.jpg') center/cover;
+    url('https://xryicon.github.io/insurancepro/src/assets/images/background-hero.jpg') center/cover;
   background-size: cover;
   background-position: center;
   padding: 80px 20px;
