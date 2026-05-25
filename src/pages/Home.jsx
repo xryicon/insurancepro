@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Zap, ShieldCheck, Euro } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
+import '../../index.css'; // Import the CSS file
 
 export default function Home() {
   const { t } = useTranslation();
@@ -20,8 +21,8 @@ export default function Home() {
       </Helmet>
 
       <div className="min-h-screen bg-gray-50">
-        {/* Hero Section */}
-        <div className="py-20 px-4 sm:px-6 lg:px-8 text-center">
+        {/* Hero Section with Background Image */}
+        <div className="hero-background py-20 px-4 sm:px-6 lg:px-8 text-center">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -42,7 +43,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="mt-10 flex flex-col sm:flex-row gap-4 justify-center"
+            className="mt-10 flex flex-col sm:flex-row gap-4 justify-center hero-buttons"
           >
             <Link to="/car-insurance">
               <Button size="large">{t('car_insurance')}</Button>
