@@ -213,4 +213,29 @@
   "current_cover": "Current Cover",
   "next": "Next",
   "about_us__insurancepro_your_trusted_insurance_partner_in_spain": "About Us | InsurancePro -Your Trusted Insurance Partner in Spain"
+  "insurance": "Seguro",
+  "pro": "Pro",
+  "contact": "Contacto",
+  "get_a_quote": "Obtener una cotización",
+  "smart_insurance_simple_savings": "Seguros inteligentes. Ahorros simples.",
+  "email": "Correo electrónico",
+  "website": "Sitio web",
+  "faq": "Preguntas frecuentes",
+  "privacy_policy": "Política de privacidad",
+  "insurancepro_all_rights_reserved": "InsurancePro. Todos los derechos reservados.",
+
+  // Cookie Banner Translations
+  "we_value_your_privacy": "Valoramos su privacidad",
+  "cookie_consent_message": "Utilizamos cookies para garantizar la funcionalidad básica (por ejemplo, preferencia de idioma). Al hacer clic en Aceptar, usted consiente el uso de cookies.",
+  "learn_more": "Más información sobre nuestra política de privacidad",
+  "accept": "Aceptar",
+  "reject": "Rechazar",
+
+  // Privacy Policy Page Translations
+  "cookies": "Cookies",
+  "privacy_policy_cookies_description": "Este sitio web utiliza cookies para garantizar la funcionalidad básica, como recordar su preferencia de idioma. Estas cookies son esenciales para el funcionamiento del sitio web y no requieren su consentimiento.",
+  "data_collection": "Recolección de datos",
+  "privacy_policy_data_collection_description": "No recopilamos ni almacenamos ningún dato personal a menos que usted lo proporcione explícitamente (por ejemplo, a través de un formulario de contacto). Cualquier dato que proporcione solo se utilizará para el propósito que usted pretendía (por ejemplo, para responder a su consulta).",
+  "your_rights": "Tus derechos",
+  "privacy_policy_your_rights_description": "De acuerdo con el GDPR, tiene derecho a acceder, rectificar o eliminar sus datos. Para ejercer estos derechos, póngase en contacto con nosotros en Info@insurancepro.es."
 }
