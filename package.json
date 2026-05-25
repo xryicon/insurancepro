@@ -23,8 +23,8 @@
     "i18next-browser-languagedetector": "^7.1.0",
     "framer-motion": "^10.16.16",
     "lucide-react": "^0.294.0",
-    "react-helmet-async": "^2.0.4"
-    "js-cookie": "^3.0.5",
+    "react-helmet-async": "^2.0.4",
+    "js-cookie": "^3.0.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",
