@@ -1,5 +1,4 @@
 {
-  // General
   "loading": "Cargando...",
   "get_a_quote": "Obtener cotización",
   "choose_the_type_of_insurance_you_need": "Elige el tipo de seguro que necesitas",
@@ -14,8 +13,6 @@
   "submit": "Enviar",
   "click_me": "Haz clic aquí",
   "upload": "Subir",
-
-  // Insurance Types
   "home_insurance_quote": "Presupuesto de seguro de hogar",
   "car_insurance_quote": "Cotización de seguro de coche",
   "compare_and_save_up_to_35_on_your_home_insurance": "Compara y ahorra hasta un 35% en tu seguro de hogar",
@@ -23,8 +20,6 @@
   "home_insurance": "Seguro de hogar",
   "car_insurance": "Seguro de coche",
   "insurance": "Seguro",
-
-  // Form Sections
   "personal_information": "Información personal",
   "please_provide_your_personal_details_for_accurate_quotes": "Por favor, proporciona tus datos personales para cotizaciones precisas",
   "property_details": "Detalles de la propiedad",
@@ -36,22 +31,16 @@
   "personal_details": "Datos personales",
   "car_details": "Detalles del coche",
   "tell_us_about_your_car_for_accurate_quotes": "Cuéntanos sobre tu coche para cotizaciones precisas",
-
-  // Form Fields: Personal Details
   "full_name": "Nombre completo",
   "email": "Correo electrónico",
   "nationality": "Nacionalidad",
   "phone": "Teléfono",
-  "telephone": "Teléfono",
   "nie_number": "Número de NIE",
   "address": "Dirección",
   "postal_code": "Código postal",
-  "postcode": "Código postal",
   "date_of_birth": "Fecha de nacimiento",
   "date_of_car_license": "Fecha de obtención del carnet de conducir",
   "nationality_of_car_license": "País de emisión del carnet de conducir",
-
-  // Form Fields: Property Details
   "property_type": "Tipo de propiedad",
   "living_size": "Tamaño interior",
   "m": "m²",
@@ -66,8 +55,6 @@
   "view_on_maps": "Ver en mapas",
   "catastro_number_optional": "Número catastral (opcional)",
   "special_items_optional": "Artículos especiales (opcional)",
-
-  // Form Fields: Car Details
   "car_make": "Marca del coche",
   "car_model": "Modelo del coche",
   "year": "Año",
@@ -83,41 +70,27 @@
   "hybrid": "Híbrido",
   "full_electric": "100% eléctrico",
   "transmission": "Transmisión",
-
-  // Form Fields: Current Insurance
   "current_provider": "Proveedor actual",
   "current_annual_premium": "Prima anual actual",
   "current_cover": "Cobertura actual",
   "company": "Compañía",
   "premium": "Prima",
   "cover": "Cobertura",
-
-  // Form Errors
   "formerrorsdateformat": "Formato de fecha: dd/mm/aaaa",
   "formerrorsfillallfields": "Por favor, rellena todos los campos obligatorios.",
   "formerrorssubmitfailed": "Error al enviar el formulario. Inténtalo de nuevo.",
-
-  // Form Steps
   "formstepspersonaldetails": "Datos personales",
   "formstepscardetails": "Detalles del coche",
   "formstepscurrentinsurance": "Seguro actual",
   "formstepsreviewsubmit": "Revisar y enviar",
-
-  // Form Navigation
   "formnavigationback": "Atrás",
   "formnavigationreview": "Revisar",
   "formnavigationnext": "Siguiente",
   "formnavigationsubmit": "Enviar solicitud",
-
-  // Success Messages
   "submit_quote_request": "Enviar solicitud de cotización",
-  "quote_request_submitted": "¡Solicitud de cotización enviada!",
   "thank_you": "¡Gracias!",
   "we_will_contact_you_soon": "Nos pondremos en contacto contigo pronto.",
-
-  // About Us
   "about_us__insurancepro__your_trusted_insurance_partner_in_spain": "Sobre nosotros | InsurancePro - Tu socio de confianza en seguros en España",
-  "about_us__insurancepro_your_trusted_insurance_partner_in_spain": "Sobre nosotros | InsurancePro - Tu socio de confianza en seguros en España",
   "learn_about_insurancepro_a_missiondriven_platform_to_help_you_save_money_on_insurance_in_spain_created_by_dylan_van_wesemael": "Conoce InsurancePro: una plataforma con misión para ayudarte a ahorrar en seguros en España. Creada por Dylan Van Wesemael.",
   "about": "Sobre nosotros",
   "insurancepro": "InsurancePro",
@@ -131,8 +104,6 @@
   "fast_easy_and_trustworthy": "forma rápida, fácil y confiable",
   "way_to_compare_insurance_options_and_save_money_no_jargon_no_hidden_fees_just_the_best_deals_tailored_to_your_needs": "manera de comparar opciones de seguro y ahorrar dinero. Sin jerga, sin tarifas ocultas, solo las mejores ofertas adaptadas a tus necesidades.",
   "whether_youre_looking_for_car_home_or_other_types_of_insurance_weve_got_you_covered_our_mission_is_to_make_insurance_simple_accessible_and_affordable_for_everyone_in_spain": "Ya sea que busques seguro de coche, hogar u otros tipos de seguro, te tenemos cubierto. Nuestra misión es hacer que el seguro sea simple, accesible y asequible para todos en España.",
-
-  // Why Choose Us
   "why_choose_us": "¿Por qué elegirnos?",
   "why_choose_insurancepro": "¿Por qué elegir InsurancePro?",
   "fast__easy": "Rápido y fácil",
@@ -146,8 +117,6 @@
   "save_money": "Ahorra dinero",
   "save_up_to_40_on_your_premiums": "Ahorra hasta un 40% en tus primas.",
   "only_the_best_insurance_companies_in_spain": "Solo las mejores compañías de seguros en España.",
-
-  // Meet the Founder
   "meet_the_founder": "Conoce al fundador",
   "hi_im": "Hola, soy",
   "dylan": "Dylan",
@@ -155,15 +124,9 @@
   "you": "a ti",
   "first_my_goal_is_to_make_insurance_simple_transparent_and_affordable_for_everyone": "en primer lugar. Mi objetivo es hacer que el seguro sea simple, transparente y asequible para todos.",
   "if_you_have_any_questions_or_feedback_feel_free_to_reach_out_id_love_to_hear_from_you": "Si tienes alguna pregunta o comentario, no dudes en contactarme. ¡Me encantaría saber de ti!",
-
-  // Contact
   "contact_us": "Contáctanos",
   "name": "Nombre",
   "your_query": "Tu consulta",
-  "savings": "Ahorros",
-  "pro": "Pro",
-
-  // Footer
   "smart_insurance_simple_savings": "Seguros inteligentes. Ahorros simples.",
   "infoinsuranceproes": "info@insurancepro.es",
   "website": "Sitio web",
@@ -171,8 +134,6 @@
   "faq": "Preguntas frecuentes",
   "privacy_policy": "Política de privacidad",
   "insurancepro_all_rights_reserved": "InsurancePro. Todos los derechos reservados.",
-
-  // Cookie Consent
   "we_value_your_privacy": "Valoramos tu privacidad",
   "cookie_consent_message": "Utilizamos cookies para garantizar la funcionalidad básica (por ejemplo, preferencia de idioma). Al hacer clic en 'Aceptar', consientes el uso de cookies.",
   "learn_more": "Más información sobre nuestra política de privacidad",
