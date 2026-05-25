@@ -212,4 +212,29 @@
   "current_cover": "Current Cover",
   "next": "Next",
   "about_us__insurancepro_your_trusted_insurance_partner_in_spain": "About Us | InsurancePro -Your Trusted Insurance Partner in Spain"
+  "insurance": "Verzekering",
+  "pro": "Pro",
+  "contact": "Contact",
+  "get_a_quote": "Krijg een offerte",
+  "smart_insurance_simple_savings": "Slimme verzekeringen. Eenvoudige besparingen.",
+  "email": "E-mail",
+  "website": "Website",
+  "faq": "Veelgestelde vragen",
+  "privacy_policy": "Privacybeleid",
+  "insurancepro_all_rights_reserved": "InsurancePro. Alle rechten voorbehouden.",
+
+  // Cookie Banner Translations
+  "we_value_your_privacy": "We waarderen uw privacy",
+  "cookie_consent_message": "We gebruiken cookies om basisfunctionaliteit te garanderen (bijv. taalkeur). Door op Accepteren te klikken, gaat u akkoord met het gebruik van cookies.",
+  "learn_more": "Meer informatie over ons privacybeleid",
+  "accept": "Accepteren",
+  "reject": "Afwijzen",
+
+  // Privacy Policy Page Translations
+  "cookies": "Cookies",
+  "privacy_policy_cookies_description": "Deze website gebruikt cookies om basisfunctionaliteit te garanderen, zoals het onthouden van uw taalkeur. Deze cookies zijn essentieel voor de werking van de website en vereisen geen toestemming.",
+  "data_collection": "Gegevensverzameling",
+  "privacy_policy_data_collection_description": "We verzamelen of slaan geen persoonlijke gegevens op tenzij u deze expliciet verstrekt (bijvoorbeeld via een contactformulier). Alle gegevens die u verstrekt, worden alleen gebruikt voor het beoogde doel (bijvoorbeeld om op uw verzoek te reageren).",
+  "your_rights": "Uw rechten",
+  "privacy_policy_your_rights_description": "Krachtens de AVG heeft u het recht om uw gegevens in te zien, te corrigeren of te laten verwijderen. Om deze rechten uit te oefenen, kunt u contact met ons opnemen via Info@insurancepro.es."
 }
