@@ -76,7 +76,7 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* Features Section - UPDATED WITH ANIMATED CARDS */}
+        {/* Features Section - UPDATED WITH NEW CARD DESIGN */}
         <div className="py-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
@@ -87,7 +87,6 @@ export default function Home() {
                 icon={Zap}
                 title={t('fast__easy')}
                 description={t('compare_quotes_in_just_a_few_clicks')}
-                color="blue"
                 delay={0}
               />
 
@@ -95,7 +94,6 @@ export default function Home() {
                 icon={ShieldCheck}
                 title={t('trusted_providers')}
                 description={t('only_the_best_insurance_companies_in_spain')}
-                color="blue"
                 delay={0.2}
               />
 
@@ -103,7 +101,6 @@ export default function Home() {
                 icon={Euro}
                 title={t('save_money')}
                 description={t('save_up_to_40_on_your_premiums')}
-                color="green"
                 delay={0.4}
               />
             </div>
