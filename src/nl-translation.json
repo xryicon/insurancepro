@@ -1,5 +1,4 @@
 {
-  // General
   "loading": "Laden...",
   "get_a_quote": "Krijg een offerte",
   "choose_the_type_of_insurance_you_need": "Kies het type verzekering dat u nodig hebt",
@@ -14,8 +13,6 @@
   "submit": "Verzenden",
   "click_me": "Klik hier",
   "upload": "Uploaden",
-
-  // Insurance Types
   "home_insurance_quote": "Woonverzekering offerte",
   "car_insurance_quote": "Autoverzekering offerte",
   "compare_and_save_up_to_35_on_your_home_insurance": "Vergelijk en bespaar tot 35% op uw woonverzekering",
@@ -23,8 +20,6 @@
   "home_insurance": "Woonverzekering",
   "car_insurance": "Autoverzekering",
   "insurance": "Verzekering",
-
-  // Form Sections
   "personal_information": "Persoonlijke gegevens",
   "please_provide_your_personal_details_for_accurate_quotes": "Geef uw persoonlijke gegevens op voor nauwkeurige offertes",
   "property_details": "Eigendomsdetails",
@@ -36,8 +31,6 @@
   "personal_details": "Persoonlijke gegevens",
   "car_details": "Autogegevens",
   "tell_us_about_your_car_for_accurate_quotes": "Vertel ons over uw auto voor nauwkeurige offertes",
-
-  // Form Fields: Personal Details
   "full_name": "Volledige naam",
   "email": "E-mail",
   "nationality": "Nationaliteit",
@@ -48,8 +41,6 @@
   "date_of_birth": "Geboortedatum",
   "date_of_car_license": "Datum van rijbewijs",
   "nationality_of_car_license": "Nationaliteit van rijbewijs",
-
-  // Form Fields: Property Details
   "property_type": "Type eigendom",
   "living_size": "Woonoppervlakte",
   "m": "m²",
@@ -64,8 +55,6 @@
   "view_on_maps": "Bekijk op kaart",
   "catastro_number_optional": "Cadastrale nummer (optioneel)",
   "special_items_optional": "Speciale items (optioneel)",
-
-  // Form Fields: Car Details
   "car_make": "Automerk",
   "car_model": "Automodel",
   "year": "Jaar",
@@ -81,39 +70,26 @@
   "hybrid": "Hybride",
   "full_electric": "100% elektrisch",
   "transmission": "Transmissie",
-
-  // Form Fields: Current Insurance
   "current_provider": "Huidige verzekeraar",
   "current_annual_premium": "Huidige jaarpremie",
   "current_cover": "Huidige dekking",
   "company": "Verzekeraar",
   "premium": "Premie",
   "cover": "Dekking",
-
-  // Form Errors
   "form_errors_date_format": "Datumformaat: dd/mm/jjjj",
   "form_errors_fill_all_fields": "Vul alle verplichte velden in.",
   "form_errors_submit_failed": "Fout bij verzenden van het formulier. Probeer het opnieuw.",
-
-  // Form Steps
   "form_steps_personal_details": "Persoonlijke gegevens",
   "form_steps_car_details": "Autogegevens",
   "form_steps_current_insurance": "Huidige verzekering",
   "form_steps_review_submit": "Controleren en verzenden",
-
-  // Form Navigation
   "form_navigation_back": "Terug",
   "form_navigation_review": "Controleren",
   "form_navigation_next": "Volgende",
   "form_navigation_submit": "Verzenden",
-
-  // Success Messages
   "submit_quote_request": "Offerte-aanvraag verzenden",
   "we_will_contact_you_soon": "We nemen snel contact met u op.",
   "thank_you": "Bedankt!",
-  "we_will_contact_you_soon": "We nemen snel contact met u op.",
-
-  // About Us
   "about_us": "Over ons",
   "about_us__insurancepro__your_trusted_insurance_partner_in_spain": "Over ons | InsurancePro - Uw betrouwbare verzekeringspartner in Spanje",
   "learn_about_insurancepro_a_missiondriven_platform_to_help_you_save_money_on_insurance_in_spain_created_by_dylan_van_wesemael": "Leer meer over InsurancePro: een missiegedreven platform om u te helpen besparen op verzekeringen in Spanje. Gemaakt door Dylan Van Wesemael.",
@@ -128,8 +104,6 @@
   "fast_easy_and_trustworthy": "snelle, eenvoudige en betrouwbare",
   "way_to_compare_insurance_options_and_save_money_no_jargon_no_hidden_fees_just_the_best_deals_tailored_to_your_needs": "manier te bieden om verzekeringsopties te vergelijken en geld te besparen. Geen jargon, geen verborgen kosten, alleen de beste deals afgestemd op uw behoeften.",
   "whether_youre_looking_for_car_home_or_other_types_of_insurance_weve_got_you_covered_our_mission_is_to_make_insurance_simple_accessible_and_affordable_for_everyone_in_spain": "Of u nu op zoek bent naar een autoverzekering, woonverzekering of andere soorten verzekeringen, wij hebben u gedekt. Onze missie is om verzekeringen eenvoudig, toegankelijk en betaalbaar te maken voor iedereen in Spanje.",
-
-  // Why Choose Us
   "why_choose_us": "Waarom kiezen voor ons?",
   "why_choose_insurancepro": "Waarom kiezen voor InsurancePro?",
   "fast__easy": "Snel & eenvoudig",
@@ -143,8 +117,6 @@
   "save_money": "Bespaar geld",
   "save_up_to_40_on_your_premiums": "Bespaar tot 40% op uw premies.",
   "only_the_best_insurance_companies_in_spain": "Alleen de beste verzekeringsmaatschappijen in Spanje.",
-
-  // Meet the Founder
   "meet_the_founder": "Maak kennis met de oprichter",
   "hi_im": "Hallo, ik ben",
   "dylan": "Dylan",
@@ -152,13 +124,9 @@
   "you": "u",
   "first_my_goal_is_to_make_insurance_simple_transparent_and_affordable_for_everyone": "op de eerste plaats stelt. Mijn doel is om verzekeringen eenvoudig, transparant en betaalbaar te maken voor iedereen.",
   "if_you_have_any_questions_or_feedback_feel_free_to_reach_out_id_love_to_hear_from_you": "Als u vragen of feedback heeft, aarzel dan niet om contact op te nemen. Ik hoor graag van u!",
-
-  // Contact
   "contact_us": "Neem contact met ons op",
   "name": "Naam",
   "your_query": "Uw vraag",
-
-  // Footer
   "smart_insurance_simple_savings": "Slimme verzekeringen. Eenvoudige besparingen.",
   "infoinsuranceproes": "info@insurancepro.es",
   "website": "Website",
@@ -166,16 +134,12 @@
   "faq": "Veelgestelde vragen",
   "privacy_policy": "Privacybeleid",
   "insurancepro_all_rights_reserved": "InsurancePro. Alle rechten voorbehouden.",
-
-  // Cookie Banner
   "we_value_your_privacy": "We waarderen uw privacy",
   "cookie_consent_message": "We gebruiken cookies om basisfunctionaliteit te garanderen (bijv. taalkeuze). Door op 'Accepteren' te klikken, gaat u akkoord met het gebruik van cookies.",
   "learn_more": "Meer informatie over ons privacybeleid",
   "accept": "Accepteren",
   "reject": "Afwijzen",
   "cookies": "Cookies",
-
-  // Privacy Policy
   "privacy_policy_cookies_description": "Deze website gebruikt cookies om basisfunctionaliteit te garanderen, zoals het onthouden van uw taalkeuze. Deze cookies zijn essentieel voor de werking van de website en vereisen geen toestemming.",
   "data_collection": "Gegevensverzameling",
   "privacy_policy_data_collection_description": "We verzamelen of slaan geen persoonlijke gegevens op tenzij u deze expliciet verstrekt (bijvoorbeeld via een contactformulier). Alle gegevens die u verstrekt, worden alleen gebruikt voor het beoogde doel (bijvoorbeeld om op uw verzoek te reageren).",
