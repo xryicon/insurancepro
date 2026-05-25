@@ -5,17 +5,20 @@ import { motion } from 'framer-motion';
 import { Zap, ShieldCheck, Euro } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import backgroundHero from '../../assets/images/main-background-hero.jpg'; // Import the image directly
+
+// Use the GitHub raw URL directly
+const backgroundHeroUrl = 'https://raw.githubusercontent.com/xryicon/insurancepro/main/src/assets/images/main%20background%20hero.jpg';
 
 export default function Home() {
   const { t } = useTranslation();
 
-  // Inline style for the hero background
+  // Inline style for the hero background using the URL
   const heroBackgroundStyle = {
-    background: `linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
-                url(${backgroundHero}) center/cover no-repeat`,
+    backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
+                      url(${backgroundHeroUrl})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
     minHeight: '50vh',
     display: 'flex',
     flexDirection: 'column',
@@ -39,7 +42,7 @@ export default function Home() {
 
       <div className="min-h-screen bg-gray-50">
         {/* Hero Section with Background Image */}
-        <div style={heroBackgroundStyle} className="py-20 px-4 sm:px-6 lg:px-8">
+        <div style={heroBackgroundStyle} className="py-20 px-4 sm:px-6 lg:px-8 w-full">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
