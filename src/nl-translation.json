@@ -34,7 +34,7 @@
   "review__submit": "Controleren en verzenden",
   "please_review_your_information_before_submitting": "Controleer uw informatie voordat u verzendt",
   "personal_details": "Persoonlijke gegevens",
-  "car_details": "Auto details",
+  "car_details": "Autogegevens",
   "tell_us_about_your_car_for_accurate_quotes": "Vertel ons over uw auto voor nauwkeurige offertes",
 
   // Form Fields: Personal Details
@@ -42,11 +42,9 @@
   "email": "E-mail",
   "nationality": "Nationaliteit",
   "phone": "Telefoon",
-  "telephone": "Telefoon",
   "nie_number": "NIE-nummer",
   "address": "Adres",
   "postal_code": "Postcode",
-  "postcode": "Postcode",
   "date_of_birth": "Geboortedatum",
   "date_of_car_license": "Datum van rijbewijs",
   "nationality_of_car_license": "Nationaliteit van rijbewijs",
@@ -93,31 +91,32 @@
   "cover": "Dekking",
 
   // Form Errors
-  "formerrorsdateformat": "Datumformaat: dd/mm/jjjj",
-  "formerrorsfillallfields": "Vul alle verplichte velden in.",
-  "formerrorssubmitfailed": "Fout bij verzenden van het formulier. Probeer het opnieuw.",
+  "form_errors_date_format": "Datumformaat: dd/mm/jjjj",
+  "form_errors_fill_all_fields": "Vul alle verplichte velden in.",
+  "form_errors_submit_failed": "Fout bij verzenden van het formulier. Probeer het opnieuw.",
 
   // Form Steps
-  "formstepspersonaldetails": "Persoonlijke gegevens",
-  "formstepscardetails": "Auto details",
-  "formstepscurrentinsurance": "Huidige verzekering",
-  "formstepsreviewsubmit": "Controleren en verzenden",
+  "form_steps_personal_details": "Persoonlijke gegevens",
+  "form_steps_car_details": "Autogegevens",
+  "form_steps_current_insurance": "Huidige verzekering",
+  "form_steps_review_submit": "Controleren en verzenden",
 
   // Form Navigation
-  "formnavigationback": "Terug",
-  "formnavigationreview": "Controleren",
-  "formnavigationnext": "Volgende",
-  "formnavigationsubmit": "Verzenden",
+  "form_navigation_back": "Terug",
+  "form_navigation_review": "Controleren",
+  "form_navigation_next": "Volgende",
+  "form_navigation_submit": "Verzenden",
 
   // Success Messages
   "submit_quote_request": "Offerte-aanvraag verzenden",
   "we_will_contact_you_soon": "We nemen snel contact met u op.",
+  "thank_you": "Bedankt!",
+  "we_will_contact_you_soon": "We nemen snel contact met u op.",
 
   // About Us
+  "about_us": "Over ons",
   "about_us__insurancepro__your_trusted_insurance_partner_in_spain": "Over ons | InsurancePro - Uw betrouwbare verzekeringspartner in Spanje",
-  "about_us__insurancepro_your_trusted_insurance_partner_in_spain": "Over ons | InsurancePro - Uw betrouwbare verzekeringspartner in Spanje",
   "learn_about_insurancepro_a_missiondriven_platform_to_help_you_save_money_on_insurance_in_spain_created_by_dylan_van_wesemael": "Leer meer over InsurancePro: een missiegedreven platform om u te helpen besparen op verzekeringen in Spanje. Gemaakt door Dylan Van Wesemael.",
-  "about": "Over ons",
   "insurancepro": "InsurancePro",
   "helping_you_save_money_on_insurance_in_spain__the_easy_way": "U helpen besparen op verzekeringen in Spanje — op de eenvoudige manier.",
   "our_story": "Ons verhaal",
@@ -158,8 +157,6 @@
   "contact_us": "Neem contact met ons op",
   "name": "Naam",
   "your_query": "Uw vraag",
-  "savings": "Besparingen",
-  "pro": "Pro",
 
   // Footer
   "smart_insurance_simple_savings": "Slimme verzekeringen. Eenvoudige besparingen.",
