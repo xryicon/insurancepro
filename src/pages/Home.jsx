@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Zap, ShieldCheck, Euro } from 'lucide-react';
 import Button from '../components/ui/Button';
-import { FeatureCard } from '../components/Card';
+import { FeatureCard } from '../components/ui/Card';
 
 // Use the GitHub raw URL directly
 const backgroundHeroUrl = 'https://raw.githubusercontent.com/xryicon/insurancepro/main/src/assets/images/main%20background%20hero.jpg';
