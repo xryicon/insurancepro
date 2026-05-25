@@ -11,6 +11,7 @@ const HomeInsurance = lazy(() => import('./pages/HomeInsurance'));
 const AboutUs = lazy(() => import('./pages/AboutUs'));
 const InsuranceSelection = lazy(() => import('./pages/InsuranceSelection'));
 const Contact = lazy(() => import('./pages/Contact'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 
 function App() {
   return (
@@ -63,6 +64,15 @@ function App() {
               element={
                 <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
                   <HomeInsurance />
+                </Suspense>
+              }
+            />
+            {/* Privacy Policy Route */}
+            <Route
+              path="privacy-policy"
+              element={
+                <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
+                  <PrivacyPolicy />
                 </Suspense>
               }
             />
