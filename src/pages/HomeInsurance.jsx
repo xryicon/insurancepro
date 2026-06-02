@@ -16,6 +16,15 @@ import {
   EMAIL_REGEX
 } from '../data/constants';
 
+// Date formatting helper
+const formatDateInput = (value) => {
+  const v = value.replace(/\D/g, '');
+  if (v.length <= 2) return v;
+  if (v.length <= 4) return `${v.substring(0, 2)}/${v.substring(2)}`;
+  if (v.length <= 6) return `${v.substring(0, 2)}/${v.substring(2, 4)}/${v.substring(4)}`;
+  return `${v.substring(0, 2)}/${v.substring(2, 4)}/${v.substring(4, 8)}`;
+};
+
 const residenceUsageOptions = [
   { value: 'main', label: 'Main residence' },
   { value: 'second', label: 'Second residence' },
@@ -61,7 +70,19 @@ export default function HomeInsurance() {
     const newErrors = {};
     if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
     if (!formData.nationality) newErrors.nationality = 'Nationality is required';
-    if (!formData.dateOfBirth) newErrors.dateOfBirth = 'Date of birth is required';
+
+    if (!formData.dateOfBirth) {
+      newErrors.dateOfBirth = 'Date of birth is required';
+    } else if (!/^\d{2}\/\d{2}\/\d{4}$/.test(formData.dateOfBirth)) {
+      newErrors.dateOfBirth = 'Please enter date as DD/MM/YYYY';
+    } else {
+      const [day, month, year] = formData.dateOfBirth.split('/').map(Number);
+      const date = new Date(year, month - 1, day);
+      if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
+        newErrors.dateOfBirth = 'Please enter a valid date';
+      }
+    }
+
     if (!formData.nieNumber.trim()) {
       newErrors.nieNumber = 'NIE number is required';
     } else if (!NIE_REGEX.test(formData.nieNumber)) {
@@ -197,9 +218,9 @@ export default function HomeInsurance() {
             Thank you for your request. Our team will review your information and get back to you with the best home insurance quotes within 24 hours.
           </p>
           <div className="flex gap-4 justify-center">
-  <Button onClick={() => navigate('/')}>Back to Home</Button>
-  <Button variant="ghost" onClick={() => navigate('/quote')}>Start New Quote</Button>
-</div>
+            <Button onClick={() => navigate('/')}>Back to Home</Button>
+            <Button variant="ghost" onClick={() => navigate('/quote')}>Start New Quote</Button>
+          </div>
         </Card>
       </div>
     );
@@ -226,9 +247,8 @@ export default function HomeInsurance() {
             <div className="flex justify-between mt-4">
               {steps.map((s) => (
                 <div key={s.number} className="text-center">
-                  <div className={`w-9 h-9 mx-auto rounded-full flex items-center justify-center ${
-                    step >= s.number ? 'bg-indigo-500' : 'bg-slate-700'
-                  }`}>
+                  <div className={`w-9 h-9 mx-auto rounded-full flex items-center justify-center $
+                    {step >= s.number ? 'bg-indigo-500' : 'bg-slate-700'}`}>
                     {s.number}
                   </div>
                   <div className="text-xs mt-1 text-slate-400">{s.label}</div>
@@ -290,7 +310,28 @@ export default function HomeInsurance() {
                     <div className="grid md:grid-cols-2 gap-6">
                       <FormField name="fullName" label="Full Name" value={formData.fullName} onChange={handleChange} error={errors.fullName} />
                       <FormField type="select" name="nationality" label="Nationality" value={formData.nationality} onChange={handleChange} options={nationalityOptions} error={errors.nationality} />
-                      <FormField type="date" name="dateOfBirth" label="Date of Birth" value={formData.dateOfBirth} onChange={handleChange} error={errors.dateOfBirth} />
+
+                      {/* Date of Birth Field - UPDATED */}
+                      <div className="space-y-1">
+                        <label className="block text-sm font-medium text-white">Date of Birth</label>
+                        <input
+                          type="text"
+                          name="dateOfBirth"
+                          value={formData.dateOfBirth}
+                          onChange={(e) => {
+                            const formatted = formatDateInput(e.target.value);
+                            setFormData(prev => ({ ...prev, dateOfBirth: formatted }));
+                            if (errors.dateOfBirth) {
+                              setErrors(prev => ({ ...prev, dateOfBirth: '' }));
+                            }
+                          }}
+                          placeholder="DD/MM/YYYY"
+                          maxLength={10}
+                          className={`w-full px-3 py-2 bg-slate-800 border ${errors.dateOfBirth ? 'border-red-500' : 'border-slate-700'} rounded-md text-white focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+                        />
+                        {errors.dateOfBirth && <p className="text-red-400 text-sm">{errors.dateOfBirth}</p>}
+                      </div>
+
                       <FormField name="nieNumber" label="NIE Number" value={formData.nieNumber} onChange={handleChange} error={errors.nieNumber} placeholder="X1234567A" />
                       <FormField name="address" label="Property Address" value={formData.address} onChange={handleChange} error={errors.address} />
                       <FormField name="postalCode" label="Postal Code" value={formData.postalCode} onChange={handleChange} error={errors.postalCode} />
