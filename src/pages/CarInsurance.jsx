@@ -1,8 +1,7 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Check, ArrowLeft } from 'lucide-react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,695 +9,318 @@ import Button from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import FormField from '../components/forms/FormField';
 import { useNavigate } from 'react-router-dom';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-// Zod schema (unchanged)
+const formatDate = (value) => {
+  if (!value) return value;
+  const v = value.replace(/\D/g, '').substring(0, 8);
+  if (v.length <= 2) return v;
+  if (v.length <= 4) return `${v.substring(0, 2)}/${v.substring(2)}`;
+  return `${v.substring(0, 2)}/${v.substring(2, 4)}/${v.substring(4)}`;
+};
+
 const schema = z.object({
-  fullName: z.string().min(1, 'Full name is required'),
-  dateOfBirth: z.string().min(1, 'Date of birth is required'),
-  nationality: z.string().min(1, 'Nationality is required'),
-  nieNumber: z.string().min(1, 'NIE number is required'),
-  dateOfCarLicense: z.string().min(1, 'Date of car license is required'),
-  nationalityOfCarLicense: z.string().min(1, 'Nationality of car license is required'),
-  address: z.string().min(1, 'Address is required'),
-  postcode: z.string().min(1, 'Postcode is required'),
-  email: z.string().email('Invalid email address').min(1, 'Email is required'),
-  telephone: z.string().min(1, 'Telephone is required'),
-  carMake: z.string().min(1, 'Car make is required'),
-  carModel: z.string().min(1, 'Car model is required'),
-  year: z.number().min(1990, 'Year must be after 1990'),
-  registration: z.string().min(1, 'Registration number is required'),
-  horsepower: z.number().min(1, 'Horsepower must be positive'),
-  engineSize: z.number().min(1, 'Engine size must be positive'),
-  transmissionType: z.enum(['Manual', 'Automatic', 'Hybrid', 'Full Electric'], {
-    errorMap: () => ({ message: 'Transmission type is required' }),
-  }),
-  currentCompany: z.string().min(1, 'Current company is required'),
-  currentPremium: z.number().min(0, 'Premium must be positive'),
-  currentCover: z.string().min(1, 'Current cover is required'),
+  fullName: z.string().min(1),
+  dateOfBirth: z.string().min(1),
+  nationality: z.string().min(1),
+  nieNumber: z.string().min(1),
+  dateOfCarLicense: z.string().min(1),
+  nationalityOfCarLicense: z.string().min(1),
+  address: z.string().min(1),
+  postcode: z.string().min(1),
+  email: z.string().email(),
+  telephone: z.string().min(1),
+  carMake: z.string().min(1),
+  carModel: z.string().min(1),
+  year: z.coerce.number().min(1990),
+  horsepower: z.coerce.number().min(1),
+  engineSize: z.coerce.number().min(1),
+  registration: z.string().min(1),
+  transmissionType: z.enum(['Manual', 'Automatic', 'Hybrid', 'Full Electric']),
+  currentCompany: z.string().min(1),
+  currentPremium: z.coerce.number().min(0),
+  currentCover: z.string().min(1),
 });
 
 export default function CarInsurance() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [dateOfBirth, setDateOfBirth] = useState('');
-  const [dateOfCarLicense, setDateOfCarLicense] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
     trigger,
-    getValues,
     setValue,
+    watch,
+    getValues,
+    reset,
+    formState: { isSubmitting },
   } = useForm({
     resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: {
+      dateOfCarLicense: formatDate(new Date().toLocaleDateString('en-GB').replace(/\//g, '')),
+      transmissionType: 'Manual',
+      nationalityOfCarLicense: '',
+    },
   });
 
-  const formatDate = useCallback((value, setState, fieldName) => {
-    let cleanedValue = value.replace(/\D/g, '');
-    cleanedValue = cleanedValue.slice(0, 8);
-    let formattedValue = '';
-    if (cleanedValue.length > 0) formattedValue = cleanedValue.slice(0, 2);
-    if (cleanedValue.length > 2) formattedValue += '/' + cleanedValue.slice(2, 4);
-    if (cleanedValue.length > 4) formattedValue += '/' + cleanedValue.slice(4, 8);
-    setState(formattedValue);
-    setValue(fieldName, formattedValue, { shouldValidate: true });
-    return formattedValue;
-  }, [setValue]);
-
-  const handleDateOfBirthChange = (e) => {
-    formatDate(e.target.value, setDateOfBirth, 'dateOfBirth');
+  const handleStartOver = () => {
+    reset({
+      fullName: '',
+      dateOfBirth: '',
+      nationality: '',
+      nieNumber: '',
+      dateOfCarLicense: formatDate(new Date().toLocaleDateString('en-GB').replace(/\//g, '')),
+      nationalityOfCarLicense: '',
+      address: '',
+      postcode: '',
+      email: '',
+      telephone: '',
+      carMake: '',
+      carModel: '',
+      year: 0,
+      horsepower: 0,
+      engineSize: 0,
+      registration: '',
+      transmissionType: 'Manual',
+      currentCompany: '',
+      currentPremium: 0,
+      currentCover: '',
+    });
+    setStep(1);
+    setSubmitSuccess(false);
   };
 
-  const handleDateOfCarLicenseChange = (e) => {
-    formatDate(e.target.value, setDateOfCarLicense, 'dateOfCarLicense');
-  };
+  const dateOfBirth = watch('dateOfBirth');
+  const dateOfCarLicense = watch('dateOfCarLicense');
+  const nationality = watch('nationality');
 
-  const validateDateFormat = (value, setState, fieldName, errorMessage) => {
-    if (value.length === 10 && !/^\d{2}\/\d{2}\/\d{4}$/.test(value)) {
-      toast.error(errorMessage);
-      setState('');
-      setValue(fieldName, '', { shouldValidate: true });
+  useEffect(() => {
+    if (dateOfBirth) {
+      setValue('dateOfBirth', formatDate(dateOfBirth), { shouldValidate: false });
     }
-  };
+  }, [dateOfBirth, setValue]);
 
-  const handleDateOfBirthBlur = () => {
-    validateDateFormat(
-      dateOfBirth,
-      setDateOfBirth,
-      'dateOfBirth',
-      t('formerrorsdateformat')
-    );
-  };
+  useEffect(() => {
+    if (dateOfCarLicense) {
+      setValue('dateOfCarLicense', formatDate(dateOfCarLicense), { shouldValidate: false });
+    }
+  }, [dateOfCarLicense, setValue]);
 
-  const handleDateOfCarLicenseBlur = () => {
-    validateDateFormat(
-      dateOfCarLicense,
-      setDateOfCarLicense,
-      'dateOfCarLicense',
-      t('formerrorsdateformat')
-    );
-  };
+  useEffect(() => {
+    if (nationality) {
+      setValue('nationalityOfCarLicense', nationality);
+    }
+  }, [nationality, setValue]);
 
-  const handleKeyDown = useCallback((e) => {
-    if (step === 4 && e.key === 'Enter') e.preventDefault();
-  }, [step]);
+  const steps = [
+    { number: 1, label: 'Personal Info' },
+    { number: 2, label: 'Car Details' },
+    { number: 3, label: 'Current Insurance' },
+    { number: 4, label: 'Review & Submit' },
+  ];
 
-  const handleNext = async (e) => {
-    if (e) e.preventDefault();
-    const fieldsToValidate = {
+  const handleNext = async () => {
+    const fields = {
       1: ['fullName', 'dateOfBirth', 'nationality', 'nieNumber', 'dateOfCarLicense', 'nationalityOfCarLicense', 'address', 'postcode', 'email', 'telephone'],
       2: ['carMake', 'carModel', 'year', 'registration', 'horsepower', 'engineSize', 'transmissionType'],
       3: ['currentCompany', 'currentPremium', 'currentCover'],
     }[step];
-    const isValid = await trigger(fieldsToValidate, { shouldFocus: true });
-    if (isValid) setStep(step + 1);
-    else toast.error(t('formerrorsfillallfields'));
+
+    const valid = await trigger(fields, { shouldFocus: true });
+    if (!valid) {
+      toast.error("Please complete all fields");
+      return;
+    }
+    setStep((s) => s + 1);
   };
 
-  const handlePrevious = () => setStep(step - 1);
+  const handlePrevious = () => setStep((s) => s - 1);
 
   const onSubmit = async (data) => {
-    const response = await fetch('https://formspree.io/f/xjgzokzw', {
+    const res = await fetch('https://formspree.io/f/xjgzokzw', {
       method: 'POST',
-      body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
     });
-
-    if (response.ok) {
-      setSubmitSuccess(true);
-    } else {
-      toast.error(t('formerrorssubmitfailed'));
-    }
+    if (res.ok) setSubmitSuccess(true);
+    else toast.error("Submit failed");
   };
 
-  const handleStartOver = () => {
-    setStep(1);
-    setDateOfBirth('');
-    setDateOfCarLicense('');
-    setSubmitSuccess(false);
-    Object.keys(getValues()).forEach(key => setValue(key, ''));
-  };
-
-  const steps = [
-    { number: 1, label: t('formstepspersonaldetails') },
-    { number: 2, label: t('formstepscardetails') },
-    { number: 3, label: t('formstepscurrentinsurance') },
-    { number: 4, label: t('formstepsreviewsubmit') },
-  ];
-
-  // Success page
   if (submitSuccess) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <Card className="text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Check className="w-10 h-10 text-green-600" />
-              </div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                {t('quote_request_submitted')}
-              </h2>
-              <p className="text-gray-600 mb-8">
-                {t('thank_you_for_your_request_our_team_will_review_your_information_and_get_back_to_you_with_the_best_home_insurance_quotes_within_24_hours')}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="large" onClick={() => navigate('/')}>
-                  {t('back_to_home')}
-                </Button>
-                <Button variant="outline" size="large" onClick={handleStartOver}>
-                  {t('start_new_quote')}
-                </Button>
-              </div>
-            </motion.div>
-          </Card>
-        </div>
+      <div className="min-h-screen bg-[#0a0f1c] flex items-center justify-center text-white">
+        <Card className="p-10 bg-slate-900 border-slate-800 text-center max-w-2xl">
+          <Check className="w-10 h-10 text-green-500 mx-auto mb-4" />
+          <h2 className="text-xl mb-4">Quote Request Submitted!</h2>
+          <p className="text-slate-400 mb-8">
+            Thank you for your request. Our team will review your information and get back to you with the best car insurance quotes within 24 hours.
+          </p>
+          <div className="flex gap-4 justify-center">
+  <Button onClick={() => navigate('/')}>Back to Home</Button>
+  <Button variant="ghost" onClick={() => navigate('/quote')}>Start New Quote</Button>
+</div>
+        </Card>
       </div>
     );
   }
 
+  const allValues = getValues();
+
   return (
     <>
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-8"
-          >
-            <button
-              onClick={() => navigate('/')}
-              className="flex items-center text-gray-600 hover:text-green-600 transition-colors mb-4"
-            >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              {t('back_to_home')}
-            </button>
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">
-                  {t('car_insurance')}
-                </h1>
-                <p className="text-gray-600 mt-1">
-                  {t('compare_and_save_up_to_35_on_your_home_insurance')}
-                </p>
-              </div>
-            </div>
-          </motion.div>
+      <ToastContainer />
+      <div className="min-h-screen bg-[#0a0f1c] text-white">
+        <div className="max-w-5xl mx-auto px-6 py-10">
+          <button onClick={() => navigate('/')} className="mb-6 flex items-center text-slate-400">
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            Back
+          </button>
 
-          {/* Progress steps */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="mb-8"
-          >
-            <div className="flex items-center justify-between">
-              {steps.map((s, index) => (
-                <React.Fragment key={s.number}>
-                  <div className="flex items-center">
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${
-                        step > s.number
-                          ? 'bg-green-600 text-white'
-                          : step === s.number
-                          ? 'bg-green-600 text-white ring-4 ring-green-100'
-                          : 'bg-gray-200 text-gray-500'
-                      }`}
-                    >
-                      {step > s.number ? <Check className="w-5 h-5" /> : s.number}
-                    </div>
-                    <div className="ml-3">
-                      <div
-                        className={`text-sm font-medium transition-colors duration-300 ${
-                          step >= s.number ? 'text-green-600' : 'text-gray-400'
-                        }`}
-                      >
-                        {s.label}
-                      </div>
-                    </div>
+          <div className="mb-10 relative">
+            <div className="h-1 bg-slate-800 rounded">
+              <div
+                className="h-1 bg-indigo-500 transition-all"
+                style={{ width: `${((step - 1) / (steps.length - 1)) * 100}%` }}
+              />
+            </div>
+            <div className="flex justify-between mt-4">
+              {steps.map((s) => (
+                <div key={s.number} className="text-center">
+                  <div className={`w-9 h-9 mx-auto rounded-full flex items-center justify-center ${
+                    step >= s.number ? 'bg-indigo-500' : 'bg-slate-700'
+                  }`}>
+                    {s.number}
                   </div>
-                  {index < steps.length - 1 && (
-                    <div
-                      className={`flex-1 h-1 mx-2 rounded transition-all duration-300 ${
-                        step > s.number ? 'bg-green-600' : 'bg-gray-200'
-                      }`}
-                      style={{ minWidth: '40px' }}
-                    ></div>
-                  )}
-                </React.Fragment>
+                  <div className="text-xs mt-1 text-slate-400">{s.label}</div>
+                </div>
               ))}
             </div>
-          </motion.div>
+          </div>
 
-          {/* Main form content */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <Card className="p-8">
-              <form
-                id="car-insurance-form"
-                onSubmit={handleSubmit(onSubmit)}
-                onKeyDown={handleKeyDown}
-                className="space-y-6"
-              >
-                {/* Step 1: Personal Details */}
-                {step === 1 && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                      {t('personal_information')}
-                    </h2>
-                    <p className="text-gray-600 mb-8">
-                      {t('please_provide_your_personal_details_for_accurate_quotes')}
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <FormField
-                        label={t('full_name')}
-                        id="fullName"
-                        placeholder={t('full_name')}
-                        error={errors.fullName?.message}
-                        {...register('fullName')}
-                      />
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t('date_of_birth')}
-                        </label>
-                        <input
-                          id="dateOfBirth"
-                          type="text"
-                          inputMode="numeric"
-                          placeholder={t('formdateplaceholder')}
-                          value={dateOfBirth}
-                          onChange={handleDateOfBirthChange}
-                          onBlur={handleDateOfBirthBlur}
-                          className={`w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
-                            errors.dateOfBirth ? 'border-red-500' : 'border-gray-300'
-                          }`}
-                        />
-                        {errors.dateOfBirth && (
-                          <p className="text-sm text-red-500 mt-1">
-                            {errors.dateOfBirth.message}
-                          </p>
-                        )}
-                      </div>
-                      <FormField
-                        label={t('nationality')}
-                        id="nationality"
-                        placeholder={t('nationality')}
-                        error={errors.nationality?.message}
-                        {...register('nationality')}
-                      />
-                      <FormField
-                        label={t('nie_number')}
-                        id="nieNumber"
-                        placeholder={t('nie_number')}
-                        error={errors.nieNumber?.message}
-                        {...register('nieNumber')}
-                      />
-                      <FormField
-                        label={t('email')}
-                        id="email"
-                        type="email"
-                        placeholder={t('email')}
-                        error={errors.email?.message}
-                        {...register('email')}
-                      />
-                      <FormField
-                        label={t('phone')}
-                        id="telephone"
-                        type="tel"
-                        placeholder={t('phone')}
-                        error={errors.telephone?.message}
-                        {...register('telephone')}
-                      />
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t('date_of_car_license')}
-                        </label>
-                        <input
-                          id="dateOfCarLicense"
-                          type="text"
-                          inputMode="numeric"
-                          placeholder={t('formdateplaceholder')}
-                          value={dateOfCarLicense}
-                          onChange={handleDateOfCarLicenseChange}
-                          onBlur={handleDateOfCarLicenseBlur}
-                          className={`w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
-                            errors.dateOfCarLicense ? 'border-red-500' : 'border-gray-300'
-                          }`}
-                        />
-                        {errors.dateOfCarLicense && (
-                          <p className="text-sm text-red-500 mt-1">
-                            {errors.dateOfCarLicense.message}
-                          </p>
-                        )}
-                      </div>
-                      <FormField
-                        label={t('nationality_of_car_license')}
-                        id="nationalityOfCarLicense"
-                        placeholder={t('nationality_of_car_license')}
-                        error={errors.nationalityOfCarLicense?.message}
-                        {...register('nationalityOfCarLicense')}
-                      />
-                      <FormField
-                        label={t('address')}
-                        id="address"
-                        placeholder={t('address')}
-                        error={errors.address?.message}
-                        {...register('address')}
-                        className="md:col-span-2"
-                      />
-                      <FormField
-                        label={t('postal_code')}
-                        id="postcode"
-                        placeholder={t('postal_code')}
-                        error={errors.postcode?.message}
-                        {...register('postcode')}
-                        className="md:col-span-2"
-                      />
+          <Card className="bg-slate-900 border-slate-800 p-8">
+            {step === 4 ? (
+              <form id="form" onSubmit={(e) => e.preventDefault()}>
+                <div className="space-y-6 text-slate-300">
+                  <div className="border-b border-slate-800 pb-4">
+                    <h3 className="text-white font-medium mb-3">Personal Information</h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div><span className="text-slate-500">Full name:</span> {allValues.fullName}</div>
+                      <div><span className="text-slate-500">Date of Birth:</span> {allValues.dateOfBirth}</div>
+                      <div><span className="text-slate-500">Nationality:</span> {allValues.nationality}</div>
+                      <div><span className="text-slate-500">NIE:</span> {allValues.nieNumber}</div>
+                      <div><span className="text-slate-500">License Date:</span> {allValues.dateOfCarLicense}</div>
+                      <div><span className="text-slate-500">License Nationality:</span> {allValues.nationalityOfCarLicense}</div>
+                      <div><span className="text-slate-500">Email:</span> {allValues.email}</div>
+                      <div><span className="text-slate-500">Phone:</span> {allValues.telephone}</div>
+                      <div className="md:col-span-2"><span className="text-slate-500">Address:</span> {allValues.address}</div>
+                      <div className="md:col-span-2"><span className="text-slate-500">Postcode:</span> {allValues.postcode}</div>
                     </div>
-                  </motion.div>
-                )}
+                  </div>
 
-                {/* Step 2: Car Details */}
-                {step === 2 && (
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                      {t('car_details')}
-                    </h2>
-                    <p className="text-gray-600 mb-8">
-                      {t('tell_us_about_your_property_for_accurate_quotes')}
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <FormField
-                        label={t('car_make')}
-                        id="carMake"
-                        placeholder={t('car_make')}
-                        error={errors.carMake?.message}
-                        {...register('carMake')}
-                      />
-                      <FormField
-                        label={t('car_model')}
-                        id="carModel"
-                        placeholder={t('car_model')}
-                        error={errors.carModel?.message}
-                        {...register('carModel')}
-                      />
-                      <FormField
-                        label={t('year')}
-                        id="year"
-                        type="number"
-                        placeholder={t('year')}
-                        error={errors.year?.message}
-                        {...register('year', { valueAsNumber: true })}
-                      />
-                      <FormField
-                        label={t('registration')}
-                        id="registration"
-                        placeholder={t('registration')}
-                        error={errors.registration?.message}
-                        {...register('registration')}
-                      />
-                      <FormField
-                        label={t('horsepower')}
-                        id="horsepower"
-                        type="number"
-                        placeholder={t('horsepower')}
-                        error={errors.horsepower?.message}
-                        {...register('horsepower', { valueAsNumber: true })}
-                      />
-                      <FormField
-                        label={t('engine_size')}
-                        id="engineSize"
-                        type="number"
-                        placeholder={t('engine_size')}
-                        error={errors.engineSize?.message}
-                        {...register('engineSize', { valueAsNumber: true })}
-                      />
-                      <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t('transmission_type')}
-                        </label>
-                        <select
-                          id="transmissionType"
-                          className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                          {...register('transmissionType')}
-                        >
-                          <option value="">{t('select_transmission_type')}</option>
-                          <option value="Manual">{t('manual')}</option>
-                          <option value="Automatic">{t('automatic')}</option>
-                          <option value="Hybrid">{t('hybrid')}</option>
-                          <option value="Full Electric">{t('full_electric')}</option>
-                        </select>
-                        {errors.transmissionType && (
-                          <p className="text-sm text-red-500 mt-1">
-                            {errors.transmissionType.message}
-                          </p>
-                        )}
-                      </div>
+                  <div className="border-b border-slate-800 pb-4">
+                    <h3 className="text-white font-medium mb-3">Car Information</h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div><span className="text-slate-500">Make:</span> {allValues.carMake}</div>
+                      <div><span className="text-slate-500">Model:</span> {allValues.carModel}</div>
+                      <div><span className="text-slate-500">Year:</span> {allValues.year}</div>
+                      <div><span className="text-slate-500">Plate:</span> {allValues.registration}</div>
+                      <div><span className="text-slate-500">HP:</span> {allValues.horsepower}</div>
+                      <div><span className="text-slate-500">Engine:</span> {allValues.engineSize}</div>
+                      <div className="md:col-span-2"><span className="text-slate-500">Transmission:</span> {allValues.transmissionType}</div>
                     </div>
-                  </motion.div>
-                )}
+                  </div>
 
-                {/* Step 3: Current Insurance */}
-                {step === 3 && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                      {t('current_insurance')}
-                    </h2>
-                    <p className="text-gray-600 mb-8">
-                      {t('information_about_your_current_coverage_helps_us_find_better_deals')}
-                    </p>
-                    <div className="grid grid-cols-1 gap-6">
-                      <FormField
-                        label={t('current_provider')}
-                        id="currentCompany"
-                        placeholder={t('current_provider')}
-                        error={errors.currentCompany?.message}
-                        {...register('currentCompany')}
-                      />
-                      <FormField
-                        label={t('current_annual_premium')}
-                        id="currentPremium"
-                        type="number"
-                        placeholder={t('current_annual_premium')}
-                        error={errors.currentPremium?.message}
-                        {...register('currentPremium', { valueAsNumber: true })}
-                      />
-                      <FormField
-                        label={t('current_cover')}
-                        id="currentCover"
-                        placeholder={t('current_cover')}
-                        error={errors.currentCover?.message}
-                        {...register('currentCover')}
-                      />
+                  <div>
+                    <h3 className="text-white font-medium mb-3">Insurance Information</h3>
+                    <div className="grid gap-4">
+                      <div><span className="text-slate-500">Current Provider:</span> {allValues.currentCompany}</div>
+                      <div><span className="text-slate-500">Premium:</span> {allValues.currentPremium}</div>
+                      <div><span className="text-slate-500">Cover:</span> {allValues.currentCover}</div>
                     </div>
-                  </motion.div>
-                )}
-
-                {/* Step 4: Review & Submit */}
-                {step === 4 && (
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                      {t('review__submit')}
-                    </h2>
-                    <p className="text-gray-600 mb-8">
-                      {t('please_review_your_information_before_submitting')}
-                    </p>
-
-                    <div className="space-y-6">
-                      {/* Personal Details Review */}
-                      <div className="bg-gray-50 rounded-lg p-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                          {t('personal_information')}
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                          <div>
-                            <div className="text-gray-500">{t('full_name')}</div>
-                            <div className="font-medium">{getValues('fullName')}</div>
-                          </div>
-                          <div>
-                            <div className="text-gray-500">{t('date_of_birth')}</div>
-                            <div className="font-medium">{getValues('dateOfBirth')}</div>
-                          </div>
-                          <div>
-                            <div className="text-gray-500">{t('nationality')}</div>
-                            <div className="font-medium">{getValues('nationality')}</div>
-                          </div>
-                          <div>
-                            <div className="text-gray-500">{t('nie_number')}</div>
-                            <div className="font-medium">{getValues('nieNumber')}</div>
-                          </div>
-                          <div>
-                            <div className="text-gray-500">{t('address')}</div>
-                            <div className="font-medium">{getValues('address')}</div>
-                          </div>
-                          <div>
-                            <div className="text-gray-500">{t('postal_code')}</div>
-                            <div className="font-medium">{getValues('postcode')}</div>
-                          </div>
-                          <div>
-                            <div className="text-gray-500">{t('email')}</div>
-                            <div className="font-medium">{getValues('email')}</div>
-                          </div>
-                          <div>
-                            <div className="text-gray-500">{t('phone')}</div>
-                            <div className="font-medium">{getValues('telephone')}</div>
-                          </div>
-                          <div>
-                            <div className="text-gray-500">{t('date_of_car_license')}</div>
-                            <div className="font-medium">{getValues('dateOfCarLicense')}</div>
-                          </div>
-                          <div>
-                            <div className="text-gray-500">{t('nationality_of_car_license')}</div>
-                            <div className="font-medium">{getValues('nationalityOfCarLicense')}</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Car Details Review */}
-                      <div className="bg-gray-50 rounded-lg p-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                          {t('car_details')}
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                          <div>
-                            <div className="text-gray-500">{t('car_make')}</div>
-                            <div className="font-medium">{getValues('carMake')}</div>
-                          </div>
-                          <div>
-                            <div className="text-gray-500">{t('car_model')}</div>
-                            <div className="font-medium">{getValues('carModel')}</div>
-                          </div>
-                          <div>
-                            <div className="text-gray-500">{t('year')}</div>
-                            <div className="font-medium">{getValues('year')}</div>
-                          </div>
-                          <div>
-                            <div className="text-gray-500">{t('registration')}</div>
-                            <div className="font-medium">{getValues('registration')}</div>
-                          </div>
-                          <div>
-                            <div className="text-gray-500">{t('horsepower')}</div>
-                            <div className="font-medium">{getValues('horsepower')} {t('cv')}</div>
-                          </div>
-                          <div>
-                            <div className="text-gray-500">{t('engine_size')}</div>
-                            <div className="font-medium">{getValues('engineSize')} {t('cc')}</div>
-                          </div>
-                          <div>
-                            <div className="text-gray-500">{t('transmission_type')}</div>
-                            <div className="font-medium">{getValues('transmissionType')}</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Current Insurance Review */}
-                      <div className="bg-gray-50 rounded-lg p-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                          {t('current_insurance')}
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                          <div>
-                            <div className="text-gray-500">{t('current_provider')}</div>
-                            <div className="font-medium">{getValues('currentCompany')}</div>
-                          </div>
-                          <div>
-                            <div className="text-gray-500">{t('current_annual_premium')}</div>
-                            <div className="font-medium">€{getValues('currentPremium')}</div>
-                          </div>
-                          <div className="md:col-span-2">
-                            <div className="text-gray-500">{t('current_cover')}</div>
-                            <div className="font-medium">{getValues('currentCover')}</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-8 p-4 bg-green-50 rounded-lg border border-green-100">
-                      <div className="flex items-center">
-                        <Check className="w-5 h-5 text-green-600 mr-3" />
-                        <span className="text-green-700">
-                          {t('your_information_is_secure_and_will_only_be_used_to_provide_you_with_insurance_quotes')}
-                        </span>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
+                  </div>
+                </div>
               </form>
+            ) : (
+              <>
+                <div className="space-y-6 text-white">
+                  {step === 1 && (
+                    <div className="grid md:grid-cols-2 gap-6 text-white">
+                      <FormField {...register('fullName')} label="Full name" />
+                      <FormField {...register('dateOfBirth')} label="Date of Birth" placeholder="DD/MM/YYYY" />
+                      <FormField {...register('nationality')} label="Nationality" />
+                      <FormField {...register('nieNumber')} label="NIE" />
+                      <FormField {...register('dateOfCarLicense')} label="License Date" placeholder="DD/MM/YYYY" />
+                      <FormField {...register('nationalityOfCarLicense')} label="License Nationality" />
+                      <FormField {...register('email')} label="Email" />
+                      <FormField {...register('telephone')} label="Phone" />
+                      <FormField {...register('address')} label="Address" className="md:col-span-2" />
+                      <FormField {...register('postcode')} label="Postcode" className="md:col-span-2" />
+                    </div>
+                  )}
 
-              {/* Navigation buttons */}
-              <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">
-                {step > 1 && (
-                  <Button
-                    variant="ghost"
-                    onClick={handlePrevious}
-                    leftIcon={<ChevronLeft className="w-5 h-5" />}
-                  >
-                    {t('back')}
-                  </Button>
-                )}
-                {step < 4 ? (
-                  <Button
-                    onClick={handleNext}
-                    loading={isSubmitting}
-                    rightIcon={<ChevronRight className="w-5 h-5" />}
-                  >
-                    {step === 3 ? t('review__submit') : t('next')}
-                  </Button>
-                ) : (
-                  <Button
-                    type="submit"
-                    form="car-insurance-form"
-                    loading={isSubmitting}
-                    rightIcon={<ChevronRight className="w-5 h-5" />}
-                  >
-                    {t('submit_quote_request')}
-                  </Button>
-                )}
-              </div>
-            </Card>
-          </motion.div>
+                  {step === 2 && (
+                    <div className="grid md:grid-cols-2 gap-6 text-white">
+                      <FormField {...register('carMake')} label="Make" />
+                      <FormField {...register('carModel')} label="Model" />
+                      <FormField {...register('year', { valueAsNumber: true })} label="Year" type="number" />
+                      <FormField {...register('registration')} label="Plate" />
+                      <FormField {...register('horsepower', { valueAsNumber: true })} label="HP" type="number" />
+                      <FormField {...register('engineSize', { valueAsNumber: true })} label="Engine" type="number" />
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium mb-1">Transmission</label>
+                        <select
+                          {...register('transmissionType')}
+                          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        >
+                          <option value="Manual">Manual</option>
+                          <option value="Automatic">Automatic</option>
+                          <option value="Hybrid">Hybrid</option>
+                          <option value="Full Electric">Full Electric</option>
+                        </select>
+                      </div>
+                    </div>
+                  )}
+
+                  {step === 3 && (
+                    <div className="grid gap-6 text-white">
+                      <FormField {...register('currentCompany')} label="Current Provider" />
+                      <FormField {...register('currentPremium', { valueAsNumber: true })} label="Premium" type="number" />
+                      <FormField {...register('currentCover')} label="Cover" />
+                    </div>
+                  )}
+                </div>
+                <div className="flex justify-between mt-8 border-t border-slate-800 pt-6">
+                  {step > 1 && (
+                    <Button type="button" variant="ghost" onClick={handlePrevious}>
+                      <ChevronLeft /> Back
+                    </Button>
+                  )}
+                  {step < 4 ? (
+                    <Button type="button" onClick={handleNext}>
+                      Next <ChevronRight />
+                    </Button>
+                  ) : null}
+                </div>
+              </>
+            )}
+
+            <div className="flex justify-between mt-8 border-t border-slate-800 pt-6">
+              {step === 4 && (
+                <Button type="button" variant="ghost" onClick={handlePrevious}>
+                  <ChevronLeft /> Back to Edit
+                </Button>
+              )}
+              {step === 4 && (
+                <Button type="submit" form="form" loading={isSubmitting} onClick={handleSubmit(onSubmit)}>
+                  Submit Quote Request
+                </Button>
+              )}
+            </div>
+          </Card>
         </div>
       </div>
     </>

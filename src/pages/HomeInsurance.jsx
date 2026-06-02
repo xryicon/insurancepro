@@ -1,10 +1,8 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Home, User, Mail, Phone, Calendar, MapPin, Shield, ArrowLeft,
-  Check, ChevronLeft, ChevronRight, Building, Bed, Bath, Ruler
-} from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, ArrowLeft } from 'lucide-react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Button from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import FormField from '../components/forms/FormField';
@@ -18,7 +16,6 @@ import {
   EMAIL_REGEX
 } from '../data/constants';
 
-// Dropdown options
 const residenceUsageOptions = [
   { value: 'main', label: 'Main residence' },
   { value: 'second', label: 'Second residence' },
@@ -26,7 +23,7 @@ const residenceUsageOptions = [
   { value: 'other', label: 'Other' },
 ];
 
-const HomeInsurance = () => {
+export default function HomeInsurance() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -163,7 +160,7 @@ const HomeInsurance = () => {
       }
     } catch (error) {
       console.error('Submission error:', error);
-      alert('There was an error submitting your form. Please try again.');
+      toast.error('There was an error submitting your form. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -192,556 +189,173 @@ const HomeInsurance = () => {
 
   if (submitSuccess) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <Card className="text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Check className="w-10 h-10 text-green-600" />
-              </div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Quote Request Submitted!
-              </h2>
-              <p className="text-gray-600 mb-8">
-                Thank you for your request. Our team will review your information
-                and get back to you with the best home insurance quotes within 24 hours.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="large" onClick={() => navigate('/')}>
-                  Back to Home
-                </Button>
-                <Button variant="outline" size="large" onClick={handleStartOver}>
-                  Start New Quote
-                </Button>
-              </div>
-            </motion.div>
-          </Card>
-        </div>
+      <div className="min-h-screen bg-[#0a0f1c] flex items-center justify-center text-white">
+        <Card className="p-10 bg-slate-900 border-slate-800 text-center max-w-2xl">
+          <Check className="w-10 h-10 text-green-500 mx-auto mb-4" />
+          <h2 className="text-xl mb-4">Quote Request Submitted!</h2>
+          <p className="text-slate-400 mb-8">
+            Thank you for your request. Our team will review your information and get back to you with the best home insurance quotes within 24 hours.
+          </p>
+          <div className="flex gap-4 justify-center">
+  <Button onClick={() => navigate('/')}>Back to Home</Button>
+  <Button variant="ghost" onClick={() => navigate('/quote')}>Start New Quote</Button>
+</div>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header section */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-8"
-        >
-          <button
-            onClick={() => navigate('/')}
-            className="flex items-center text-gray-600 hover:text-green-600 transition-colors mb-4"
-          >
+    <>
+      <ToastContainer />
+      <div className="min-h-screen bg-[#0a0f1c] text-white">
+        <div className="max-w-5xl mx-auto px-6 py-10">
+          <button onClick={() => navigate('/')} className="mb-6 flex items-center text-slate-400">
             <ArrowLeft className="w-5 h-5 mr-2" />
-            Back to Home
+            Back
           </button>
 
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Home Insurance Quote
-              </h1>
-              <p className="text-gray-600 mt-1">
-                Compare and save up to 35% on your home insurance
-              </p>
+          {/* Progress bar */}
+          <div className="mb-10 relative">
+            <div className="h-1 bg-slate-800 rounded">
+              <div
+                className="h-1 bg-indigo-500 transition-all"
+                style={{ width: `${((step - 1) / (steps.length - 1)) * 100}%` }}
+              />
+            </div>
+            <div className="flex justify-between mt-4">
+              {steps.map((s) => (
+                <div key={s.number} className="text-center">
+                  <div className={`w-9 h-9 mx-auto rounded-full flex items-center justify-center ${
+                    step >= s.number ? 'bg-indigo-500' : 'bg-slate-700'
+                  }`}>
+                    {s.number}
+                  </div>
+                  <div className="text-xs mt-1 text-slate-400">{s.label}</div>
+                </div>
+              ))}
             </div>
           </div>
-        </motion.div>
 
-        {/* Progress steps */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="mb-8"
-        >
-          <div className="flex items-center justify-between">
-            {steps.map((s, index) => (
-              <React.Fragment key={s.number}>
-                <div className="flex items-center">
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${
-                      step > s.number
-                        ? 'bg-green-600 text-white'
-                        : step === s.number
-                        ? 'bg-green-600 text-white ring-4 ring-green-100'
-                        : 'bg-gray-200 text-gray-500'
-                    }`}
-                  >
-                    {step > s.number ? <Check className="w-5 h-5" /> : s.number}
-                  </div>
-                  <div className="ml-3">
-                    <div
-                      className={`text-sm font-medium transition-colors duration-300 ${
-                        step >= s.number ? 'text-green-600' : 'text-gray-400'
-                      }`}
-                    >
-                      {s.label}
-                    </div>
-                  </div>
-                </div>
-                {index < steps.length - 1 && (
-                  <div
-                    className={`flex-1 h-1 mx-2 rounded transition-all duration-300 ${
-                      step > s.number ? 'bg-green-600' : 'bg-gray-200'
-                    }`}
-                    style={{ minWidth: '40px' }}
-                  ></div>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Main form content */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <Card className="p-8">
-            {/* STEP 1: Personal Information */}
-            {step === 1 && (
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  Personal Information
-                </h2>
-                <p className="text-gray-600 mb-8">
-                  Please provide your personal details for accurate quotes
-                </p>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <FormField
-                    type="text"
-                    name="fullName"
-                    label="Full Name"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    placeholder="John Doe"
-                    required
-                    error={errors.fullName}
-                  />
-                  
-                  {/* DROPDOWN: Nationality */}
-                  <FormField
-                    type="select"
-                    name="nationality"
-                    label="Nationality"
-                    value={formData.nationality}
-                    onChange={handleChange}
-                    options={nationalityOptions}
-                    placeholder="Select nationality"
-                    required
-                    error={errors.nationality}
-                  />
-
-                  <FormField
-                    type="date"
-                    name="dateOfBirth"
-                    label="Date of Birth"
-                    value={formData.dateOfBirth}
-                    onChange={handleChange}
-                    required
-                    error={errors.dateOfBirth}
-                  />
-                  <FormField
-                    type="text"
-                    name="nieNumber"
-                    label="NIE Number"
-                    value={formData.nieNumber}
-                    onChange={handleChange}
-                    placeholder="X1234567A"
-                    required
-                    error={errors.nieNumber}
-                    hint="Spanish NIE format"
-                  />
-                  <FormField
-                    type="text"
-                    name="address"
-                    label="Property Address"
-                    value={formData.address}
-                    onChange={handleChange}
-                    placeholder="Calle Gran Vía, 123"
-                    required
-                    error={errors.address}
-                  />
-                  <FormField
-                    type="text"
-                    name="postalCode"
-                    label="Postal Code"
-                    value={formData.postalCode}
-                    onChange={handleChange}
-                    placeholder="28001"
-                    required
-                    error={errors.postalCode}
-                  />
-                  <FormField
-                    type="email"
-                    name="email"
-                    label="Email Address"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="john@example.com"
-                    required
-                    error={errors.email}
-                  />
-                  <FormField
-                    type="tel"
-                    name="phone"
-                    label="Phone Number"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    placeholder="+34 600 000 000"
-                    error={errors.phone}
-                    hint="Spanish phone number"
-                  />
-                </div>
-              </motion.div>
-            )}
-
-            {/* STEP 2: Property Details */}
-            {step === 2 && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  Property Details
-                </h2>
-                <p className="text-gray-600 mb-8">
-                  Tell us about your property for accurate quotes
-                </p>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* DROPDOWN: Property Type */}
-                  <FormField
-                    type="select"
-                    name="propertyType"
-                    label="Property Type"
-                    value={formData.propertyType}
-                    onChange={handleChange}
-                    options={propertyTypeOptions}
-                    placeholder="Select property type"
-                    required
-                    error={errors.propertyType}
-                  />
-
-                  <div />
-
-                  <FormField
-                    type="number"
-                    name="livingSize"
-                    label="Living Size (m²)"
-                    value={formData.livingSize}
-                    onChange={handleChange}
-                    placeholder="120"
-                    required
-                    error={errors.livingSize}
-                  />
-
-                  <FormField
-                    type="number"
-                    name="outsideSize"
-                    label="Outside Size (m²) (Optional)"
-                    value={formData.outsideSize}
-                    onChange={handleChange}
-                    placeholder="50"
-                    hint="Garage, Carport, Casita"
-                  />
-
-                  <FormField
-                    type="number"
-                    name="bedrooms"
-                    label="Number of Bedrooms"
-                    value={formData.bedrooms}
-                    onChange={handleChange}
-                    placeholder="3"
-                    required
-                    error={errors.bedrooms}
-                  />
-
-                  <FormField
-                    type="number"
-                    name="bathrooms"
-                    label="Number of Bathrooms"
-                    value={formData.bathrooms}
-                    onChange={handleChange}
-                    placeholder="2"
-                    required
-                    error={errors.bathrooms}
-                  />
-
-                  {/* DROPDOWN: Construction Year */}
-                  <FormField
-                    type="select"
-                    name="constructionYear"
-                    label="Construction Year"
-                    value={formData.constructionYear}
-                    onChange={handleChange}
-                    options={yearOptions.map(year => ({ value: year, label: year }))}
-                    placeholder="Select year"
-                    required
-                    error={errors.constructionYear}
-                  />
-
-                  {/* DROPDOWN: Refurbished Year */}
-                  <FormField
-                    type="select"
-                    name="refurbishedYear"
-                    label="Refurbished Year (Optional)"
-                    value={formData.refurbishedYear}
-                    onChange={handleChange}
-                    options={[{ value: '', label: 'Not refurbished' }, ...yearOptions.map(year => ({ value: year, label: year }))]}
-                    placeholder="Select year"
-                  />
-
-                  {/* DROPDOWN: Residence Usage */}
-                  <FormField
-                    type="select"
-                    name="residenceUsage"
-                    label="Residence Usage"
-                    value={formData.residenceUsage}
-                    onChange={handleChange}
-                    options={residenceUsageOptions}
-                    required
-                    error={errors.residenceUsage}
-                    className="md:col-span-2"
-                  />
-
-                  <FormField
-                    type="number"
-                    name="contentsValue"
-                    label="Contents Value (€)"
-                    value={formData.contentsValue}
-                    onChange={handleChange}
-                    placeholder="50000"
-                    required
-                    error={errors.contentsValue}
-                    hint="Estimated value of your belongings"
-                  />
-
-                  {/* OPTIONAL: Google Maps Link */}
-                  <FormField
-                    type="url"
-                    name="googleMapsLink"
-                    label="Google Maps Link (Optional)"
-                    value={formData.googleMapsLink}
-                    onChange={handleChange}
-                    placeholder="https://maps.google.com/..."
-                    className="md:col-span-2"
-                  />
-
-                  {/* OPTIONAL: Catastro Number */}
-                  <FormField
-                    type="text"
-                    name="catastroNumber"
-                    label="Catastro Number (Optional)"
-                    value={formData.catastroNumber}
-                    onChange={handleChange}
-                    placeholder="123456789012345678AA"
-                    className="md:col-span-2"
-                  />
-
-                  {/* OPTIONAL: Special Items */}
-                  <FormField
-                    type="textarea"
-                    name="specialItems"
-                    label="Special Items to Insure (Optional)"
-                    value={formData.specialItems}
-                    onChange={handleChange}
-                    placeholder="Jewelry, art, electronics, etc."
-                    className="md:col-span-2"
-                    hint="List any high-value items that need additional coverage"
-                  />
-                </div>
-              </motion.div>
-            )}
-
-            {/* STEP 3: Current Insurance */}
-            {step === 3 && (
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  Current Insurance
-                </h2>
-                <p className="text-gray-600 mb-8">
-                  Information about your current coverage helps us find better deals
-                </p>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <FormField
-                    type="text"
-                    name="currentProvider"
-                    label="Write your current provider"
-                    value={formData.currentProvider}
-                    onChange={handleChange}
-                    placeholder="e.g., Allianz, Mapfre, etc."
-                    required
-                    error={errors.currentProvider}
-                    className="md:col-span-2"
-                  />
-
-                  <FormField
-                    type="number"
-                    name="currentPremium"
-                    label="Current Annual Premium (€)"
-                    value={formData.currentPremium}
-                    onChange={handleChange}
-                    placeholder="300"
-                    required
-                    error={errors.currentPremium}
-                    className="md:col-span-2"
-                  />
-                </div>
-              </motion.div>
-            )}
-
-            {/* STEP 4: Review & Submit */}
-            {step === 4 && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  Review & Submit
-                </h2>
-                <p className="text-gray-600 mb-8">
-                  Please review your information before submitting
-                </p>
-
-                <div className="space-y-6">
-                  {/* Personal Information Review */}
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                      <div><div className="text-gray-500">Full Name</div><div className="font-medium">{formData.fullName}</div></div>
-                      <div><div className="text-gray-500">Email</div><div className="font-medium">{formData.email}</div></div>
-                      <div><div className="text-gray-500">Nationality</div><div className="font-medium">{formData.nationality}</div></div>
-                      <div><div className="text-gray-500">Phone</div><div className="font-medium">{formData.phone || 'Not provided'}</div></div>
-                      <div><div className="text-gray-500">NIE Number</div><div className="font-medium">{formData.nieNumber}</div></div>
-                      <div><div className="text-gray-500">Address</div><div className="font-medium">{formData.address}</div></div>
-                      <div><div className="text-gray-500">Postal Code</div><div className="font-medium">{formData.postalCode}</div></div>
+          <Card className="bg-slate-900 border-slate-800 p-8">
+            {step === 4 ? (
+              <form id="form" onSubmit={(e) => e.preventDefault()}>
+                <div className="space-y-6 text-slate-300">
+                  <div className="border-b border-slate-800 pb-4">
+                    <h3 className="text-white font-medium mb-3">Personal Information</h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div><span className="text-slate-500">Full Name:</span> {formData.fullName}</div>
+                      <div><span className="text-slate-500">Email:</span> {formData.email}</div>
+                      <div><span className="text-slate-500">Nationality:</span> {formData.nationality}</div>
+                      <div><span className="text-slate-500">Phone:</span> {formData.phone || 'Not provided'}</div>
+                      <div><span className="text-slate-500">NIE Number:</span> {formData.nieNumber}</div>
+                      <div><span className="text-slate-500">Date of Birth:</span> {formData.dateOfBirth}</div>
+                      <div><span className="text-slate-500">Address:</span> {formData.address}</div>
+                      <div><span className="text-slate-500">Postal Code:</span> {formData.postalCode}</div>
                     </div>
                   </div>
 
-                  {/* Property Details Review */}
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Property Details</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                      <div><div className="text-gray-500">Property Type</div><div className="font-medium">{formData.propertyType}</div></div>
-                      <div><div className="text-gray-500">Living Size</div><div className="font-medium">{formData.livingSize} m²</div></div>
-                      {formData.outsideSize && (
-                        <div><div className="text-gray-500">Outside Size</div><div className="font-medium">{formData.outsideSize} m²</div></div>
-                      )}
-                      <div><div className="text-gray-500">Bedrooms</div><div className="font-medium">{formData.bedrooms}</div></div>
-                      <div><div className="text-gray-500">Bathrooms</div><div className="font-medium">{formData.bathrooms}</div></div>
-                      <div><div className="text-gray-500">Construction Year</div><div className="font-medium">{formData.constructionYear}</div></div>
-                      {formData.refurbishedYear && (
-                        <div><div className="text-gray-500">Refurbished Year</div><div className="font-medium">{formData.refurbishedYear}</div></div>
-                      )}
-                      <div className="md:col-span-2">
-                        <div className="text-gray-500">Residence Usage</div>
-                        <div className="font-medium">
-                          {formData.residenceUsage === 'main' ? 'Main residence' :
-                           formData.residenceUsage === 'second' ? 'Second residence' :
-                           formData.residenceUsage === 'rented' ? 'Rented residence' : 'Other'}
-                        </div>
-                      </div>
-                      <div><div className="text-gray-500">Contents Value</div><div className="font-medium">€{formData.contentsValue}</div></div>
-                      {formData.googleMapsLink && (
-                        <div className="md:col-span-2">
-                          <div className="text-gray-500">Google Maps Link (Optional)</div>
-                          <div className="font-medium">
-                            <a href={formData.googleMapsLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">View on Maps</a>
-                          </div>
-                        </div>
-                      )}
-                      {formData.catastroNumber && (
-                        <div className="md:col-span-2">
-                          <div className="text-gray-500">Catastro Number (Optional)</div>
-                          <div className="font-medium">{formData.catastroNumber}</div>
-                        </div>
-                      )}
-                      {formData.specialItems && (
-                        <div className="md:col-span-2">
-                          <div className="text-gray-500">Special Items (Optional)</div>
-                          <div className="font-medium">{formData.specialItems}</div>
-                        </div>
-                      )}
+                  <div className="border-b border-slate-800 pb-4">
+                    <h3 className="text-white font-medium mb-3">Property Details</h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div><span className="text-slate-500">Property Type:</span> {formData.propertyType}</div>
+                      <div><span className="text-slate-500">Living Size:</span> {formData.livingSize} m²</div>
+                      {formData.outsideSize && <div><span className="text-slate-500">Outside Size:</span> {formData.outsideSize} m²</div>}
+                      <div><span className="text-slate-500">Bedrooms:</span> {formData.bedrooms}</div>
+                      <div><span className="text-slate-500">Bathrooms:</span> {formData.bathrooms}</div>
+                      <div><span className="text-slate-500">Construction Year:</span> {formData.constructionYear}</div>
+                      {formData.refurbishedYear && <div><span className="text-slate-500">Refurbished Year:</span> {formData.refurbishedYear}</div>}
+                      <div className="md:col-span-2"><span className="text-slate-500">Residence Usage:</span> {formData.residenceUsage === 'main' ? 'Main residence' : formData.residenceUsage === 'second' ? 'Second residence' : formData.residenceUsage === 'rented' ? 'Rented residence' : 'Other'}</div>
+                      <div><span className="text-slate-500">Contents Value:</span> €{formData.contentsValue}</div>
+                      {formData.googleMapsLink && <div className="md:col-span-2"><span className="text-slate-500">Google Maps Link:</span> <a href={formData.googleMapsLink} target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">View on Maps</a></div>}
+                      {formData.catastroNumber && <div className="md:col-span-2"><span className="text-slate-500">Catastro Number:</span> {formData.catastroNumber}</div>}
+                      {formData.specialItems && <div className="md:col-span-2"><span className="text-slate-500">Special Items:</span> {formData.specialItems}</div>}
                     </div>
                   </div>
 
-                  {/* Current Insurance Review */}
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Current Insurance</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                      <div><div className="text-gray-500">Current Provider</div><div className="font-medium">{formData.currentProvider}</div></div>
-                      <div className="md:col-span-2"><div className="text-gray-500">Current Annual Premium</div><div className="font-medium">€{formData.currentPremium}</div></div>
+                  <div>
+                    <h3 className="text-white font-medium mb-3">Current Insurance</h3>
+                    <div className="grid gap-4">
+                      <div><span className="text-slate-500">Current Provider:</span> {formData.currentProvider}</div>
+                      <div><span className="text-slate-500">Current Annual Premium:</span> €{formData.currentPremium}</div>
                     </div>
                   </div>
                 </div>
+              </form>
+            ) : (
+              <>
+                <div className="space-y-6 text-white">
+                  {/* STEP 1: Personal Information */}
+                  {step === 1 && (
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <FormField name="fullName" label="Full Name" value={formData.fullName} onChange={handleChange} error={errors.fullName} />
+                      <FormField type="select" name="nationality" label="Nationality" value={formData.nationality} onChange={handleChange} options={nationalityOptions} error={errors.nationality} />
+                      <FormField type="date" name="dateOfBirth" label="Date of Birth" value={formData.dateOfBirth} onChange={handleChange} error={errors.dateOfBirth} />
+                      <FormField name="nieNumber" label="NIE Number" value={formData.nieNumber} onChange={handleChange} error={errors.nieNumber} placeholder="X1234567A" />
+                      <FormField name="address" label="Property Address" value={formData.address} onChange={handleChange} error={errors.address} />
+                      <FormField name="postalCode" label="Postal Code" value={formData.postalCode} onChange={handleChange} error={errors.postalCode} />
+                      <FormField type="email" name="email" label="Email Address" value={formData.email} onChange={handleChange} error={errors.email} />
+                      <FormField type="tel" name="phone" label="Phone Number" value={formData.phone} onChange={handleChange} error={errors.phone} />
+                    </div>
+                  )}
 
-                <div className="mt-8 p-4 bg-green-50 rounded-lg border border-green-100">
-                  <div className="flex items-center">
-                    <Check className="w-5 h-5 text-green-600 mr-3" />
-                    <span className="text-green-700">
-                      Your information is secure and will only be used to provide you with insurance quotes.
-                    </span>
-                  </div>
+                  {/* STEP 2: Property Details */}
+                  {step === 2 && (
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <FormField type="select" name="propertyType" label="Property Type" value={formData.propertyType} onChange={handleChange} options={propertyTypeOptions} error={errors.propertyType} />
+                      <div />
+                      <FormField type="number" name="livingSize" label="Living Size (m²)" value={formData.livingSize} onChange={handleChange} error={errors.livingSize} />
+                      <FormField type="number" name="outsideSize" label="Outside Size (m²)" value={formData.outsideSize} onChange={handleChange} hint="Garage, Carport, Casita" />
+                      <FormField type="number" name="bedrooms" label="Number of Bedrooms" value={formData.bedrooms} onChange={handleChange} error={errors.bedrooms} />
+                      <FormField type="number" name="bathrooms" label="Number of Bathrooms" value={formData.bathrooms} onChange={handleChange} error={errors.bathrooms} />
+                      <FormField type="select" name="constructionYear" label="Construction Year" value={formData.constructionYear} onChange={handleChange} options={yearOptions.map(year => ({ value: year, label: year }))} error={errors.constructionYear} />
+                      <FormField type="select" name="refurbishedYear" label="Refurbished Year" value={formData.refurbishedYear} onChange={handleChange} options={[{ value: '', label: 'Not refurbished' }, ...yearOptions.map(year => ({ value: year, label: year }))]} />
+                      <FormField type="select" name="residenceUsage" label="Residence Usage" value={formData.residenceUsage} onChange={handleChange} options={residenceUsageOptions} error={errors.residenceUsage} className="md:col-span-2" />
+                      <FormField type="number" name="contentsValue" label="Contents Value (€)" value={formData.contentsValue} onChange={handleChange} error={errors.contentsValue} hint="Estimated value of your belongings" />
+                      <FormField type="url" name="googleMapsLink" label="Google Maps Link (Optional)" value={formData.googleMapsLink} onChange={handleChange} className="md:col-span-2" />
+                      <FormField name="catastroNumber" label="Catastro Number (Optional)" value={formData.catastroNumber} onChange={handleChange} className="md:col-span-2" />
+                      <FormField type="textarea" name="specialItems" label="Special Items to Insure (Optional)" value={formData.specialItems} onChange={handleChange} className="md:col-span-2" hint="List any high-value items that need additional coverage" />
+                    </div>
+                  )}
+
+                  {/* STEP 3: Current Insurance */}
+                  {step === 3 && (
+                    <div className="grid gap-6">
+                      <FormField name="currentProvider" label="Write your current provider" value={formData.currentProvider} onChange={handleChange} error={errors.currentProvider} className="md:col-span-2" />
+                      <FormField type="number" name="currentPremium" label="Current Annual Premium (€)" value={formData.currentPremium} onChange={handleChange} error={errors.currentPremium} className="md:col-span-2" />
+                    </div>
+                  )}
                 </div>
-              </motion.div>
+                <div className="flex justify-between mt-8 border-t border-slate-800 pt-6">
+                  {step > 1 && (
+                    <Button type="button" variant="ghost" onClick={handlePrevious}>
+                      <ChevronLeft /> Back
+                    </Button>
+                  )}
+                  {step < 4 ? (
+                    <Button type="button" onClick={handleNext}>
+                      Next <ChevronRight />
+                    </Button>
+                  ) : null}
+                </div>
+              </>
             )}
 
-            {/* Navigation buttons */}
-            <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">
-              {step > 1 && (
-                <Button
-                  variant="ghost"
-                  onClick={handlePrevious}
-                  leftIcon={<ChevronLeft className="w-5 h-5" />}
-                >
-                  Back
+            <div className="flex justify-between mt-8 border-t border-slate-800 pt-6">
+              {step === 4 && (
+                <Button type="button" variant="ghost" onClick={handlePrevious}>
+                  <ChevronLeft /> Back to Edit
                 </Button>
               )}
-              {step < 4 ? (
-                <Button
-                  onClick={handleNext}
-                  loading={isSubmitting}
-                  rightIcon={<ChevronRight className="w-5 h-5" />}
-                >
-                  {step === 3 ? 'Review' : 'Next'}
-                </Button>
-              ) : (
-                <Button
-                  onClick={handleSubmit}
-                  loading={isSubmitting}
-                  rightIcon={<ChevronRight className="w-5 h-5" />}
-                >
+              {step === 4 && (
+                <Button type="submit" form="form" loading={isSubmitting} onClick={handleSubmit}>
                   Submit Quote Request
                 </Button>
               )}
             </div>
           </Card>
-        </motion.div>
+        </div>
       </div>
-    </div>
+    </>
   );
-};
-
-export default HomeInsurance;
+}

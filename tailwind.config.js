@@ -7,12 +7,19 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#2563eb', // Blue-600
-        secondary: '#1e40af', // Blue-800
-        accent: '#f59e0b', // Amber-500
+        primary: "#3b82f6",
+        secondary: "#0f172a",
+        accent: "#22c55e",
+
+        surface: {
+          100: "#f1f5f9",
+          200: "#e2e8f0",
+        },
       },
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+
+      boxShadow: {
+        soft: "0 10px 25px rgba(0,0,0,0.06)",
+        medium: "0 15px 35px rgba(0,0,0,0.12)",
       },
     },
   },

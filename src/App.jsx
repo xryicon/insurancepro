@@ -4,7 +4,7 @@ import { I18nextProvider } from 'react-i18next';
 import Layout from './components/Layout';
 import i18n from './i18n';
 
-// Lazy-loaded pages
+// ================= LAZY PAGES =================
 const Home = lazy(() => import('./pages/Home'));
 const CarInsurance = lazy(() => import('./pages/CarInsurance'));
 const HomeInsurance = lazy(() => import('./pages/HomeInsurance'));
@@ -12,72 +12,35 @@ const AboutUs = lazy(() => import('./pages/AboutUs'));
 const InsuranceSelection = lazy(() => import('./pages/InsuranceSelection'));
 const Contact = lazy(() => import('./pages/Contact'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const FAQ = lazy(() => import('./pages/FAQ'));  // Add this
+
+// ================= LOADING UI =================
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center bg-[#0a0f1c]">
+    <div className="animate-pulse text-slate-400 text-sm">
+      Loading...
+    </div>
+  </div>
+);
 
 function App() {
   return (
     <I18nextProvider i18n={i18n}>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route
-              index
-              element={
-                <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
-                  <Home />
-                </Suspense>
-              }
-            />
-            <Route
-              path="about"
-              element={
-                <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
-                  <AboutUs />
-                </Suspense>
-              }
-            />
-            <Route
-              path="contact"
-              element={
-                <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
-                  <Contact />
-                </Suspense>
-              }
-            />
-            <Route
-              path="quote"
-              element={
-                <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
-                  <InsuranceSelection />
-                </Suspense>
-              }
-            />
-            <Route
-              path="car-insurance"
-              element={
-                <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
-                  <CarInsurance />
-                </Suspense>
-              }
-            />
-            <Route
-              path="home-insurance"
-              element={
-                <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
-                  <HomeInsurance />
-                </Suspense>
-              }
-            />
-            {/* Privacy Policy Route */}
-            <Route
-              path="privacy-policy"
-              element={
-                <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
-                  <PrivacyPolicy />
-                </Suspense>
-              }
-            />
-          </Route>
-        </Routes>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="about" element={<AboutUs />} />
+              <Route path="contact" element={<Contact />} />
+              <Route path="quote" element={<InsuranceSelection />} />
+              <Route path="faq" element={<FAQ />} />  {/* Changed from /faq to faq */}
+              <Route path="car-insurance" element={<CarInsurance />} />
+              <Route path="home-insurance" element={<HomeInsurance />} />
+              <Route path="privacy-policy" element={<PrivacyPolicy />} />
+            </Route>
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </I18nextProvider>
   );

@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
+import { Card } from '../components/ui/Card';
+import Button from '../components/ui/Button';
 
 export default function CookieBanner() {
   const [showModal, setShowModal] = useState(false);
@@ -29,99 +31,51 @@ export default function CookieBanner() {
     setShowModal(true);
   };
 
-  const modalOverlayStyle = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: 'rgba(0, 0, 0, 0.5)',
-    display: showModal ? 'flex' : 'none',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000,
-  };
-
-  const modalStyle = {
-    background: '#fff',
-    padding: '24px',
-    borderRadius: '8px',
-    maxWidth: '500px',
-    width: '90%',
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
-    textAlign: 'center',
-    fontFamily: 'Arial, sans-serif',
-  };
-
-  const buttonContainerStyle = {
-    display: 'flex',
-    gap: '12px',
-    justifyContent: 'center',
-    marginTop: '20px',
-  };
-
-  const buttonStyle = {
-    padding: '10px 20px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontWeight: 'bold',
-    border: 'none',
-  };
-
-  const acceptButtonStyle = {
-    ...buttonStyle,
-    background: '#0066cc',
-    color: '#fff',
-  };
-
-  const rejectButtonStyle = {
-    ...buttonStyle,
-    background: '#f0f0f0',
-    color: '#333',
-    border: '1px solid #ccc',
-  };
-
-  const floatingButtonStyle = {
-    position: 'fixed',
-    bottom: '20px',
-    right: '20px',
-    background: '#0066cc',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '50%',
-    width: '50px',
-    height: '50px',
-    display: showFloatingButton ? 'flex' : 'none',
-    justifyContent: 'center',
-    alignItems: 'center',
-    cursor: 'pointer',
-    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',
-    zIndex: 999,
-    fontSize: '20px',
-  };
+  if (!showModal && !showFloatingButton) return null;
 
   return (
     <>
-      <div style={modalOverlayStyle} onClick={handleReject}>
-        <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
-          <h3 style={{ margin: 0, color: '#333' }}>We Value Your Privacy</h3>
-          <p style={{ margin: '16px 0', color: '#555' }}>
-            We use cookies to ensure basic functionality (e.g., language preference).
-            By clicking <strong>Accept</strong>, you consent to our use of cookies.
-          </p>
-          <p style={{ margin: '16px 0', fontSize: '14px' }}>
-            <a href="/privacy-policy" style={{ color: '#0066cc' }}>Learn more about our privacy policy</a>
-          </p>
-          <div style={buttonContainerStyle}>
-            <button onClick={handleReject} style={rejectButtonStyle}>Reject</button>
-            <button onClick={handleAccept} style={acceptButtonStyle}>Accept</button>
-          </div>
+      {/* Modal Overlay */}
+      {showModal && (
+        <div
+          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
+          onClick={handleReject}
+        >
+          <Card
+            className="max-w-md w-full bg-slate-900 border-slate-800 p-6 text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-xl font-bold text-white mb-4">We Value Your Privacy</h3>
+            <p className="text-slate-400 mb-4">
+              We use cookies to ensure basic functionality (e.g., language preference).
+              By clicking <strong className="text-white">Accept</strong>, you consent to our use of cookies.
+            </p>
+            <p className="text-sm mb-6">
+              <a href="/privacy-policy" className="text-indigo-400 hover:underline">
+                Learn more about our privacy policy
+              </a>
+            </p>
+            <div className="flex gap-4 justify-center">
+              <Button variant="ghost" onClick={handleReject} className="text-slate-300">
+                Reject
+              </Button>
+              <Button onClick={handleAccept}>
+                Accept
+              </Button>
+            </div>
+          </Card>
         </div>
-      </div>
+      )}
 
-      <button style={floatingButtonStyle} onClick={reopenModal}>
-        🍪
-      </button>
+      {/* Floating Cookie Button */}
+      {showFloatingButton && (
+        <button
+          onClick={reopenModal}
+          className="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg z-40 flex items-center justify-center"
+        >
+          🍪
+        </button>
+      )}
     </>
   );
 }

@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Heart, TrendingUp } from 'lucide-react';
+import { ShieldCheck, Heart, TrendingUp, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export default function AboutUs() {
@@ -9,149 +9,139 @@ export default function AboutUs() {
   return (
     <>
       <Helmet>
-        <title>{t('About Us | InsurancePro - Your Trusted Insurance Partner in Spain')}</title>
+        <title>About InsurancePro | Smart Insurance Comparison Spain</title>
         <meta
           name="description"
-          content={t('Learn about InsurancePro: a mission-driven platform to help you save money on insurance in Spain. Created by Dylan Van Wesemael.')}
+          content="Learn how InsurancePro helps people in Spain save money on insurance with fast, transparent comparisons."
         />
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50">
-        {/* Hero Section */}
-        <div className="py-20 px-4 sm:px-6 lg:px-8 text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-4xl font-bold text-gray-900 sm:text-5xl"
-          >
-            {t('About')} <span className="text-blue-600">{t('InsurancePro')}</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-6 text-xl text-gray-600 max-w-3xl mx-auto"
-          >
-            {t('Helping you save money on insurance in Spain — the easy way.')}
-          </motion.p>
-        </div>
+      {/* PAGE WRAPPER */}
+      <div className="relative min-h-screen bg-[#070B14] text-white overflow-hidden">
 
-        {/* Our Story Section */}
-        <div className="py-12 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="bg-white rounded-xl shadow-lg p-8 lg:p-12"
-            >
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                {t('Our Story')}
-              </h2>
-              <p className="text-lg text-gray-600 mb-6">
-                {t('A few years ago, I found myself struggling to find a')} <strong>{t('simple, transparent, and affordable')}</strong> {t('way to compare insurance quotes in Spain. Most websites were either too complicated, lacked clear pricing, or didn’t cater to expats and locals alike.')}
-              </p>
-              <p className="text-lg text-gray-600 mb-6">
-                {t('That’s why I created')} <strong>{t('InsurancePro')}</strong> {t('— to give people a')} <strong>{t('fast, easy, and trustworthy')}</strong> {t('way to compare insurance options and save money. No jargon, no hidden fees, just the best deals tailored to your needs.')}
-              </p>
-              <p className="text-lg text-gray-600">
-                {t('Whether you’re looking for car, home, or other types of insurance, we’ve got you covered. Our mission is to make insurance simple, accessible, and affordable for everyone in Spain.')}
-              </p>
-            </motion.div>
-          </div>
-        </div>
+        {/* GLOW BACKGROUND */}
+        <div className="absolute top-[-200px] left-[-200px] w-[500px] h-[500px] bg-blue-500/10 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[-200px] right-[-200px] w-[500px] h-[500px] bg-indigo-500/10 blur-[120px] rounded-full" />
 
-        {/* Why Choose Us Section */}
-        <div className="py-12 px-4 sm:px-6 lg:px-8 bg-white">
-          <div className="max-w-7xl mx-auto">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-              className="text-3xl font-bold text-gray-900 text-center mb-12"
-            >
-              {t('Why Choose InsurancePro?')}
-            </motion.h2>
-            <div className="grid gap-8 md:grid-cols-3">
-              {/* Simple & Fast */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.8 }}
-                className="text-center p-6 rounded-xl hover:shadow-lg transition-shadow"
-              >
-                <div className="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <TrendingUp className="w-7 h-7 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  {t('Simple & Fast')}
-                </h3>
-                <p className="text-gray-600">
-                  {t('Compare quotes in minutes with our easy-to-use platform. No complicated forms or endless paperwork.')}
-                </p>
-              </motion.div>
+        {/* ================= HERO ================= */}
+        <section className="relative py-28 text-center">
 
-              {/* Trusted Partners */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 1.0 }}
-                className="text-center p-6 rounded-xl hover:shadow-lg transition-shadow"
-              >
-                <div className="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <ShieldCheck className="w-7 h-7 text-green-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  {t('Trusted Partners')}
-                </h3>
-                <p className="text-gray-600">
-                  {t('We work with the best insurance providers in Spain to bring you reliable, high-quality coverage.')}
-                </p>
-              </motion.div>
+          <div className="max-w-4xl mx-auto px-6">
 
-              {/* Save Money */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 1.2 }}
-                className="text-center p-6 rounded-xl hover:shadow-lg transition-shadow"
-              >
-                <div className="w-14 h-14 bg-purple-50 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <Heart className="w-7 h-7 text-purple-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  {t('Save Money')}
-                </h3>
-                <p className="text-gray-600">
-                  {t('Our platform helps you find the best rates, so you can save up to 40% on your insurance premiums.')}
-                </p>
-              </motion.div>
+            {/* BADGE */}
+            <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-white/5 border border-white/10 text-gray-300 text-sm">
+              <Sparkles className="w-4 h-4 text-blue-400" />
+              Built for smarter insurance decisions in Spain
             </div>
-          </div>
-        </div>
 
-        {/* Founder Section */}
-        <div className="py-12 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
+            {/* TITLE */}
+            <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 1.4 }}
-              className="bg-white rounded-xl shadow-lg p-8 lg:p-12 text-center"
+              className="mt-6 text-5xl md:text-6xl font-extrabold"
             >
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                {t('Meet the Founder')}
-              </h2>
-              <p className="text-lg text-gray-600 mb-6">
-                {t('Hi, I’m')} <strong>{t('Dylan')}</strong>, {t('the creator of InsurancePro. After years of frustration trying to navigate the complex world of insurance in Spain, I decided to build a solution that puts')} <strong>{t('you')}</strong> {t('first. My goal is to make insurance simple, transparent, and affordable for everyone.')}
-              </p>
-              <p className="text-lg text-gray-600">
-                {t('If you have any questions or feedback, feel free to reach out. I’d love to hear from you!')}
-              </p>
-            </motion.div>
+              About <span className="text-blue-400">InsurancePro</span>
+            </motion.h1>
+
+            {/* SUBTEXT */}
+            <p className="mt-6 text-gray-400 text-lg max-w-2xl mx-auto">
+              A faster, simpler way to compare insurance and save money — without confusion, or hidden fees.
+            </p>
+
           </div>
-        </div>
+        </section>
+
+        {/* ================= STORY ================= */}
+        <section className="relative py-20">
+
+          <div className="max-w-5xl mx-auto px-6">
+
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-10 backdrop-blur-xl">
+
+              <h2 className="text-2xl font-bold mb-6">
+                Our Story
+              </h2>
+
+              <p className="text-gray-300 leading-relaxed mb-4">
+                A few years ago, I struggled to compare insurance in Spain — everything was slow, unclear, and full of hidden terms.
+              </p>
+
+              <p className="text-gray-300 leading-relaxed mb-4">
+                That frustration led to the creation of <span className="text-white font-semibold">InsurancePro</span>, a platform focused on clarity, speed, and real savings.
+              </p>
+
+              <p className="text-gray-300 leading-relaxed">
+                Today, our mission is simple: help people in Spain find better insurance in minutes, not hours.
+              </p>
+
+            </div>
+
+          </div>
+        </section>
+
+        {/* ================= VALUE GRID ================= */}
+        <section className="relative py-20">
+
+          <div className="max-w-6xl mx-auto px-6">
+
+            <h2 className="text-center text-3xl font-bold mb-12">
+              Why people trust us
+            </h2>
+
+            <div className="grid md:grid-cols-3 gap-8">
+
+              {/* CARD 1 */}
+              <div className="group p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition">
+                <TrendingUp className="w-8 h-8 text-blue-400 mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Fast comparisons</h3>
+                <p className="text-gray-400">
+                  Get real insurance quotes in under 24 hours.
+                </p>
+              </div>
+
+              {/* CARD 2 */}
+              <div className="group p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition">
+                <ShieldCheck className="w-8 h-8 text-green-400 mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Trusted providers</h3>
+                <p className="text-gray-400">
+                  Only verified insurance companies in Spain.
+                </p>
+              </div>
+
+              {/* CARD 3 */}
+              <div className="group p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition">
+                <Heart className="w-8 h-8 text-pink-400 mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Save money</h3>
+                <p className="text-gray-400">
+                  Users typically reduce costs by up to 40%.
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+        {/* ================= FOUNDER ================= */}
+        <section className="relative py-24">
+
+          <div className="max-w-4xl mx-auto px-6 text-center">
+
+            <div className="bg-gradient-to-b from-white/10 to-white/5 border border-white/10 rounded-3xl p-10 backdrop-blur-xl">
+
+              <h2 className="text-2xl font-bold mb-4">
+                Meet the Founder
+              </h2>
+
+              <p className="text-gray-300 leading-relaxed">
+                Hi, I’m <span className="text-white font-semibold">Dylan</span>. I built InsurancePro after seeing how confusing insurance in Spain can be. My goal is simple: make insurance transparent, fast, and fair for everyone.
+              </p>
+
+            </div>
+
+          </div>
+        </section>
+
       </div>
     </>
   );
