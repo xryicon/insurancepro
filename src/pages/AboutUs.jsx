@@ -1,11 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { ShieldCheck, Heart, TrendingUp, Sparkles } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 
 export default function AboutUs() {
-  const { t } = useTranslation();
-
   return (
     <>
       <Helmet>

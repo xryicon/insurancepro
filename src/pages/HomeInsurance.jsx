@@ -282,8 +282,7 @@ const handleSubmit = useCallback(async () => {
             <div className="flex justify-between mt-4">
               {steps.map((s) => (
                 <div key={s.number} className="text-center">
-                  <div className={`w-9 h-9 mx-auto rounded-full flex items-center justify-center $
-                    {step >= s.number ? 'bg-indigo-500' : 'bg-slate-700'}`}>
+                  <div className={`w-9 h-9 mx-auto rounded-full flex items-center justify-center ${step >= s.number ? 'bg-indigo-500' : 'bg-slate-700'}`}>
                     {s.number}
                   </div>
                   <div className="text-xs mt-1 text-slate-400">{s.label}</div>

@@ -9,7 +9,6 @@ import Button from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import FormField from '../components/forms/FormField';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { supabase } from '../lib/supabase';
 
 const formatDate = (value) => {
@@ -49,7 +48,6 @@ const schema = z.object({
 });
 
 export default function CarInsurance() {
-  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [step, setStep] = useState(1);
@@ -147,59 +145,57 @@ export default function CarInsurance() {
 
   const handlePrevious = () => setStep((s) => s - 1);
 
-  // ✅ SUPABASE INTEGRATION (ONLY CHANGE)
- const onSubmit = async (data) => {
-  try {
-    const { error } = await supabase.from('leads').insert([
-      {
-        full_name: data.fullName,
-        email: data.email,
-        phone: data.telephone || null,
-        address: data.address,
+  const onSubmit = async (data) => {
+    try {
+      const { error } = await supabase.from('leads').insert([
+        {
+          full_name: data.fullName,
+          email: data.email,
+          phone: data.telephone || null,
+          address: data.address,
 
-        lead_type: 'car',
-        status: 'new',
-        source: 'car_insurance_form',
+          lead_type: 'car',
+          status: 'new',
+          source: 'car_insurance_form',
 
-        data: {
-          nationality: data.nationality,
-          date_of_birth: data.dateOfBirth,
-          nie_number: data.nieNumber,
-          date_of_car_license: data.dateOfCarLicense,
-          nationality_of_car_license: data.nationalityOfCarLicense,
-          postal_code: data.postcode,
+          data: {
+            nationality: data.nationality,
+            date_of_birth: data.dateOfBirth,
+            nie_number: data.nieNumber,
+            date_of_car_license: data.dateOfCarLicense,
+            nationality_of_car_license: data.nationalityOfCarLicense,
+            postal_code: data.postcode,
 
-          car_make: data.carMake,
-          car_model: data.carModel,
-          year: data.year,
-          horsepower: data.horsepower,
-          engine_size: data.engineSize,
-          registration: data.registration,
-          transmission_type: data.transmissionType,
+            car_make: data.carMake,
+            car_model: data.carModel,
+            year: data.year,
+            horsepower: data.horsepower,
+            engine_size: data.engineSize,
+            registration: data.registration,
+            transmission_type: data.transmissionType,
 
-          current_company: data.currentCompany,
-          current_premium: data.currentPremium ? parseFloat(data.currentPremium) : null,
-          current_cover: data.currentCover
+            current_company: data.currentCompany,
+            current_premium: data.currentPremium ? parseFloat(data.currentPremium) : null,
+            current_cover: data.currentCover
+          }
         }
+      ]);
+
+      if (error) {
+        console.error(error);
+        toast.error(error.message);
+        return;
       }
-    ]);
 
-    if (error) {
-      console.error(error);
-      toast.error(error.message);
-      return;
+      toast.success('Car insurance quote submitted!');
+
+      setSubmitSuccess(true);
+
+    } catch (err) {
+      console.error(err);
+      toast.error('Submission failed');
     }
-
-    toast.success('Car insurance quote submitted!');
-
-    // ✅ IMPORTANT: show success screen
-    setSubmitSuccess(true);
-
-  } catch (err) {
-    console.error(err);
-    toast.error('Submission failed');
-  }
-};
+  };
 
   const allValues = getValues();
 
@@ -239,7 +235,7 @@ export default function CarInsurance() {
             Back
           </button>
 
-          {/* PROGRESS BAR (UNCHANGED UI) */}
+          {/* PROGRESS BAR */}
           <div className="mb-10 relative">
             <div className="h-1 bg-slate-800 rounded">
               <div
@@ -270,7 +266,6 @@ export default function CarInsurance() {
 
           <Card className="bg-slate-900 border-slate-800 p-8">
 
-            {/* IMPORTANT: FORM WRAPPER FIXED */}
             <form id="form" onSubmit={handleSubmit(onSubmit)}>
 
               {step === 4 ? (
@@ -385,7 +380,6 @@ export default function CarInsurance() {
 
                   </div>
 
-                  {/* NAV BUTTONS (UNCHANGED UI STRUCTURE) */}
                   <div className="flex justify-between mt-8 border-t border-slate-800 pt-6">
                     {step > 1 && (
                       <Button type="button" variant="ghost" onClick={handlePrevious}>
@@ -402,7 +396,6 @@ export default function CarInsurance() {
                 </>
               )}
 
-              {/* STEP 4 BUTTONS */}
               <div className="flex justify-between mt-8 border-t border-slate-800 pt-6">
                 {step === 4 && (
                   <Button type="button" variant="ghost" onClick={handlePrevious}>

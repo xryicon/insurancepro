@@ -15,13 +15,10 @@ const bg =
   'https://raw.githubusercontent.com/xryicon/insurancepro/main/src/assets/images/main%20background%20hero.jpg';
 
 export default function Home() {
-  // Assume t is provided by your translation context
-  const t = (key) => key; // Replace with your actual translation function
-
   return (
     <>
       <Helmet>
-        <title>{t('home.title')}</title>
+        <title>Save money on insurance in Spain with InsurancePro</title>
       </Helmet>
 
       {/* PAGE WRAPPER */}
@@ -53,7 +50,7 @@ export default function Home() {
 
             {/* BADGE */}
             <div className="inline-flex items-center px-4 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-gray-300">
-              {t('home.badge')}
+              Trusted insurance comparison platform
             </div>
 
             {/* TITLE */}
@@ -62,10 +59,10 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               className="mt-6 text-5xl md:text-7xl font-extrabold leading-tight"
             >
-              {t('home.hero.title.part1')}
+              Compare insurance &
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">
-                {t('home.hero.title.part2')}
+                save instantly
               </span>
             </motion.h1>
 
@@ -73,7 +70,7 @@ export default function Home() {
             <div className="mt-10 flex justify-center">
               <Link to="/quote">
                 <Button size="lg" variant="primary">
-                  {t('home.cta')}
+                  Start comparison
                 </Button>
               </Link>
             </div>
@@ -82,17 +79,17 @@ export default function Home() {
             <div className="mt-10 flex flex-wrap justify-center gap-6 text-sm text-gray-400">
               <span className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-green-400" />
-                {t('home.trust.item1')}
+                Free comparison
               </span>
 
               <span className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-green-400" />
-                {t('home.trust.item2')}
+                Fast results
               </span>
 
               <span className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-green-400" />
-                {t('home.trust.item3')}
+                Trusted insurers
               </span>
             </div>
           </div>
@@ -108,10 +105,10 @@ export default function Home() {
           {/* HEADER */}
           <div className="max-w-6xl mx-auto px-6 text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight">
-              {t('home.features.title')}
+              Why people switch to us
             </h2>
             <p className="text-gray-400 mt-4 text-lg">
-              {t('home.features.subtitle')}
+              Compare faster, pay less, and avoid overpaying in minutes
             </p>
           </div>
 
@@ -128,10 +125,10 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-white">
-                  {t('home.features.card1.title')}
+                  Save time instantly
                 </h3>
                 <p className="text-gray-400 mt-2 leading-relaxed">
-                  {t('home.features.card1.description')}
+                  Get real insurance quotes in under 24 hours.
                 </p>
               </div>
             </div>
@@ -147,10 +144,10 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-white">
-                  {t('home.features.card2.title')}
+                  Fully trusted insurers
                 </h3>
                 <p className="text-gray-400 mt-2 leading-relaxed">
-                  {t('home.features.card2.description')}
+                  We only show regulated insurance providers operating in Spain.
                 </p>
               </div>
             </div>
@@ -165,10 +162,10 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-white">
-                  {t('home.features.card3.title')}
+                  Lower your insurance cost
                 </h3>
                 <p className="text-gray-400 mt-2 leading-relaxed">
-                  {t('home.features.card3.description')}
+                  Compare multiple offers and instantly find cheaper coverage.
                 </p>
               </div>
             </div>
@@ -177,10 +174,10 @@ export default function Home() {
           {/* MINI CTA */}
           <div className="mt-14 text-center">
             <p className="text-gray-400 mb-4">
-              {t('home.features.miniCta.text')}
+              Ready to see your savings?
             </p>
             <a href="/quote" className="inline-flex px-6 py-3 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-400 transition shadow-lg hover:shadow-blue-500/30">
-              {t('home.features.miniCta.button')}
+              Start comparison
             </a>
           </div>
         </section>

@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Mail, Phone, User, MessageSquare } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 function Contact() {
-  const { t } = useTranslation();
-
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -24,7 +21,6 @@ function Contact() {
     }));
   };
 
-  // ✅ SUPABASE VERSION
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -35,11 +31,9 @@ function Contact() {
           full_name: formData.name,
           email: formData.email,
           phone: formData.telephone || null,
-
           lead_type: 'contact',
           status: 'new',
           source: 'contact_form',
-
           data: {
             message: formData.query
           }
@@ -68,18 +62,18 @@ function Contact() {
       <div className="min-h-screen bg-[#070B14] text-white flex items-center justify-center px-6">
         <div className="text-center max-w-md">
           <h2 className="text-3xl font-bold text-green-400 mb-4">
-            {t('thank_you') || 'Thank you'}
+            Thank you
           </h2>
 
           <p className="text-gray-400">
-            {t('we_will_contact_you_soon') || 'We will contact you soon.'}
+            We will contact you soon.
           </p>
 
           <button
             onClick={() => setSubmitSuccess(false)}
             className="mt-6 px-6 py-3 bg-white/10 border border-white/20 rounded-xl hover:bg-white/20 transition"
           >
-            {t('back') || 'Back'}
+            Back
           </button>
         </div>
       </div>
@@ -95,7 +89,7 @@ function Contact() {
       <div className="relative max-w-3xl mx-auto px-6 py-20">
 
         <h1 className="text-4xl font-bold text-center mb-10">
-          {t('contact_us') || 'Contact us'}
+          Contact us
         </h1>
 
         <div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-xl">
@@ -105,9 +99,8 @@ function Contact() {
             <div>
               <label className="text-sm text-gray-300 flex items-center gap-2 mb-2">
                 <User className="w-4 h-4" />
-                {t('name')}
+                Name
               </label>
-
               <input
                 type="text"
                 name="name"
@@ -123,7 +116,6 @@ function Contact() {
                 <Mail className="w-4 h-4" />
                 Email
               </label>
-
               <input
                 type="email"
                 name="email"
@@ -137,9 +129,8 @@ function Contact() {
             <div>
               <label className="text-sm text-gray-300 flex items-center gap-2 mb-2">
                 <Phone className="w-4 h-4" />
-                {t('telephone')}
+                Telephone
               </label>
-
               <input
                 type="tel"
                 name="telephone"
@@ -153,9 +144,8 @@ function Contact() {
             <div>
               <label className="text-sm text-gray-300 flex items-center gap-2 mb-2">
                 <MessageSquare className="w-4 h-4" />
-                {t('your_query')}
+                Your Query
               </label>
-
               <textarea
                 name="query"
                 value={formData.query}
@@ -173,7 +163,6 @@ function Contact() {
             >
               {isSubmitting ? 'Sending...' : 'Send message'}
             </button>
-
           </form>
         </div>
       </div>

@@ -3,7 +3,6 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Menu, X, Phone } from 'lucide-react';
 import { navLinks } from '../data/constants';
-import { useTranslation } from 'react-i18next';
 import CookieBanner from '../components/CookieBanner';
 
 const Layout = () => {
@@ -12,11 +11,6 @@ const Layout = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
-
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
-  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -62,10 +56,10 @@ const Layout = () => {
 
               <div className="flex flex-col">
                 <span className="text-xl font-bold text-white">
-                  {t('brand.name')}
+                  InsurancePro
                 </span>
                 <span className="text-xs text-gray-400 hidden sm:block">
-                  {t('brand.tagline')}
+                  Compare smarter. Save faster.
                 </span>
               </div>
             </div>
@@ -86,42 +80,26 @@ const Layout = () => {
                       : 'text-gray-400 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  {t(link.label)}
+                  {link.label}
                 </a>
               ))}
             </nav>
 
             {/* ACTIONS */}
             <div className="hidden lg:flex items-center space-x-3">
-              <div className="flex items-center space-x-2">
-                {['en', 'es', 'nl'].map((lng) => (
-                  <button
-                    key={lng}
-                    onClick={() => changeLanguage(lng)}
-                    className={`px-2 py-1 rounded-md text-sm font-medium transition ${
-                      i18n.language === lng
-                        ? 'bg-white/10 text-white'
-                        : 'text-gray-400 hover:text-white'
-                    }`}
-                  >
-                    {lng.toUpperCase()}
-                  </button>
-                ))}
-              </div>
-
               <button
                 onClick={() => navigate('/contact')}
                 className="flex items-center space-x-1 px-4 py-2 text-sm text-gray-400 hover:text-white transition"
               >
                 <Phone className="w-4 h-4" />
-                <span>{t('contact')}</span>
+                <span>Contact</span>
               </button>
 
               <button
                 onClick={() => navigate('/quote')}
                 className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-sm font-medium rounded-lg shadow-lg"
               >
-                {t('get_a_quote')}
+                Get a quote
               </button>
             </div>
 
@@ -155,7 +133,7 @@ const Layout = () => {
                     }}
                     className="block px-4 py-3 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/5"
                   >
-                    {t(link.label)}
+                    {link.label}
                   </a>
                 ))}
 
@@ -163,14 +141,14 @@ const Layout = () => {
                   onClick={() => navigate('/quote')}
                   className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg mt-2"
                 >
-                  {t('get_a_quote')}
+                  Get a quote
                 </button>
 
                 <button
                   onClick={() => navigate('/admin/login')}
                   className="w-full px-4 py-3 text-xs text-gray-400 hover:text-white"
                 >
-                  {t('admin_login')}
+                  Admin login
                 </button>
               </div>
             </motion.div>
@@ -189,20 +167,20 @@ const Layout = () => {
           <div className="flex items-center justify-center space-x-2 mb-3">
             <Shield className="w-5 h-5 text-white" />
             <span className="text-lg font-semibold">
-              {t('brand.name')}
+              InsurancePro
             </span>
           </div>
 
           <p className="text-gray-500 text-sm">
-            {t('footer.description')}
+            Smart insurance comparison platform
           </p>
 
           <div className="flex justify-center space-x-6 mt-6 text-sm text-gray-500">
             <a onClick={() => navigate('/faq')} className="hover:text-white cursor-pointer">
-              {t('faq')}
+              FAQ
             </a>
             <a onClick={() => navigate('/privacy-policy')} className="hover:text-white cursor-pointer">
-              {t('privacy_policy')}
+              Privacy Policy
             </a>
           </div>
 
@@ -211,12 +189,12 @@ const Layout = () => {
               onClick={() => navigate('/admin/login')}
               className="text-xs text-gray-600 hover:text-white transition"
             >
-              {t('admin_login')}
+              Admin login
             </button>
           </div>
 
           <div className="border-t border-white/10 mt-6 pt-6 text-xs text-gray-600">
-            {t('footer.copyright', { year: new Date().getFullYear() })}
+            © {new Date().getFullYear()} InsurancePro
           </div>
         </div>
       </footer>
