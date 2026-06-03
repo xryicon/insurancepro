@@ -319,5 +319,9 @@
   "homefeaturescard3title": "home.features.card3.title",
   "homefeaturescard3description": "home.features.card3.description",
   "homefeaturesminictatext": "home.features.miniCta.text",
-  "homefeaturesminictabutton": "home.features.miniCta.button"
+  "homefeaturesminictabutton": "home.features.miniCta.button",
+  "brandname": "brand.name",
+  "brandtagline": "brand.tagline",
+  "footerdescription": "footer.description",
+  "footercopyright": "footer.copyright"
 }
