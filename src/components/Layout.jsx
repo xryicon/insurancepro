@@ -145,10 +145,10 @@ const Layout = () => {
                 </button>
 
                 <button
-                  onClick={() => navigate('/admin/login')}
+                  onClick={() => navigate('/contact')}
                   className="w-full px-4 py-3 text-xs text-gray-400 hover:text-white"
                 >
-                  Admin login
+                  Contact
                 </button>
               </div>
             </motion.div>
