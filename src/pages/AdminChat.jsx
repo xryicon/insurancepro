@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { X, ArrowLeft, MessageSquare, Users, Send, Settings, History } from 'lucide-react';
-import { isChatOnline } from '../utils/chatHours';
 
 export default function AdminChat() {
   const navigate = useNavigate();
