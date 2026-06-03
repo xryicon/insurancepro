@@ -35,14 +35,10 @@ const Layout = () => {
   return (
     <div className="min-h-screen bg-[#0b1220] text-white relative overflow-hidden">
 
-      {/* noise texture */}
       <div className="fixed inset-0 pointer-events-none opacity-[0.04] bg-[url('/noise.png')]" />
-
-      {/* ambient glow */}
       <div className="absolute top-[-200px] left-[-200px] w-[500px] h-[500px] bg-blue-500/10 blur-3xl rounded-full" />
       <div className="absolute bottom-[-200px] right-[-200px] w-[500px] h-[500px] bg-indigo-500/10 blur-3xl rounded-full" />
 
-      {/* COOKIE */}
       <CookieBanner />
 
       {/* HEADER */}
@@ -75,13 +71,9 @@ const Layout = () => {
             {/* DESKTOP NAV */}
             <nav className="hidden lg:flex items-center space-x-1">
               {navLinks.map((link) => (
-                <a
+                <button
                   key={link.path}
-                  href={link.path}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate(link.path);
-                  }}
+                  onClick={() => navigate(link.path)}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                     location.pathname === link.path
                       ? 'bg-white/10 text-white'
@@ -89,7 +81,7 @@ const Layout = () => {
                   }`}
                 >
                   {t(link.label)}
-                </a>
+                </button>
               ))}
             </nav>
 
@@ -150,17 +142,13 @@ const Layout = () => {
               <div className="px-4 py-4 space-y-2">
 
                 {navLinks.map((link) => (
-                  <a
+                  <button
                     key={link.path}
-                    href={link.path}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate(link.path);
-                    }}
-                    className="block px-4 py-3 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/5"
+                    onClick={() => navigate(link.path)}
+                    className="block w-full text-left px-4 py-3 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/5"
                   >
                     {t(link.label)}
-                  </a>
+                  </button>
                 ))}
 
                 <button
@@ -170,7 +158,6 @@ const Layout = () => {
                   {t('get_a_quote')}
                 </button>
 
-                {/* ADMIN LOGIN (mobile too) */}
                 <button
                   onClick={() => navigate('/admin/login')}
                   className="w-full px-4 py-3 text-xs text-gray-400 hover:text-white"
@@ -204,20 +191,28 @@ const Layout = () => {
             Smart insurance comparison platform
           </p>
 
+          {/* FIXED MOBILE LINKS */}
           <div className="flex justify-center space-x-6 mt-6 text-sm text-gray-500">
-            <a href="/faq" onClick={(e) => { e.preventDefault(); navigate('/faq'); }} className="hover:text-white">
+            <button
+              onClick={() => navigate('/faq')}
+              className="hover:text-white"
+            >
               FAQ
-            </a>
-            <a href="/privacy-policy" onClick={(e) => { e.preventDefault(); navigate('/privacy-policy'); }} className="hover:text-white">
+            </button>
+
+            <button
+              onClick={() => navigate('/privacy-policy')}
+              className="hover:text-white"
+            >
               Privacy
-            </a>
+            </button>
           </div>
 
-          {/* ADMIN LOGIN */}
+          {/* ADMIN LOGIN FIXED */}
           <div className="mt-6 flex justify-center">
             <button
               onClick={() => navigate('/admin/login')}
-              className="text-xs text-gray-600 hover:text-white transition"
+              className="text-xs text-gray-600 hover:text-white transition py-2 px-2"
             >
               Admin login
             </button>
