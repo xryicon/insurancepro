@@ -40,7 +40,7 @@ const Layout = () => {
       <div className="absolute top-[-200px] left-[-200px] w-[500px] h-[500px] bg-blue-500/10 blur-3xl rounded-full" />
       <div className="absolute bottom-[-200px] right-[-200px] w-[500px] h-[500px] bg-indigo-500/10 blur-3xl rounded-full" />
 
-      {/* COOKIE (FIXED - NO WRAPPER ISSUES) */}
+      {/* COOKIE */}
       <CookieBanner />
 
       {/* HEADER */}
@@ -62,10 +62,10 @@ const Layout = () => {
 
               <div className="flex flex-col">
                 <span className="text-xl font-bold text-white">
-                  Insurance<span className="text-blue-400">Pro</span>
+                  {t('brand.name')}
                 </span>
                 <span className="text-xs text-gray-400 hidden sm:block">
-                  Compare smarter. Save faster.
+                  {t('brand.tagline')}
                 </span>
               </div>
             </div>
@@ -93,7 +93,6 @@ const Layout = () => {
 
             {/* ACTIONS */}
             <div className="hidden lg:flex items-center space-x-3">
-
               <div className="flex items-center space-x-2">
                 {['en', 'es', 'nl'].map((lng) => (
                   <button
@@ -126,14 +125,13 @@ const Layout = () => {
               </button>
             </div>
 
-            {/* MOBILE */}
+            {/* MOBILE MENU TOGGLE */}
             <button
               onClick={toggleMobileMenu}
               className="lg:hidden p-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/10"
             >
               {isMobileMenuOpen ? <X /> : <Menu />}
             </button>
-
           </div>
         </div>
 
@@ -172,7 +170,7 @@ const Layout = () => {
                   onClick={() => navigate('/admin/login')}
                   className="w-full px-4 py-3 text-xs text-gray-400 hover:text-white"
                 >
-                  Admin login
+                  {t('admin_login')}
                 </button>
               </div>
             </motion.div>
@@ -188,25 +186,23 @@ const Layout = () => {
       {/* FOOTER */}
       <footer className="relative z-30 bg-black border-t border-white/10 text-white mt-20">
         <div className="max-w-7xl mx-auto px-6 py-10 text-center">
-
           <div className="flex items-center justify-center space-x-2 mb-3">
             <Shield className="w-5 h-5 text-white" />
             <span className="text-lg font-semibold">
-              Insurance<span className="text-blue-400">Pro</span>
+              {t('brand.name')}
             </span>
           </div>
 
           <p className="text-gray-500 text-sm">
-            Smart insurance comparison platform
+            {t('footer.description')}
           </p>
 
           <div className="flex justify-center space-x-6 mt-6 text-sm text-gray-500">
             <a onClick={() => navigate('/faq')} className="hover:text-white cursor-pointer">
-              FAQ
+              {t('faq')}
             </a>
-
             <a onClick={() => navigate('/privacy-policy')} className="hover:text-white cursor-pointer">
-              Privacy
+              {t('privacy_policy')}
             </a>
           </div>
 
@@ -215,25 +211,23 @@ const Layout = () => {
               onClick={() => navigate('/admin/login')}
               className="text-xs text-gray-600 hover:text-white transition"
             >
-              Admin login
+              {t('admin_login')}
             </button>
           </div>
 
           <div className="border-t border-white/10 mt-6 pt-6 text-xs text-gray-600">
-            © {new Date().getFullYear()} InsurancePro
+            {t('footer.copyright', { year: new Date().getFullYear() })}
           </div>
-
         </div>
       </footer>
 
-      {/* FLOATING COOKIE BUTTON (FIXED) */}
+      {/* FLOATING COOKIE BUTTON */}
       <button
         onClick={() => document.dispatchEvent(new Event('open-cookie'))}
         className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg flex items-center justify-center"
       >
         🍪
       </button>
-
     </div>
   );
 };
