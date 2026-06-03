@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Button from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import FormField from '../components/forms/FormField';
+import { supabase } from '../lib/supabase';
 import {
   propertyTypeOptions,
   insuranceProviders,
@@ -163,29 +164,63 @@ export default function HomeInsurance() {
     setStep(step - 1);
   }, [step]);
 
-  const handleSubmit = useCallback(async () => {
-    setIsSubmitting(true);
-    try {
-      const response = await fetch('https://formspree.io/f/xdajdegr', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+const handleSubmit = useCallback(async () => {
+  setIsSubmitting(true);
 
-      if (response.ok) {
-        setSubmitSuccess(true);
-      } else {
-        throw new Error('Submission failed');
+  try {
+    const { error } = await supabase.from('leads').insert([
+      {
+        full_name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone || null,
+        address: formData.address,
+
+        lead_type: 'home',
+        status: 'new',
+        source: 'home_insurance_form',
+
+        data: {
+          nationality: formData.nationality,
+          date_of_birth: formData.dateOfBirth,
+          nie_number: formData.nieNumber,
+          postal_code: formData.postalCode,
+
+          property_type: formData.propertyType,
+          living_size: formData.livingSize ? parseInt(formData.livingSize) : null,
+          outside_size: formData.outsideSize ? parseInt(formData.outsideSize) : null,
+          bedrooms: formData.bedrooms ? parseInt(formData.bedrooms) : null,
+          bathrooms: formData.bathrooms ? parseInt(formData.bathrooms) : null,
+
+          construction_year: formData.constructionYear,
+          refurbished_year: formData.refurbishedYear,
+
+          residence_usage: formData.residenceUsage,
+          contents_value: formData.contentsValue ? parseFloat(formData.contentsValue) : null,
+
+          google_maps_link: formData.googleMapsLink,
+          catastro_number: formData.catastroNumber,
+          special_items: formData.specialItems,
+
+          current_provider: formData.currentProvider,
+          current_premium: formData.currentPremium ? parseFloat(formData.currentPremium) : null
+        }
       }
-    } catch (error) {
-      console.error('Submission error:', error);
-      toast.error('There was an error submitting your form. Please try again.');
-    } finally {
-      setIsSubmitting(false);
+    ]);
+
+    if (error) {
+      console.error(error);
+      throw error;
     }
-  }, [formData]);
+
+    setSubmitSuccess(true);
+    toast.success('Home insurance quote submitted!');
+  } catch (error) {
+    console.error('Supabase error:', error);
+    toast.error('There was an error submitting your quote request.');
+  } finally {
+    setIsSubmitting(false);
+  }
+}, [formData]);
 
   const handleStartOver = useCallback(() => {
     setFormData({

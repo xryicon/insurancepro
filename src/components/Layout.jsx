@@ -9,6 +9,7 @@ import CookieBanner from '../components/CookieBanner';
 const Layout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
   const location = useLocation();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
@@ -95,7 +96,6 @@ const Layout = () => {
             {/* ACTIONS */}
             <div className="hidden lg:flex items-center space-x-3">
 
-              {/* LANGUAGE */}
               <div className="flex items-center space-x-2">
                 {['en', 'es', 'nl'].map((lng) => (
                   <button
@@ -169,6 +169,15 @@ const Layout = () => {
                 >
                   {t('get_a_quote')}
                 </button>
+
+                {/* ADMIN LOGIN (mobile too) */}
+                <button
+                  onClick={() => navigate('/admin/login')}
+                  className="w-full px-4 py-3 text-xs text-gray-400 hover:text-white"
+                >
+                  Admin login
+                </button>
+
               </div>
             </motion.div>
           )}
@@ -204,9 +213,20 @@ const Layout = () => {
             </a>
           </div>
 
+          {/* ADMIN LOGIN */}
+          <div className="mt-6 flex justify-center">
+            <button
+              onClick={() => navigate('/admin/login')}
+              className="text-xs text-gray-600 hover:text-white transition"
+            >
+              Admin login
+            </button>
+          </div>
+
           <div className="border-t border-white/10 mt-6 pt-6 text-xs text-gray-600">
             © {new Date().getFullYear()} InsurancePro
           </div>
+
         </div>
       </footer>
     </div>

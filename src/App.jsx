@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { I18nextProvider } from 'react-i18next';
 import Layout from './components/Layout';
 import i18n from './i18n';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // ================= LAZY PAGES =================
 const Home = lazy(() => import('./pages/Home'));
@@ -12,7 +13,10 @@ const AboutUs = lazy(() => import('./pages/AboutUs'));
 const InsuranceSelection = lazy(() => import('./pages/InsuranceSelection'));
 const Contact = lazy(() => import('./pages/Contact'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
-const FAQ = lazy(() => import('./pages/FAQ'));  // Add this
+const FAQ = lazy(() => import('./pages/FAQ'));
+
+const AdminLogin = lazy(() => import('./pages/AdminLogin'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 
 // ================= LOADING UI =================
 const PageLoader = () => (
@@ -34,10 +38,23 @@ function App() {
               <Route path="about" element={<AboutUs />} />
               <Route path="contact" element={<Contact />} />
               <Route path="quote" element={<InsuranceSelection />} />
-              <Route path="faq" element={<FAQ />} />  {/* Changed from /faq to faq */}
+              <Route path="faq" element={<FAQ />} />
               <Route path="car-insurance" element={<CarInsurance />} />
               <Route path="home-insurance" element={<HomeInsurance />} />
               <Route path="privacy-policy" element={<PrivacyPolicy />} />
+
+              {/* ADMIN LOGIN (public) */}
+              <Route path="admin/login" element={<AdminLogin />} />
+
+              {/* ADMIN DASHBOARD (protected) 🔒 */}
+              <Route
+                path="admin"
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
             </Route>
           </Routes>
         </Suspense>
