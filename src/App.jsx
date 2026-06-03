@@ -15,6 +15,10 @@ const FAQ = lazy(() => import('./pages/FAQ'));
 
 const AdminLogin = lazy(() => import('./pages/AdminLogin'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const AdminChat = lazy(() => import('./pages/AdminChat'));
+
+// ✅ NEW HUB PAGE
+const AdminHub = lazy(() => import('./pages/AdminHub'));
 
 // ================= LOADING UI =================
 const PageLoader = () => (
@@ -27,35 +31,58 @@ const PageLoader = () => (
 
 function App() {
   return (
-      <BrowserRouter>
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Home />} />
-              <Route path="about" element={<AboutUs />} />
-              <Route path="contact" element={<Contact />} />
-              <Route path="quote" element={<InsuranceSelection />} />
-              <Route path="faq" element={<FAQ />} />
-              <Route path="car-insurance" element={<CarInsurance />} />
-              <Route path="home-insurance" element={<HomeInsurance />} />
-              <Route path="privacy-policy" element={<PrivacyPolicy />} />
+    <BrowserRouter>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
 
-              {/* ADMIN LOGIN (public) */}
-              <Route path="admin/login" element={<AdminLogin />} />
+          {/* MAIN LAYOUT ROUTES */}
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="about" element={<AboutUs />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="quote" element={<InsuranceSelection />} />
+            <Route path="faq" element={<FAQ />} />
+            <Route path="car-insurance" element={<CarInsurance />} />
+            <Route path="home-insurance" element={<HomeInsurance />} />
+            <Route path="privacy-policy" element={<PrivacyPolicy />} />
 
-              {/* ADMIN DASHBOARD (protected) 🔒 */}
-              <Route
-                path="admin"
-                element={
-                  <ProtectedRoute>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
-            </Route>
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
+            {/* ADMIN LOGIN */}
+            <Route path="admin/login" element={<AdminLogin />} />
+
+            {/* ✅ ADMIN HUB (NEW DEFAULT AFTER LOGIN) */}
+            <Route
+              path="admin"
+              element={
+                <ProtectedRoute>
+                  <AdminHub />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* LEADS DASHBOARD */}
+            <Route
+              path="admin/leads"
+              element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* CHAT */}
+            <Route
+              path="admin/chat"
+              element={
+                <ProtectedRoute>
+                  <AdminChat />
+                </ProtectedRoute>
+              }
+            />
+
+          </Route>
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
   );
 }
 

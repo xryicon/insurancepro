@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Menu, X, Phone } from 'lucide-react';
 import { navLinks } from '../data/constants';
 import CookieBanner from '../components/CookieBanner';
+import LiveChat from '../components/LiveChat';
 
 const Layout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -13,9 +14,8 @@ const Layout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -24,17 +24,15 @@ const Layout = () => {
     setIsMobileMenuOpen(false);
   }, [location]);
 
-  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
-
   return (
     <div className="min-h-screen bg-[#0b1220] text-white relative overflow-x-hidden">
 
-      {/* background */}
+      {/* BACKGROUND */}
       <div className="fixed inset-0 pointer-events-none opacity-[0.04] bg-[url('/noise.png')]" />
       <div className="absolute top-[-200px] left-[-200px] w-[500px] h-[500px] bg-blue-500/10 blur-3xl rounded-full" />
       <div className="absolute bottom-[-200px] right-[-200px] w-[500px] h-[500px] bg-indigo-500/10 blur-3xl rounded-full" />
 
-      {/* COOKIE */}
+      {/* COOKIE BANNER */}
       <CookieBanner />
 
       {/* HEADER */}
@@ -103,9 +101,9 @@ const Layout = () => {
               </button>
             </div>
 
-            {/* MOBILE MENU TOGGLE */}
+            {/* MOBILE MENU BUTTON */}
             <button
-              onClick={toggleMobileMenu}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="lg:hidden p-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/10"
             >
               {isMobileMenuOpen ? <X /> : <Menu />}
@@ -156,14 +154,15 @@ const Layout = () => {
         </AnimatePresence>
       </header>
 
-      {/* MAIN */}
+      {/* MAIN CONTENT */}
       <main className="pt-16 relative z-10">
         <Outlet />
       </main>
 
       {/* FOOTER */}
-      <footer className="relative z-30 bg-black border-t border-white/10 text-white mt-20">
+      <footer className="relative z-20 bg-black border-t border-white/10 text-white mt-20">
         <div className="max-w-7xl mx-auto px-6 py-10 text-center">
+
           <div className="flex items-center justify-center space-x-2 mb-3">
             <Shield className="w-5 h-5 text-white" />
             <span className="text-lg font-semibold">
@@ -176,18 +175,18 @@ const Layout = () => {
           </p>
 
           <div className="flex justify-center space-x-6 mt-6 text-sm text-gray-500">
-            <a onClick={() => navigate('/faq')} className="hover:text-white cursor-pointer">
+            <button onClick={() => navigate('/faq')} className="hover:text-white">
               FAQ
-            </a>
-            <a onClick={() => navigate('/privacy-policy')} className="hover:text-white cursor-pointer">
+            </button>
+            <button onClick={() => navigate('/privacy-policy')} className="hover:text-white">
               Privacy Policy
-            </a>
+            </button>
           </div>
 
-          <div className="mt-6 flex justify-center">
+          <div className="mt-6">
             <button
               onClick={() => navigate('/admin/login')}
-              className="text-xs text-gray-600 hover:text-white transition"
+              className="text-xs text-gray-600 hover:text-white"
             >
               Admin login
             </button>
@@ -199,7 +198,16 @@ const Layout = () => {
         </div>
       </footer>
 
-      {/* FLOATING COOKIE BUTTON */}
+      {/* =========================
+          FLOATING UI LAYER (FIXED)
+      ========================= */}
+
+      {/* LIVE CHAT (SAFE ZONE: bottom-left) */}
+      <div className="fixed bottom-6 left-6 z-50">
+        <LiveChat />
+      </div>
+
+      {/* COOKIE BUTTON (bottom-right safe) */}
       <button
         onClick={() => document.dispatchEvent(new Event('open-cookie'))}
         className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg flex items-center justify-center"
