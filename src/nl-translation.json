@@ -221,5 +221,20 @@
   "compare_smarter_save_faster": "Compare smarter. Save faster.",
   "smart_insurance_comparison_platform": "Smart insurance comparison platform",
   "privacy": "Privacy",
-  "processing": "Processing..."
+  "processing": "Processing...",
+  "thank_you_for_your_request_we_will_contact_you_within_24_hours": "Thank you for your request. We will contact you within 24 hours.",
+  "provider": "Provider:",
+  "admin_login": "Admin login",
+  "back_to_website": "Back to website",
+  "our_dashboard": "Our Dashboard",
+  "total": "Total:",
+  "new_today": "New Today:",
+  "usage": "Usage:",
+  "google_maps": "Google Maps:",
+  "catastro": "Catastro:",
+  "new": "New",
+  "contacted": "Contacted",
+  "closed": "Closed",
+  "prev": "Prev",
+  "page": "Page"
 }
