@@ -85,7 +85,7 @@ export default function AdminDashboard() {
       return (
         lead.full_name?.toLowerCase().includes(q) ||
         lead.email?.toLowerCase().includes(q) ||
-        data.registration?.toLowerCase().includes(q) // plate
+        data.registration?.toLowerCase().includes(q)
       );
     });
   }, [leads, search]);
@@ -200,11 +200,16 @@ export default function AdminDashboard() {
                 {expandedId === lead.id && (
                   <div className="mt-4 text-sm text-gray-300 space-y-1 border-t border-slate-800 pt-4">
 
+                    {/* ✅ FIXED: CONTACT + COMMON FIELDS */}
+                    <p><b>Name:</b> {lead.full_name}</p>
                     <p><b>Email:</b> {lead.email}</p>
                     <p><b>Phone:</b> {lead.phone}</p>
-                    <p><b>Address:</b> {lead.address}</p>
 
-                    {/* HOME FULL FIXED */}
+                    {lead.address && (
+                      <p><b>Address:</b> {lead.address}</p>
+                    )}
+
+                    {/* HOME FULL */}
                     {lead.lead_type === 'home' && (
                       <>
                         <p><b>Property Type:</b> {data.property_type}</p>
@@ -222,7 +227,7 @@ export default function AdminDashboard() {
                       </>
                     )}
 
-                    {/* CAR FULL FIXED (plate included in search) */}
+                    {/* CAR FULL */}
                     {lead.lead_type === 'car' && (
                       <>
                         <p><b>Make:</b> {data.car_make}</p>
@@ -235,9 +240,18 @@ export default function AdminDashboard() {
                       </>
                     )}
 
-                    {/* FINANCE */}
-                    <p><b>Provider:</b> {data.current_provider}</p>
-                    <p><b>Premium:</b> €{data.current_premium}</p>
+                    {/* FINANCE — ONLY FOR INSURANCE LEADS */}
+                    {lead.lead_type !== 'contact' && (
+                      <>
+                        <p><b>Provider:</b> {data.current_provider}</p>
+                        <p><b>Premium:</b> €{data.current_premium}</p>
+                      </>
+                    )}
+
+                    {/* CONTACT MESSAGE (JSON SAFE) */}
+                    {lead.lead_type === 'contact' && (
+                      <p><b>Message:</b> {data.query || data.message || 'No message'}</p>
+                    )}
 
                     <p className="text-xs text-gray-500">
                       {new Date(lead.created_at).toLocaleString()}

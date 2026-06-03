@@ -3,79 +3,168 @@ import Cookies from 'js-cookie';
 import { Card } from '../components/ui/Card';
 import Button from '../components/ui/Button';
 
+const COOKIE_NAME = 'cookieConsent';
+const COOKIE_VERSION = '1.2';
+
 export default function CookieBanner() {
-  const [showModal, setShowModal] = useState(false);
-  const [showFloatingButton, setShowFloatingButton] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [step, setStep] = useState('banner');
+  const [settings, setSettings] = useState({
+    necessary: true,
+    analytics: false,
+    marketing: false,
+  });
 
   useEffect(() => {
-    if (!Cookies.get('cookieConsent')) {
-      setShowModal(true);
-    } else {
-      setShowFloatingButton(true);
+    const existing = Cookies.get(COOKIE_NAME);
+
+    if (!existing) {
+      setVisible(true);
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(existing);
+      if (parsed.version !== COOKIE_VERSION) {
+        setVisible(true);
+      }
+    } catch {
+      setVisible(true);
     }
   }, []);
 
-  const handleAccept = () => {
-    Cookies.set('cookieConsent', 'accepted', { expires: 365, path: '/' });
-    setShowModal(false);
-    setShowFloatingButton(true);
+  useEffect(() => {
+    const handler = () => {
+      setVisible(true);
+      setStep('banner');
+    };
+
+    document.addEventListener('open-cookie', handler);
+    return () => document.removeEventListener('open-cookie', handler);
+  }, []);
+
+  const saveConsent = (newSettings) => {
+    const payload = {
+      ...newSettings,
+      version: COOKIE_VERSION,
+      timestamp: Date.now(),
+    };
+
+    Cookies.set(COOKIE_NAME, JSON.stringify(payload), {
+      expires: 365,
+      path: '/',
+    });
+
+    setVisible(false);
   };
 
-  const handleReject = () => {
-    Cookies.set('cookieConsent', 'rejected', { expires: 365, path: '/' });
-    setShowModal(false);
-    setShowFloatingButton(true);
+  const acceptAll = () => {
+    saveConsent({
+      necessary: true,
+      analytics: true,
+      marketing: true,
+    });
   };
 
-  const reopenModal = () => {
-    setShowModal(true);
+  const rejectAll = () => {
+    saveConsent({
+      necessary: true,
+      analytics: false,
+      marketing: false,
+    });
   };
 
-  if (!showModal && !showFloatingButton) return null;
+  const saveCustom = () => {
+    saveConsent(settings);
+  };
+
+  if (!visible) return null;
 
   return (
-    <>
-      {/* Modal Overlay */}
-      {showModal && (
-        <div
-          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
-          onClick={handleReject}
-        >
-          <Card
-            className="max-w-md w-full bg-slate-900 border-slate-800 p-6 text-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3 className="text-xl font-bold text-white mb-4">We Value Your Privacy</h3>
-            <p className="text-slate-400 mb-4">
-              We use cookies to ensure basic functionality (e.g., language preference).
-              By clicking <strong className="text-white">Accept</strong>, you consent to our use of cookies.
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[999] p-4">
+      <Card
+        className="max-w-lg w-full bg-slate-900 border-slate-800 p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {step === 'banner' && (
+          <>
+            <h3 className="text-xl font-bold mb-3">
+              We use cookies
+            </h3>
+
+            <p className="text-slate-400 text-sm mb-4">
+              We use necessary cookies to run this website and optional cookies to improve your experience and understand usage.
             </p>
-            <p className="text-sm mb-6">
-              <a href="/privacy-policy" className="text-indigo-400 hover:underline">
-                Learn more about our privacy policy
-              </a>
+
+            <p className="text-xs text-slate-500 mb-6">
+              You can manage your preferences or withdraw consent at any time. See our{' '}
+              <a className="text-indigo-400 underline" href="/privacy-policy">
+                Privacy Policy
+              </a>.
             </p>
-            <div className="flex gap-4 justify-center">
-              <Button variant="ghost" onClick={handleReject} className="text-slate-300">
-                Reject
+
+            <div className="flex flex-col gap-2">
+              <Button onClick={acceptAll}>Accept all</Button>
+              <Button variant="ghost" onClick={rejectAll}>
+                Reject all
               </Button>
-              <Button onClick={handleAccept}>
-                Accept
+              <Button variant="ghost" onClick={() => setStep('customize')}>
+                Customize
               </Button>
             </div>
-          </Card>
-        </div>
-      )}
+          </>
+        )}
 
-      {/* Floating Cookie Button */}
-      {showFloatingButton && (
-        <button
-          onClick={reopenModal}
-          className="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg z-40 flex items-center justify-center"
-        >
-          🍪
-        </button>
-      )}
-    </>
+        {step === 'customize' && (
+          <>
+            <h3 className="text-xl font-bold mb-3">
+              Cookie preferences
+            </h3>
+
+            <div className="space-y-4 text-sm">
+              <div className="flex justify-between">
+                <span>Necessary cookies</span>
+                <input type="checkbox" checked disabled />
+              </div>
+
+              <div className="flex justify-between">
+                <span>Analytics cookies</span>
+                <input
+                  type="checkbox"
+                  checked={settings.analytics}
+                  onChange={(e) =>
+                    setSettings((s) => ({
+                      ...s,
+                      analytics: e.target.checked,
+                    }))
+                  }
+                />
+              </div>
+
+              <div className="flex justify-between">
+                <span>Marketing cookies</span>
+                <input
+                  type="checkbox"
+                  checked={settings.marketing}
+                  onChange={(e) =>
+                    setSettings((s) => ({
+                      ...s,
+                      marketing: e.target.checked,
+                    }))
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-2 mt-6">
+              <Button onClick={saveCustom}>Save</Button>
+              <Button variant="ghost" onClick={() => setStep('banner')}>
+                Back
+              </Button>
+            </div>
+          </>
+        )}
+      </Card>
+    </div>
   );
 }

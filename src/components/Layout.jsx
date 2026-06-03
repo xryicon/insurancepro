@@ -33,17 +33,19 @@ const Layout = () => {
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
   return (
-    <div className="min-h-screen bg-[#0b1220] text-white relative overflow-hidden">
+    <div className="min-h-screen bg-[#0b1220] text-white relative overflow-x-hidden">
 
+      {/* background */}
       <div className="fixed inset-0 pointer-events-none opacity-[0.04] bg-[url('/noise.png')]" />
       <div className="absolute top-[-200px] left-[-200px] w-[500px] h-[500px] bg-blue-500/10 blur-3xl rounded-full" />
       <div className="absolute bottom-[-200px] right-[-200px] w-[500px] h-[500px] bg-indigo-500/10 blur-3xl rounded-full" />
 
+      {/* COOKIE (FIXED - NO WRAPPER ISSUES) */}
       <CookieBanner />
 
       {/* HEADER */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
           isScrolled
             ? 'bg-[#0b1220]/80 backdrop-blur-xl border-b border-white/10'
             : 'bg-transparent'
@@ -71,9 +73,13 @@ const Layout = () => {
             {/* DESKTOP NAV */}
             <nav className="hidden lg:flex items-center space-x-1">
               {navLinks.map((link) => (
-                <button
+                <a
                   key={link.path}
-                  onClick={() => navigate(link.path)}
+                  href={link.path}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate(link.path);
+                  }}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                     location.pathname === link.path
                       ? 'bg-white/10 text-white'
@@ -81,7 +87,7 @@ const Layout = () => {
                   }`}
                 >
                   {t(link.label)}
-                </button>
+                </a>
               ))}
             </nav>
 
@@ -114,19 +120,20 @@ const Layout = () => {
 
               <button
                 onClick={() => navigate('/quote')}
-                className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-sm font-medium rounded-lg shadow-lg hover:shadow-xl transition active:scale-[0.98]"
+                className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-sm font-medium rounded-lg shadow-lg"
               >
                 {t('get_a_quote')}
               </button>
             </div>
 
-            {/* MOBILE MENU */}
+            {/* MOBILE */}
             <button
               onClick={toggleMobileMenu}
               className="lg:hidden p-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/10"
             >
               {isMobileMenuOpen ? <X /> : <Menu />}
             </button>
+
           </div>
         </div>
 
@@ -140,15 +147,18 @@ const Layout = () => {
               className="lg:hidden bg-[#0b1220] border-t border-white/10"
             >
               <div className="px-4 py-4 space-y-2">
-
                 {navLinks.map((link) => (
-                  <button
+                  <a
                     key={link.path}
-                    onClick={() => navigate(link.path)}
-                    className="block w-full text-left px-4 py-3 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/5"
+                    href={link.path}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate(link.path);
+                    }}
+                    className="block px-4 py-3 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/5"
                   >
                     {t(link.label)}
-                  </button>
+                  </a>
                 ))}
 
                 <button
@@ -164,7 +174,6 @@ const Layout = () => {
                 >
                   Admin login
                 </button>
-
               </div>
             </motion.div>
           )}
@@ -177,7 +186,7 @@ const Layout = () => {
       </main>
 
       {/* FOOTER */}
-      <footer className="bg-black border-t border-white/10 text-white mt-20">
+      <footer className="relative z-30 bg-black border-t border-white/10 text-white mt-20">
         <div className="max-w-7xl mx-auto px-6 py-10 text-center">
 
           <div className="flex items-center justify-center space-x-2 mb-3">
@@ -191,28 +200,20 @@ const Layout = () => {
             Smart insurance comparison platform
           </p>
 
-          {/* FIXED MOBILE LINKS */}
           <div className="flex justify-center space-x-6 mt-6 text-sm text-gray-500">
-            <button
-              onClick={() => navigate('/faq')}
-              className="hover:text-white"
-            >
+            <a onClick={() => navigate('/faq')} className="hover:text-white cursor-pointer">
               FAQ
-            </button>
+            </a>
 
-            <button
-              onClick={() => navigate('/privacy-policy')}
-              className="hover:text-white"
-            >
+            <a onClick={() => navigate('/privacy-policy')} className="hover:text-white cursor-pointer">
               Privacy
-            </button>
+            </a>
           </div>
 
-          {/* ADMIN LOGIN FIXED */}
           <div className="mt-6 flex justify-center">
             <button
               onClick={() => navigate('/admin/login')}
-              className="text-xs text-gray-600 hover:text-white transition py-2 px-2"
+              className="text-xs text-gray-600 hover:text-white transition"
             >
               Admin login
             </button>
@@ -224,6 +225,15 @@ const Layout = () => {
 
         </div>
       </footer>
+
+      {/* FLOATING COOKIE BUTTON (FIXED) */}
+      <button
+        onClick={() => document.dispatchEvent(new Event('open-cookie'))}
+        className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg flex items-center justify-center"
+      >
+        🍪
+      </button>
+
     </div>
   );
 };
