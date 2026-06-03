@@ -13,8 +13,10 @@ function isChatOnlineByTime() {
 
   const weekday = parts.find(p => p.type === 'weekday')?.value;
   const hour = parseInt(parts.find(p => p.type === 'hour')?.value || '0', 10);
+
   const isWeekend = weekday === 'Sat' || weekday === 'Sun';
   if (isWeekend) return false;
+
   return hour >= 9 && hour < 16;
 }
 
@@ -25,7 +27,11 @@ export default function LiveChat() {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState('idle');
   const [session, setSession] = useState(null);
+
   const sessionRef = useRef(null);
+  const messagesEndRef = useRef(null);
+  const isInitialLoad = useRef(true);
+
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [form, setForm] = useState({
@@ -33,7 +39,7 @@ export default function LiveChat() {
     visitor_email: '',
     visitor_phone: '',
   });
-  const messagesEndRef = useRef(null);
+
   const online = isChatOnlineByTime();
   const isOnline = forceMode === 'open' || (forceMode !== 'closed' && online);
 
@@ -41,7 +47,7 @@ export default function LiveChat() {
     sessionRef.current = session;
   }, [session]);
 
-  // Enhanced force mode subscription with error handling
+  // ---------------- FORCE MODE ----------------
   useEffect(() => {
     const loadForceMode = async () => {
       try {
@@ -50,12 +56,14 @@ export default function LiveChat() {
           .select('force_mode')
           .limit(1)
           .single();
+
         if (error) throw error;
         if (data?.force_mode) setForceMode(data.force_mode);
-      } catch (error) {
-        console.error('Force mode load error:', error);
+      } catch (err) {
+        console.error('Force mode load error:', err);
       }
     };
+
     loadForceMode();
 
     const channel = supabase
@@ -73,17 +81,12 @@ export default function LiveChat() {
           }
         }
       )
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          console.log('Force mode subscription active');
-        }
-      });
+      .subscribe();
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => supabase.removeChannel(channel);
   }, []);
 
+  // ---------------- OPEN / CLOSE ----------------
   const handleOpen = () => {
     setOpen(true);
     setStep(isOnline ? 'register' : 'offline');
@@ -91,6 +94,7 @@ export default function LiveChat() {
 
   const handleClose = () => setOpen(false);
 
+  // ---------------- START CHAT ----------------
   const startChat = async () => {
     if (!isOnline) return;
 
@@ -107,9 +111,14 @@ export default function LiveChat() {
       .select()
       .single();
 
-    if (error) return console.error(error);
+    if (error) {
+      console.error(error);
+      return;
+    }
+
     setSession(data);
     setStep('chat');
+    isInitialLoad.current = true;
 
     await supabase.from('chat_messages').insert([
       {
@@ -121,24 +130,32 @@ export default function LiveChat() {
     ]);
   };
 
+  // ---------------- SEND MESSAGE ----------------
   const sendMessage = async (e) => {
     if (e) e.preventDefault();
+
     const current = sessionRef.current;
     if (!current || !input.trim()) return;
+
+    const message = input;
+
+    setInput('');
 
     await supabase.from('chat_messages').insert([
       {
         session_id: current.id,
         sender_type: 'visitor',
         sender_name: form.visitor_name,
-        message: input,
+        message,
       },
     ]);
-    setInput('');
   };
 
+  // ---------------- LOAD + REALTIME MESSAGES ----------------
   useEffect(() => {
     if (!session?.id) return;
+
+    let isMounted = true;
 
     const loadMessages = async () => {
       const { data } = await supabase
@@ -146,8 +163,12 @@ export default function LiveChat() {
         .select('*')
         .eq('session_id', session.id)
         .order('created_at', { ascending: true });
-      setMessages(data || []);
+
+      if (isMounted) {
+        setMessages(data || []);
+      }
     };
+
     loadMessages();
 
     const channel = supabase
@@ -160,37 +181,51 @@ export default function LiveChat() {
           table: 'chat_messages',
           filter: `session_id=eq.${session.id}`,
         },
-        (payload) => setMessages((p) => [...p, payload.new])
+        (payload) => {
+          setMessages((prev) => {
+            if (prev.some(m => m.id === payload.new.id)) return prev;
+            return [...prev, payload.new];
+          });
+        }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('chat subscription:', status);
+      });
 
-    return () => supabase.removeChannel(channel);
+    return () => {
+      isMounted = false;
+      supabase.removeChannel(channel);
+    };
   }, [session?.id]);
 
+  // ---------------- AUTO SCROLL (FIXED) ----------------
   useEffect(() => {
+    if (isInitialLoad.current) {
+      isInitialLoad.current = false;
+      return;
+    }
+
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // ---------------- UI ----------------
   return (
     <>
-      {/* Floating chat button */}
+      {/* Floating button */}
       <div
         className="fixed right-6 bottom-6 z-[9999] flex flex-col items-end gap-3"
         style={{ bottom: `${BOTTOM_GAP}px` }}
       >
         {isOnline && (
           <div className="flex items-center gap-2 px-3 py-2 bg-slate-800/80 backdrop-blur-sm border border-white/10 rounded-full shadow-lg">
-            <div className="relative">
-              <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-              <MessageCircle className="w-5 h-5 text-green-400" />
-            </div>
+            <MessageCircle className="w-5 h-5 text-green-400" />
             <span className="text-sm text-white">Need help?</span>
           </div>
         )}
 
         <button
           onClick={handleOpen}
-          className="w-14 h-14 rounded-full bg-gradient-to-br from-green-500 to-green-600 text-white flex items-center justify-center shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-200"
+          className="w-14 h-14 rounded-full bg-gradient-to-br from-green-500 to-green-600 text-white flex items-center justify-center shadow-xl"
         >
           <MessageCircle className="w-7 h-7" />
         </button>
@@ -199,166 +234,90 @@ export default function LiveChat() {
       {/* Chat window */}
       {open && (
         <div
-          className="fixed right-6 z-[9999] w-[92vw] max-w-[380px] h-[550px] sm:w-96 sm:h-[620px] bg-slate-900/95 backdrop-blur-lg border border-white/10 rounded-xl shadow-2xl flex flex-col overflow-hidden"
+          className="fixed right-6 z-[9999] w-[92vw] max-w-[380px] h-[550px] sm:w-96 sm:h-[620px] bg-slate-900/95 backdrop-blur-lg border border-white/10 rounded-xl shadow-2xl flex flex-col"
           style={{ bottom: `${BOTTOM_GAP + 80}px` }}
         >
           {/* Header */}
-          <div className="flex justify-between items-center p-4 border-b border-white/10 bg-slate-800/50">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center">
-                <MessageCircle className="w-5 h-5 text-green-400" />
-              </div>
-              <div>
-                <h2 className="text-white font-semibold">Live Chat</h2>
-                <p className="text-xs text-gray-400">
-                  {isOnline ? 'Online - We reply as soon as possible' : 'Currently offline'}
-                </p>
-              </div>
+          <div className="flex justify-between items-center p-4 border-b border-white/10">
+            <div>
+              <h2 className="text-white font-semibold">Live Chat</h2>
+              <p className="text-xs text-gray-400">
+                {isOnline ? 'Online' : 'Offline'}
+              </p>
             </div>
-            <button
-              onClick={handleClose}
-              className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-            >
-              <X className="w-5 h-5" />
+
+            <button onClick={handleClose}>
+              <X className="w-5 h-5 text-gray-400" />
             </button>
           </div>
 
-          {/* Offline state */}
+          {/* Offline */}
           {step === 'offline' && (
             <div className="flex flex-col items-center justify-center h-full text-center p-6">
-              <div className="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mb-4">
-                <Clock className="w-8 h-8 text-gray-500" />
-              </div>
-              <p className="text-lg font-semibold text-white">We are currently out of office</p>
-              <p className="text-sm text-gray-400 mt-2">
-                Mon–Fri 09:00–16:00 (Madrid time)
-              </p>
-              <a
-                href="/contact"
-                className="mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-              >
-                Contact Us
-              </a>
+              <Clock className="w-10 h-10 text-gray-500 mb-3" />
+              <p className="text-white">We are offline</p>
+              <p className="text-sm text-gray-400">Mon–Fri 09–16</p>
             </div>
           )}
 
-          {/* Registration form */}
+          {/* Register */}
           {step === 'register' && (
-            <div className="p-4 space-y-4">
-              <div className="space-y-1">
-                <label className="text-xs text-gray-400 flex items-center gap-1">
-                  <User className="w-3.5 h-3.5" />
-                  Name
-                </label>
-                <input
-                  className="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Your name"
-                  value={form.visitor_name}
-                  onChange={(e) => setForm({ ...form, visitor_name: e.target.value })}
-                />
-              </div>
+            <div className="p-4 space-y-3">
+              <input
+                className="w-full p-3 bg-white/5 text-white rounded-lg"
+                placeholder="Name"
+                value={form.visitor_name}
+                onChange={(e) => setForm({ ...form, visitor_name: e.target.value })}
+              />
 
-              <div className="space-y-1">
-                <label className="text-xs text-gray-400 flex items-center gap-1">
-                  <Mail className="w-3.5 h-3.5" />
-                  Email
-                </label>
-                <input
-                  type="email"
-                  className="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="your@email.com"
-                  value={form.visitor_email}
-                  onChange={(e) => setForm({ ...form, visitor_email: e.target.value })}
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs text-gray-400 flex items-center gap-1">
-                  <Phone className="w-3.5 h-3.5" />
-                  Phone (optional)
-                </label>
-                <input
-                  type="tel"
-                  className="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="+34 123 456 789"
-                  value={form.visitor_phone}
-                  onChange={(e) => setForm({ ...form, visitor_phone: e.target.value })}
-                />
-              </div>
+              <input
+                className="w-full p-3 bg-white/5 text-white rounded-lg"
+                placeholder="Email"
+                value={form.visitor_email}
+                onChange={(e) => setForm({ ...form, visitor_email: e.target.value })}
+              />
 
               <button
                 onClick={startChat}
                 disabled={!form.visitor_name || !form.visitor_email}
-                className="w-full py-3 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+                className="w-full p-3 bg-green-600 text-white rounded-lg"
               >
-                <MessageCircle className="w-5 h-5" />
                 Start Chat
               </button>
             </div>
           )}
 
-          {/* Chat interface */}
+          {/* Chat */}
           {step === 'chat' && (
             <>
-              <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-white/2">
-                {messages.length === 0 ? (
-                  <div className="text-center text-gray-400 py-8">
-                    <p>Start a conversation...</p>
-                    <p className="text-xs mt-1">Our team will respond shortly</p>
-                  </div>
-                ) : (
-                  messages.map((msg) => (
-                    <div
-                      key={msg.id}
-                      className={`flex gap-3 ${msg.sender_type === 'visitor' ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div
-                        className={`max-w-[80%] p-3 rounded-2xl ${
-                          msg.sender_type === 'visitor'
-                            ? 'bg-green-600 text-white rounded-br-sm'
-                            : msg.sender_type === 'system'
-                            ? 'bg-gray-700/50 text-center text-xs'
-                            : 'bg-slate-700 text-white rounded-bl-sm'
-                        }`}
-                      >
-                        {msg.sender_type !== 'system' && (
-                          <p className="text-xs font-medium mb-1 opacity-70">
-                            {msg.sender_name}
-                          </p>
-                        )}
-                        <p className="text-sm">{msg.message}</p>
-                        <p className="text-xs text-gray-400 mt-1">
-                          {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        </p>
-                      </div>
+              <div className="flex-1 p-4 overflow-y-auto space-y-3">
+                {messages.map((msg) => (
+                  <div
+                    key={msg.id}
+                    className={`flex ${msg.sender_type === 'visitor' ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <div className="max-w-[80%] p-3 rounded-lg bg-slate-700 text-white">
+                      <p className="text-sm">{msg.message}</p>
                     </div>
-                  ))
-                )}
+                  </div>
+                ))}
                 <div ref={messagesEndRef} />
               </div>
 
-              <form onSubmit={sendMessage} className="p-3 border-t border-white/10 bg-slate-800/50">
-                <div className="flex gap-2">
-                  <input
-                    className="flex-1 p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Type your message..."
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        sendMessage();
-                      }
-                    }}
-                  />
-                  <button
-                    type="submit"
-                    disabled={!input.trim()}
-                    className="p-3 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
-                  >
-                    <Send className="w-5 h-5" />
-                  </button>
-                </div>
+              <form onSubmit={sendMessage} className="p-3 border-t border-white/10 flex gap-2">
+                <input
+                  className="flex-1 p-3 bg-white/5 text-white rounded-lg"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Type..."
+                />
+
+                <button
+                  type="submit"
+                  className="p-3 bg-green-600 text-white rounded-lg"
+                >
+                  <Send className="w-5 h-5" />
+                </button>
               </form>
             </>
           )}
