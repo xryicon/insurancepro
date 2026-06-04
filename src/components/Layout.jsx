@@ -160,7 +160,7 @@ const Layout = () => {
       </main>
 
       {/* FOOTER */}
-      <footer className="relative z-20 bg-black border-t border-white/10 text-white mt-20">
+     <footer className="relative z-20 bg-[#0b1220] border-t border-white/10 text-white mt-20">
         <div className="max-w-7xl mx-auto px-6 py-10 text-center">
 
           <div className="flex items-center justify-center space-x-2 mb-3">

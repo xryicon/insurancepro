@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { X, MessageCircle, Clock, Send, User, Mail, Phone } from 'lucide-react';
+import { X, MessageCircle, Clock, Send } from 'lucide-react';
 
 function isChatOnlineByTime() {
   const now = new Date();
+
   const parts = new Intl.DateTimeFormat('en-GB', {
     timeZone: 'Europe/Madrid',
     weekday: 'short',
@@ -11,8 +13,8 @@ function isChatOnlineByTime() {
     hour12: false,
   }).formatToParts(now);
 
-  const weekday = parts.find(p => p.type === 'weekday')?.value;
-  const hour = parseInt(parts.find(p => p.type === 'hour')?.value || '0', 10);
+  const weekday = parts.find((p) => p.type === 'weekday')?.value;
+  const hour = parseInt(parts.find((p) => p.type === 'hour')?.value || '0', 10);
 
   const isWeekend = weekday === 'Sat' || weekday === 'Sun';
   if (isWeekend) return false;
@@ -20,65 +22,50 @@ function isChatOnlineByTime() {
   return hour >= 9 && hour < 16;
 }
 
-const BOTTOM_GAP = 110;
+const BOTTOM_GAP = 120;
 
 export default function LiveChat() {
   const [forceMode, setForceMode] = useState('auto');
   const [open, setOpen] = useState(false);
-  const [step, setStep] = useState('idle');
   const [session, setSession] = useState(null);
 
   const sessionRef = useRef(null);
   const messagesEndRef = useRef(null);
-  const isInitialLoad = useRef(true);
 
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [allSessions, setAllSessions] = useState([]);
+
   const [form, setForm] = useState({
     visitor_name: '',
     visitor_email: '',
     visitor_phone: '',
   });
 
-  const online = isChatOnlineByTime();
-  const isOnline = forceMode === 'open' || (forceMode !== 'closed' && online);
-
+  // ---------------- FORCE MODE SYNC ----------------
   useEffect(() => {
-    sessionRef.current = session;
-  }, [session]);
+    const load = async () => {
+      const { data } = await supabase
+        .from('chat_settings')
+        .select('force_mode')
+        .limit(1)
+        .maybeSingle();
 
-  // ---------------- FORCE MODE ----------------
-  useEffect(() => {
-    const loadForceMode = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('chat_settings')
-          .select('force_mode')
-          .limit(1)
-          .single();
-
-        if (error) throw error;
-        if (data?.force_mode) setForceMode(data.force_mode);
-      } catch (err) {
-        console.error('Force mode load error:', err);
+      if (data?.force_mode) {
+        setForceMode(data.force_mode);
       }
     };
 
-    loadForceMode();
+    load();
 
     const channel = supabase
-      .channel('chat_settings_live')
+      .channel('chat-settings-livechat')
       .on(
         'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'chat_settings',
-        },
+        { event: '*', schema: 'public', table: 'chat_settings' },
         (payload) => {
-          if (payload.new?.force_mode) {
-            setForceMode(payload.new.force_mode);
-          }
+          const mode = payload.new?.force_mode;
+          if (mode) setForceMode(mode);
         }
       )
       .subscribe();
@@ -86,15 +73,109 @@ export default function LiveChat() {
     return () => supabase.removeChannel(channel);
   }, []);
 
-  // ---------------- OPEN / CLOSE ----------------
-  const handleOpen = () => {
-    setOpen(true);
-    setStep(isOnline ? 'register' : 'offline');
-  };
+  const online = isChatOnlineByTime();
 
+  const isOnline =
+    forceMode === 'open'
+      ? true
+      : forceMode === 'closed'
+      ? false
+      : online;
+
+  const isQueued = session?.status === 'waiting';
+  const isActive = session?.status === 'active';
+  const isClosed = session?.status === 'closed';
+
+  const queuePosition =
+    session?.id && allSessions.length
+      ? allSessions
+          .filter((s) => s.status === 'waiting')
+          .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+          .findIndex((s) => s.id === session.id) + 1
+      : null;
+
+  useEffect(() => {
+    sessionRef.current = session;
+  }, [session]);
+
+  // ---------------- QUEUE ----------------
+  useEffect(() => {
+    if (!session) return;
+
+    const loadQueue = async () => {
+      const { data } = await supabase
+        .from('chat_sessions')
+        .select('*')
+        .eq('status', 'waiting')
+        .order('created_at', { ascending: true });
+
+      setAllSessions(data || []);
+    };
+
+    loadQueue();
+
+    const channel = supabase
+      .channel('queue-live')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'chat_sessions' },
+        loadQueue
+      )
+      .subscribe();
+
+    return () => supabase.removeChannel(channel);
+  }, [session]);
+
+  // ---------------- SESSION LIVE ----------------
+  useEffect(() => {
+    if (!session?.id) return;
+
+    const channel = supabase
+      .channel(`session-${session.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'chat_sessions',
+          filter: `id=eq.${session.id}`,
+        },
+        (payload) => setSession(payload.new)
+      )
+      .subscribe();
+
+    return () => supabase.removeChannel(channel);
+  }, [session?.id]);
+
+  // ---------------- MESSAGES ----------------
+  useEffect(() => {
+    if (!session?.id) return;
+
+    const channel = supabase
+      .channel(`messages-${session.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'chat_messages',
+          filter: `session_id=eq.${session.id}`,
+        },
+        (payload) => {
+          setMessages((prev) => {
+            if (prev.some((m) => m.id === payload.new.id)) return prev;
+            return [...prev, payload.new];
+          });
+        }
+      )
+      .subscribe();
+
+    return () => supabase.removeChannel(channel);
+  }, [session?.id]);
+
+  const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  // ---------------- START CHAT ----------------
   const startChat = async () => {
     if (!isOnline) return;
 
@@ -111,34 +192,18 @@ export default function LiveChat() {
       .select()
       .single();
 
-    if (error) {
-      console.error(error);
-      return;
-    }
+    if (error) return console.error(error);
 
-    setSession(data);
-    setStep('chat');
-    isInitialLoad.current = true;
-
-    await supabase.from('chat_messages').insert([
-      {
-        session_id: data.id,
-        sender_type: 'system',
-        sender_name: 'system',
-        message: `${form.visitor_name} started a chat`,
-      },
-    ]);
+    setSession({ ...data, status: 'waiting' });
   };
 
-  // ---------------- SEND MESSAGE ----------------
   const sendMessage = async (e) => {
-    if (e) e.preventDefault();
+    e.preventDefault();
 
     const current = sessionRef.current;
     if (!current || !input.trim()) return;
 
-    const message = input;
-
+    const message = input.trim();
     setInput('');
 
     await supabase.from('chat_messages').insert([
@@ -151,96 +216,64 @@ export default function LiveChat() {
     ]);
   };
 
-  // ---------------- LOAD + REALTIME MESSAGES ----------------
-  useEffect(() => {
+  const closeChat = async () => {
     if (!session?.id) return;
 
-    let isMounted = true;
+    await supabase
+      .from('chat_sessions')
+      .update({
+        status: 'closed',
+        closed_by: 'visitor',
+      })
+      .eq('id', session.id);
 
-    const loadMessages = async () => {
-      const { data } = await supabase
-        .from('chat_messages')
-        .select('*')
-        .eq('session_id', session.id)
-        .order('created_at', { ascending: true });
+    await supabase.from('chat_messages').insert([
+      {
+        session_id: session.id,
+        sender_type: 'system',
+        sender_name: 'system',
+        message: 'Chat closed by visitor',
+      },
+    ]);
 
-      if (isMounted) {
-        setMessages(data || []);
-      }
-    };
+    setSession((prev) => ({ ...prev, status: 'closed' }));
+  };
 
-    loadMessages();
-
-    const channel = supabase
-      .channel(`chat-${session.id}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'chat_messages',
-          filter: `session_id=eq.${session.id}`,
-        },
-        (payload) => {
-          setMessages((prev) => {
-            if (prev.some(m => m.id === payload.new.id)) return prev;
-            return [...prev, payload.new];
-          });
-        }
-      )
-      .subscribe((status) => {
-        console.log('chat subscription:', status);
-      });
-
-    return () => {
-      isMounted = false;
-      supabase.removeChannel(channel);
-    };
-  }, [session?.id]);
-
-  // ---------------- AUTO SCROLL (FIXED) ----------------
   useEffect(() => {
-    if (isInitialLoad.current) {
-      isInitialLoad.current = false;
-      return;
-    }
-
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // ---------------- UI ----------------
   return (
     <>
-      {/* Floating button */}
+      {/* FLOAT BUTTON (moved higher so cookie button won't overlap) */}
       <div
-        className="fixed right-6 bottom-6 z-[9999] flex flex-col items-end gap-3"
-        style={{ bottom: `${BOTTOM_GAP}px` }}
+        className="fixed right-6 z-[9999] flex flex-col items-end gap-2"
+        style={{ bottom: '180px' }}   // ✅ FIX: avoids cookie overlap
       >
         {isOnline && (
-          <div className="flex items-center gap-2 px-3 py-2 bg-slate-800/80 backdrop-blur-sm border border-white/10 rounded-full shadow-lg">
-            <MessageCircle className="w-5 h-5 text-green-400" />
-            <span className="text-sm text-white">Need help?</span>
+          <div className="px-4 py-2 bg-green-600 text-white rounded-full text-sm font-semibold shadow-xl animate-pulse">
+            💬 Need help? Chat with us
           </div>
         )}
 
         <button
           onClick={handleOpen}
-          className="w-14 h-14 rounded-full bg-gradient-to-br from-green-500 to-green-600 text-white flex items-center justify-center shadow-xl"
+          className="w-14 h-14 rounded-full bg-green-600 text-white flex items-center justify-center shadow-xl"
         >
-          <MessageCircle className="w-7 h-7" />
+          <MessageCircle className="w-6 h-6" />
         </button>
       </div>
 
-      {/* Chat window */}
+      {/* CHAT WINDOW */}
       {open && (
         <div
-          className="fixed right-6 z-[9999] w-[92vw] max-w-[380px] h-[550px] sm:w-96 sm:h-[620px] bg-slate-900/95 backdrop-blur-lg border border-white/10 rounded-xl shadow-2xl flex flex-col"
-          style={{ bottom: `${BOTTOM_GAP + 80}px` }}
+          className="fixed right-6 z-[9999] w-[92vw] max-w-[380px] h-[600px] bg-slate-900 border border-white/10 rounded-xl flex flex-col"
+          style={{ bottom: '260px' }}
         >
-          {/* Header */}
-          <div className="flex justify-between items-center p-4 border-b border-white/10">
+          {/* HEADER */}
+          <div className="p-4 border-b border-white/10 flex justify-between">
             <div>
-              <h2 className="text-white font-semibold">Live Chat</h2>
+              <p className="text-white font-semibold">Live Chat</p>
               <p className="text-xs text-gray-400">
                 {isOnline ? 'Online' : 'Offline'}
               </p>
@@ -251,53 +284,54 @@ export default function LiveChat() {
             </button>
           </div>
 
-          {/* Offline */}
-          {step === 'offline' && (
-            <div className="flex flex-col items-center justify-center h-full text-center p-6">
-              <Clock className="w-10 h-10 text-gray-500 mb-3" />
-              <p className="text-white">We are offline</p>
-              <p className="text-sm text-gray-400">Mon–Fri 09–16</p>
-            </div>
-          )}
-
-          {/* Register */}
-          {step === 'register' && (
-            <div className="p-4 space-y-3">
-              <input
-                className="w-full p-3 bg-white/5 text-white rounded-lg"
-                placeholder="Name"
-                value={form.visitor_name}
-                onChange={(e) => setForm({ ...form, visitor_name: e.target.value })}
-              />
-
-              <input
-                className="w-full p-3 bg-white/5 text-white rounded-lg"
-                placeholder="Email"
-                value={form.visitor_email}
-                onChange={(e) => setForm({ ...form, visitor_email: e.target.value })}
-              />
-
+          {/* CLOSED */}
+          {isClosed && (
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
+              <X className="w-10 h-10 text-red-500 mb-3" />
+              <p className="text-white font-semibold">Chat ended</p>
               <button
-                onClick={startChat}
-                disabled={!form.visitor_name || !form.visitor_email}
-                className="w-full p-3 bg-green-600 text-white rounded-lg"
+                onClick={() => {
+                  setSession(null);
+                  setMessages([]);
+                }}
+                className="mt-4 px-4 py-2 bg-green-600 text-white rounded"
               >
-                Start Chat
+                Start new chat
               </button>
             </div>
           )}
 
-          {/* Chat */}
-          {step === 'chat' && (
+          {/* OFFLINE */}
+          {!isOnline && !isClosed && (
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
+              <Clock className="w-10 h-10 text-gray-500 mb-3" />
+              <p className="text-white">We are currently closed, we open Monday to Friday from 9 AM to 5 PM</p>
+              <Link
+                to="/contact"
+                className="mt-4 px-4 py-2 bg-green-600 text-white rounded"
+              >
+                Contact Us
+              </Link>
+            </div>
+          )}
+
+          {/* QUEUE */}
+          {isOnline && isQueued && (
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
+              <p className="text-white font-semibold">
+                You are currently in queue — an agent will be with you shortly
+              </p>
+            </div>
+          )}
+
+          {/* ACTIVE */}
+          {isOnline && isActive && (
             <>
-              <div className="flex-1 p-4 overflow-y-auto space-y-3">
+              <div className="flex-1 overflow-y-auto p-4 space-y-3">
                 {messages.map((msg) => (
-                  <div
-                    key={msg.id}
-                    className={`flex ${msg.sender_type === 'visitor' ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div className="max-w-[80%] p-3 rounded-lg bg-slate-700 text-white">
-                      <p className="text-sm">{msg.message}</p>
+                  <div key={msg.id} className="flex justify-start">
+                    <div className="p-3 rounded-lg bg-slate-700 text-white">
+                      {msg.message}
                     </div>
                   </div>
                 ))}
@@ -306,20 +340,50 @@ export default function LiveChat() {
 
               <form onSubmit={sendMessage} className="p-3 border-t border-white/10 flex gap-2">
                 <input
-                  className="flex-1 p-3 bg-white/5 text-white rounded-lg"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
+                  className="flex-1 p-2 bg-white/5 text-white rounded-lg"
                   placeholder="Type..."
                 />
-
-                <button
-                  type="submit"
-                  className="p-3 bg-green-600 text-white rounded-lg"
-                >
+                <button className="p-2 bg-green-600 rounded-lg text-white">
                   <Send className="w-5 h-5" />
                 </button>
               </form>
             </>
+          )}
+
+          {/* START FORM */}
+          {!session && isOnline && (
+            <div className="p-4 space-y-2">
+              <input
+                placeholder="Name"
+                className="w-full p-2 bg-white/5 text-white rounded"
+                onChange={(e) =>
+                  setForm({ ...form, visitor_name: e.target.value })
+                }
+              />
+              <input
+                placeholder="Email"
+                className="w-full p-2 bg-white/5 text-white rounded"
+                onChange={(e) =>
+                  setForm({ ...form, visitor_email: e.target.value })
+                }
+              />
+              <input
+                placeholder="Phone"
+                className="w-full p-2 bg-white/5 text-white rounded"
+                onChange={(e) =>
+                  setForm({ ...form, visitor_phone: e.target.value })
+                }
+              />
+
+              <button
+                onClick={startChat}
+                className="w-full bg-green-600 p-2 rounded text-white"
+              >
+                Start Chat
+              </button>
+            </div>
           )}
         </div>
       )}

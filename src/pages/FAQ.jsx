@@ -17,15 +17,15 @@ const faqItems = [
   },
   {
     question: "Can I cancel my policy at any time?",
-    answer: "Yes, you can cancel your policy at any time. Please refer to our terms and conditions for any applicable fees."
+    answer: "Yes, if you are swapping insurance company we will need one months notice, if you need to cancel because you sold the car or property, we will need a proof of sale."
   },
   {
     question: "What payment methods do you accept?",
-    answer: "We accept bank transfers, credit/debit cards, and direct debit payments."
+    answer: "We accept credit/debit cards, and direct debit payments."
   },
   {
     question: "How do I make a claim?",
-    answer: "Contact our claims department directly at claims@yourcompany.com or call +34 123 456 789."
+    answer: "Contact our claims department directly at info@insurancepro.es."
   }
 ];
 
