@@ -214,5 +214,13 @@
   "start_a_conversation": "Start a conversation...",
   "our_team_will_respond_shortly": "Our team will respond shortly",
   "we_are_offline": "We are offline",
-  "monfri_0916": "Mon–Fri 09–16"
+  "monfri_0916": "Mon–Fri 09–16",
+  "queue_": "Queue #",
+  "select_a_chat": "Select a chat",
+  "close": "Close",
+  "_need_help_chat_with_us": "💬 Need help? Chat with us",
+  "chat_ended": "Chat ended",
+  "start_new_chat": "Start new chat",
+  "we_are_currently_closed_we_open_monday_to_friday_from_9_am_to_5_pm": "We are currently closed, we open Monday to Friday from 9 AM to 5 PM",
+  "you_are_currently_in_queue__an_agent_will_be_with_you_shortly": "You are currently in queue — an agent will be with you shortly"
 }
