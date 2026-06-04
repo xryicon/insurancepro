@@ -245,30 +245,37 @@ export default function LiveChat() {
 
   return (
     <>
-      {/* FLOAT BUTTON (moved higher so cookie button won't overlap) */}
+      {/* FLOAT BUTTON (MOBILE FIXED) */}
       <div
-        className="fixed right-6 z-[9999] flex flex-col items-end gap-2"
-        style={{ bottom: '180px' }}   // ✅ FIX: avoids cookie overlap
+        className="fixed right-4 sm:right-6 z-[9999] flex flex-col items-end gap-2"
+        style={{ bottom: '140px' }}   // 👈 better mobile spacing
       >
         {isOnline && (
-          <div className="px-4 py-2 bg-green-600 text-white rounded-full text-sm font-semibold shadow-xl animate-pulse">
+          <div className="px-3 sm:px-4 py-2 bg-green-600 text-white rounded-full text-xs sm:text-sm font-semibold shadow-xl animate-pulse">
             💬 Need help? Chat with us
           </div>
         )}
 
         <button
           onClick={handleOpen}
-          className="w-14 h-14 rounded-full bg-green-600 text-white flex items-center justify-center shadow-xl"
+          className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-green-600 text-white flex items-center justify-center shadow-xl"
         >
-          <MessageCircle className="w-6 h-6" />
+          <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
       </div>
 
-      {/* CHAT WINDOW */}
+      {/* CHAT WINDOW (MOBILE FIXED) */}
       {open && (
         <div
-          className="fixed right-6 z-[9999] w-[92vw] max-w-[380px] h-[600px] bg-slate-900 border border-white/10 rounded-xl flex flex-col"
-          style={{ bottom: '260px' }}
+          className="
+            fixed right-0 sm:right-6 z-[9999]
+            w-full sm:w-[92vw] max-w-[380px]
+            h-[85vh] sm:h-[600px]
+            bg-slate-900 border border-white/10
+            rounded-none sm:rounded-xl
+            flex flex-col
+          "
+          style={{ bottom: '0px', sm: { bottom: '260px' } }}
         >
           {/* HEADER */}
           <div className="p-4 border-b border-white/10 flex justify-between">
@@ -305,7 +312,9 @@ export default function LiveChat() {
           {!isOnline && !isClosed && (
             <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
               <Clock className="w-10 h-10 text-gray-500 mb-3" />
-              <p className="text-white">We are currently closed, we open Monday to Friday from 9 AM to 5 PM</p>
+              <p className="text-white text-sm sm:text-base">
+                We are currently closed, we open Monday to Friday from 9 AM to 5 PM
+              </p>
               <Link
                 to="/contact"
                 className="mt-4 px-4 py-2 bg-green-600 text-white rounded"
@@ -330,7 +339,7 @@ export default function LiveChat() {
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
                 {messages.map((msg) => (
                   <div key={msg.id} className="flex justify-start">
-                    <div className="p-3 rounded-lg bg-slate-700 text-white">
+                    <div className="p-3 rounded-lg bg-slate-700 text-white max-w-[80%]">
                       {msg.message}
                     </div>
                   </div>
@@ -338,11 +347,11 @@ export default function LiveChat() {
                 <div ref={messagesEndRef} />
               </div>
 
-              <form onSubmit={sendMessage} className="p-3 border-t border-white/10 flex gap-2">
+              <form className="p-3 border-t border-white/10 flex gap-2">
                 <input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  className="flex-1 p-2 bg-white/5 text-white rounded-lg"
+                  className="flex-1 p-2 bg-white/5 text-white rounded-lg text-sm"
                   placeholder="Type..."
                 />
                 <button className="p-2 bg-green-600 rounded-lg text-white">
@@ -357,21 +366,21 @@ export default function LiveChat() {
             <div className="p-4 space-y-2">
               <input
                 placeholder="Name"
-                className="w-full p-2 bg-white/5 text-white rounded"
+                className="w-full p-2 bg-white/5 text-white rounded text-sm"
                 onChange={(e) =>
                   setForm({ ...form, visitor_name: e.target.value })
                 }
               />
               <input
                 placeholder="Email"
-                className="w-full p-2 bg-white/5 text-white rounded"
+                className="w-full p-2 bg-white/5 text-white rounded text-sm"
                 onChange={(e) =>
                   setForm({ ...form, visitor_email: e.target.value })
                 }
               />
               <input
                 placeholder="Phone"
-                className="w-full p-2 bg-white/5 text-white rounded"
+                className="w-full p-2 bg-white/5 text-white rounded text-sm"
                 onChange={(e) =>
                   setForm({ ...form, visitor_phone: e.target.value })
                 }
