@@ -34,7 +34,14 @@ export default function AdminChat() {
   useEffect(() => {
     localStorage.setItem('admin_force_mode', forceMode);
   }, [forceMode]);
+// ---------------- SAVE AGENT NAME (DEBOUNCED) ----------------
+useEffect(() => {
+  const t = setTimeout(() => {
+    localStorage.setItem('agentName', agentName);
+  }, 300);
 
+  return () => clearTimeout(t);
+}, [agentName]);
   // ---------------- UPDATE FORCE MODE (FIXED FOR UUID) ----------------
   const updateForceMode = async (mode) => {
     setForceMode(mode);
